@@ -1,0 +1,31 @@
+.navbar{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 100px;
+}
+
+.navbar h1{
+    margin-right: 700px;
+}
+.navbar button{
+    margin-left: 700px;
+}
+.container{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    height: 300px;
+    width: 400px;
+    border: 50px;
+    border-width: 100px;
+    border-color: black;
+    border-radius: 10px;
+    padding: 5%;
+    color: black;
+    background-color: white;
+}
+.container input{
+    margin-bottom: 50px;
+    
+}
