@@ -60,6 +60,10 @@ body {
     margin-bottom: 20px;
 }
 
+.top-bar h1 {
+    margin: 0;
+}
+
 .user-controls {
     display: flex;
     align-items: center;
@@ -91,88 +95,86 @@ body {
 /* Main content */
 .main-content {
     display: flex;
-    justify-content: space-between;
-    padding-top: 20px;
-    flex-wrap: wrap; /* Allow content to wrap on smaller screens */
-}
-
-/* Scan and Scanner options side by side */
-.scan-options {
-    display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 20px;
-    padding: 10%;
-    width: 200px; /* Adjust for better responsiveness */
 }
 
-.scan-btn {
+.category-buttons {
     display: flex;
-    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 150px;
-    height: 150px;
+}
+
+.add-category-btn {
+    background-color: #2ECC71;
+    color: white;
+}
+
+.delete-category-btn {
+    background-color: #E74C3C;
+    color: white;
+}
+
+.record-summary {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.summary-btn {
     background-color: white;
-    border: 2px solid #ddd;
-    border-radius: 10px;
+    padding: 15px 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 18px;
+    text-align: center;
 }
 
-.scan-btn i {
-    font-size: 40px;
-    color: #1ABC9C;
-}
-
-.scanner-dropdown select {
+.search-bar {
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-/* Receipt viewer */
-.receipt-card {
+.data-table {
     background-color: white;
-    width: 100%; /* Full width for responsiveness */
-    max-width: 600px;
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #ddd;
-    min-height: 400px;
-    margin: 20px 0;
+    border: 1px solid #ddd;
 }
 
-.document-placeholder {
-    text-align: center;
+.data-table table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.document-placeholder i {
-    font-size: 50px;
-    color: #999;
+.data-table th, .data-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-.document-placeholder p {
-    font-size: 18px;
-    color: #999;
-    margin-top: 10px;
+.data-table th {
+    background-color: #f2f2f2;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f1f1f1;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .main-content {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .scan-options, .receipt-card {
-        width: 100%;
-    }
-
     .dashboard {
         margin-left: 0;
     }
@@ -188,5 +190,19 @@ body {
 
     .sidebar .brand h2 {
         font-size: 16px;
+    }
+
+    .main-content {
+        padding: 0;
+    }
+
+    .category-buttons, .record-summary, .data-table {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .summary-btn {
+        width: 100%;
+        text-align: left;
     }
 }

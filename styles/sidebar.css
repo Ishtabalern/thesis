@@ -39,7 +39,8 @@ body {
 }
 
 .sidebar a:hover, .sidebar a.active {
-    background-color: #16A085;
+    background-color: #F0F0F0;
+    color: #1ABC9C;
     transition: 0.3s;
 }
 
