@@ -48,6 +48,15 @@ $conn->close();
     <!-- Navbar Section -->
     <div class="navbar">
         <h1>CSK (logo)</h1>
+        <div class="right-section">
+            <div class="dropdown">
+                <button class="dropbtn">Login ▼</button>
+                <div class="dropdown-content">
+                    <a href="admin_login.php">Admin</a>
+                    <a href="login.php">Employee</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Login Container -->

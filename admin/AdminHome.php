@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
 }
 
 // Fetch all employees
-$employees = $conn->query("SELECT id, username, employee_id FROM user");
+$employees = $conn->query("SELECT id, username, employee_id, created_at FROM user");
 ?>
 
 <!DOCTYPE html>
@@ -140,6 +140,7 @@ $employees = $conn->query("SELECT id, username, employee_id FROM user");
                             <th>Employee ID</th>
                             <th>Username</th>
                             <th>Password</th>
+                            <th>Date Created</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -153,6 +154,9 @@ $employees = $conn->query("SELECT id, username, employee_id FROM user");
                                     </td>
                                     <td>
                                         <input type="password" name="password" placeholder="New Password (leave blank if unchanged)">
+                                    </td>
+                                    <td>
+                                    <?php echo htmlspecialchars($employee['created_at']); ?>
                                     </td>
                                     <td>
                                         <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee['employee_id']); ?>">

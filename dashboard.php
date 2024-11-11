@@ -1,3 +1,18 @@
+<?php
+// Start session to check if the user is logged in
+session_start();
+
+// Check if the user is logged in as an employee
+if (!isset($_SESSION['employee_id'])) {
+    // If not logged in, redirect to login page
+    header("Location: login.php");
+    exit();
+}
+
+// Get the username from the session
+$username = $_SESSION['username'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +27,9 @@
         <div class="brand">
             <h2>CSK - (LOGO)</h2>
         </div>
-        <a href="dashboard.html" class="active"><i class="fa-solid fa-house"></i>Home</a>
-        <a href="scan.html"><i class="fa-solid fa-camera"></i>Capture Documents</a>
-        <a href="records.html"><i class="fa-solid fa-file"></i>Financial Records</a>
+        <a href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
+        <a href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+        <a href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
         <a href="#"><i class="fa-solid fa-file-export"></i>Generate Report</a>
         <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>
     </div>
@@ -22,8 +37,9 @@
     <div class="dashboard">
         <div class="top-bar">
             <h1>Home</h1>
+            <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
             <div class="user-controls">
-                <button class="logout-btn">Log out</button>
+                <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>
