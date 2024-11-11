@@ -69,7 +69,7 @@ $employees = $conn->query("SELECT id, username, employee_id, created_at FROM use
             <header class="header">
                 <h2>Home</h2>
                 <div class="buttons">
-                    <button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button>
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
                     <button>Admin</button>
                 </div>
             </header>
@@ -110,7 +110,7 @@ $employees = $conn->query("SELECT id, username, employee_id, created_at FROM use
             <header class="header">
                 <h2>Manage Users</h2>
                 <div class="buttons">
-                    <button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button>
+                <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
                     <button>Admin</button>
                 </div>
             </header>

@@ -15,9 +15,9 @@
         <div class="brand">
             <h2>CSK - (LOGO)</h2>
         </div>
-        <a href="dashboard.html"><i class="fa-solid fa-house"></i>Home</a>
-        <a href="scan.html" class="active"><i class="fa-solid fa-camera"></i>Capture Documents</a>
-        <a href="records.html"><i class="fa-solid fa-file"></i>Financial Records</a>
+        <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
+        <a href="scan.php" class="active"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+        <a href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
         <a href="#"><i class="fa-solid fa-file-export"></i>Generate Report</a>
         <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>
     </div>
