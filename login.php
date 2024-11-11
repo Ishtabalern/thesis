@@ -93,6 +93,9 @@ $conn->close();
             <input type="password" class="input-field" name="password" placeholder="Password" required>
             <button type="submit" class="submit">ENTER</button>
         </form>
+        <div class="forgot-password">
+            <a href="forgot_password.php">Forgot Password?</a>
+        </div>
     </div>
 </body>
 </html>

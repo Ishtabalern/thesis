@@ -103,6 +103,22 @@ label {
     background-color: #16A085;
 }
 
+.forgot-password {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.forgot-password a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+
 /* Responsive design */
 @media (max-width: 600px) {
     .navbar {

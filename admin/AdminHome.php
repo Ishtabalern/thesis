@@ -40,8 +40,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     $stmt->close();
 }
 
+if (isset($_GET['id'])) {
+   $request_id = $_GET['id'];
+
+   // Prepare SQL query to delete the reset request
+   $stmt = $conn->prepare("DELETE FROM password_reset_requests WHERE id = ?");
+   $stmt->bind_param("i", $request_id);
+
+   // Execute the query
+   if ($stmt->execute()) {
+       // Successful deletion, notify the admin
+       $message = "Request deleted successfully.";
+   } else {
+       // Handle error if the query fails
+       $message = "Error: Could not delete the request.";
+   }
+
+   $stmt->close();
+}
+
 // Fetch all employees
 $employees = $conn->query("SELECT id, username, employee_id, created_at FROM user");
+
+// Fetch pending password reset requests
+$sql = "SELECT r.id, r.employee_id, e.username, r.request_date FROM password_reset_requests r JOIN user e ON r.employee_id = e.employee_id WHERE r.status = 'pending'";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -129,6 +152,32 @@ $employees = $conn->query("SELECT id, username, employee_id, created_at FROM use
                         <a href="signup.php"><button class="create">Create Account</button></a>
                     </div>
                 </div>
+
+                <h2>Password Reset Requests</h2>
+        <?php if ($result->num_rows > 0): ?>
+            <table>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Username</th>
+                    <th>Request Date</th>
+                    <th>Action</th>
+                </tr>
+                <?php while($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['employee_id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['username']); ?></td>
+                        <td><?php echo htmlspecialchars($row['request_date']); ?></td>
+                        <td>
+                            <!-- Link to process the reset (you can later implement this functionality) -->
+                            <a href="AdminHome.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this request?');">Delete Request</a>
+
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </table>
+        <?php else: ?>
+            <p>No password reset requests at the moment.</p>
+        <?php endif; ?>
 
                 <?php if (isset($message)): ?>
                     <p><?php echo htmlspecialchars($message); ?></p>
