@@ -75,6 +75,7 @@ $result = $conn->query($sql);
     <title>CSK - Admin Home</title>
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <section class="sidebar">
@@ -140,53 +141,30 @@ $result = $conn->query($sql);
 
             <section class="manage-users-content">
                 <div class="accounts">
-                    <div class="active-account">
-                        <input type="radio" name="account" data-account="account">
-                        <span>Account</span>
+                    <div class="account-request-create-section">
+                        <div class="active-account" style="border-right:1px solid #2323;">
+                            <h4>Account</h4>
+                        </div>
+                        <div class="active-account">
+                            <h4>Request</h4>
+                        </div>
+                        <div class="create-account">
+                            <a href="signup.php"><button class="create">Create Account</button></a>
+                        </div>
                     </div>
-                    <div class="active-account">
-                        <input type="radio" name="account" data-account="pending">
-                        <span>Pending</span>
-                    </div>
-                    <div class="right-side">
-                        <a href="signup.php"><button class="create">Create Account</button></a>
+
+                    <div class="search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search">
                     </div>
                 </div>
 
-                <h2>Password Reset Requests</h2>
-        <?php if ($result->num_rows > 0): ?>
-            <table>
-                <tr>
-                    <th>Employee ID</th>
-                    <th>Username</th>
-                    <th>Request Date</th>
-                    <th>Action</th>
-                </tr>
-                <?php while($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['employee_id']); ?></td>
-                        <td><?php echo htmlspecialchars($row['username']); ?></td>
-                        <td><?php echo htmlspecialchars($row['request_date']); ?></td>
-                        <td>
-                            <!-- Link to process the reset (you can later implement this functionality) -->
-                            <a href="AdminHome.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this request?');">Delete Request</a>
-
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </table>
-        <?php else: ?>
-            <p>No password reset requests at the moment.</p>
-        <?php endif; ?>
-
-                <?php if (isset($message)): ?>
-                    <p><?php echo htmlspecialchars($message); ?></p>
-                <?php endif; ?>
+            <!--passowrd reset request here-->
+                
 
                 <table id="account" class="account-table active">
                     <thead>
                         <tr>
-                            <th>Employee ID</th>
                             <th>Username</th>
                             <th>Password</th>
                             <th>Date Created</th>
@@ -197,19 +175,27 @@ $result = $conn->query($sql);
                         <?php while ($employee = $employees->fetch_assoc()): ?>
                             <tr>
                                 <form action="" method="POST">
-                                    <td><?php echo htmlspecialchars($employee['employee_id']); ?></td>
-                                    <td>
-                                        <input type="text" name="username" value="<?php echo htmlspecialchars($employee['username']); ?>" required>
+                                    <td >
+                                        <p style="">
+                                        <?php echo htmlspecialchars($employee['username']); ?>
+                                        </p>
+                                        <p style="color:#B8B8B8; font-size:12px; margin-top:10px">
+                                            <?php echo htmlspecialchars($employee['employee_id']); ?>
+                                        </p>
                                     </td>
+                                    
+
+
                                     <td>
-                                        <input type="password" name="password" placeholder="New Password (leave blank if unchanged)">
+                                        <input class="password" type="password" name="password" placeholder="New Password (leave blank if unchanged)">
                                     </td>
+
                                     <td>
                                     <?php echo htmlspecialchars($employee['created_at']); ?>
                                     </td>
                                     <td>
                                         <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee['employee_id']); ?>">
-                                        <button type="submit" name="update">Update</button>
+                                        <button type="submit" name="update" >Update</button>
                                     </td>
                                 </form>
                             </tr>

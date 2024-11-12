@@ -188,33 +188,65 @@
  
  .manage-users-content .accounts{
     display:var(--flex);
-
+   justify-content: space-between;
     padding: 20px 20px;
     border-bottom: 1px solid var(--border);
+    align-items: center;
 
  }
 
+ .accounts .account-request-create-section{
+   display:var(--flex);
+   align-items: center;
+}
+
  .accounts .active-account{
-    margin-right: 20px;
     align-items: center;
     display: var(--flex);
     cursor: pointer;
+    padding: 5px 20px;
+    
+ }
+
+ .create-account{
+   margin-left: 15px;
+   width: 130px;
+   text-align: center;
 
  }
 
- .active-account > input[type="radio"] {
-    height: 15px;
-    width: 15px;
-    margin-right: 10px;
- 
-  }
+ .search{
+   background-color: white;
+   height: 30px;
+   display: var(--flex);
+   align-items: center;
+   padding: 0px 10px;
+   justify-content: space-between;
+   border: 1px solid var(--greenBG);
+   border-radius: 8px;
+ }
 
-  .active-account input[type="radio"]:checked {
-    height: 15px;
-    width: 15px;
-    margin-right: 10px;
-    background-color: var(--greenBG);
-  }
+ .search  input{
+   padding: 0px 10px;
+   height: 100%;
+   width: 150px;
+   background-color: transparent;
+   border: none;
+   outline: none;
+
+ }
+ 
+ .create-account button{
+   width: 100%;
+   height: 30px;
+   cursor: pointer;
+   background-color: var(--whiteBG);
+   color: var(--greenBG);
+   border: 1px solid var(--greenBG);
+   border-radius: 4px;
+ }
+
+
 
    /*manage user
    
@@ -232,9 +264,6 @@
  }
      
    */
-
-
-
 
 
 .account-table, th, td {
@@ -307,9 +336,11 @@ td button{
    max-width: 80px;
    height: 30px;
    cursor: pointer;
-   border-radius: 30px;
-   border: 1px solid rgb(148, 148, 148);
-   color: #fff;
+   border-radius: 10px;
+   border: 1px solid var(--greenBG);
+   color: var(--greenBG);
+   background-color: var(--whiteBG);
+
 }
 
 td .edit{
@@ -340,4 +371,11 @@ td .delete:hover{
 
 .account-table.active {
    display: table;
+}
+
+
+.password{
+   padding: 10px;
+   border-radius: 4px;
+   border: 1px solid var(--greenBG);
 }
