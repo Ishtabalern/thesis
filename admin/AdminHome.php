@@ -83,7 +83,7 @@ $result = $conn->query($sql);
         <div class="btn-container">
             <button class="btn-tabs" data-tab="home"><i class="fa-solid fa-house"></i> Home</button>
             <button class="btn-tabs" data-tab="manage-users"><i class="fa-solid fa-users-gear"></i> Manage Users</button>
-            <button class="btn-tabs" data-tab="system-logs"><i class="fa-solid fa-file-circle-check"></i> System Logs</button>
+            <button class="btn-tabs" data-tab="system-logs"><i class="fa-solid fa-file-circle-check"></i> Audit Logs</button>
             <button class="btn-tabs" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
         </div>
     </section>
@@ -125,7 +125,7 @@ $result = $conn->query($sql);
                         <span>CVSU - Bacoor</span>
                         <span>Fan</span>
                         <span>₱45</span>
-                    </div>
+                    </div>                
                 </div>
             </section>
         </section>
@@ -155,13 +155,12 @@ $result = $conn->query($sql);
 
                     <div class="search">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Search">
+                        <input type="text" placeholder="Search Username">
                     </div>
                 </div>
 
             <!--passowrd reset request here-->
                 
-
                 <table id="account" class="account-table active">
                     <thead>
                         <tr>
@@ -210,9 +209,63 @@ $result = $conn->query($sql);
         </section>
 
         <section id="system-logs" class="tab-content">
-            <h2>System Logs</h2>
-            <p>View system logs and activity history.</p>
+            <header class="header">
+                <h2>Audit Logs</h2>
+                <div class="buttons">
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <button>Admin</button>
+                </div>
+            </header>
+
+            <section class="transaction-history">
+                <div class="documents-captured-container">
+                    <h3>Documents Captured</h3>
+
+                    <div class="search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Search Username">
+                    </div>
+                </div>
+                
+                <table id="account" class="documents-captured-table active">
+                    <thead class="table-header">
+                        <tr>
+                            <th></th>
+                            <th>Timestamp</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-data">
+                            <tr>
+                                <td>1</td>
+                                <td>13:43 PM, 11/11/24</td>
+                                <td>
+                                    <div class="data-employee-name">
+                                        <p>Jan dela Cruz</p>
+                                        <p style="font-size:11px; color:#7a7a7a">Employee</p>
+                                    </div>                                  
+                                </td>
+                                <td>Scanned a Document</td>
+                                <td>Expense</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>13:43 PM, 11/11/24</td>
+                                <td>Jan dela Cruz Employee</td>
+                                <td>Scanned a Document</td>
+                                <td>Expense</td>
+                            </tr>
+                  
+                    </tbody>
+                </table>
+
+            </section>
+        
         </section>
+
+
 
         <section id="settings" class="tab-content">
             <h2>Settings</h2>
