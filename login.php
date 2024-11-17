@@ -69,11 +69,13 @@ $conn->close();
 </head>
 <body>
     <div class="navbar">
-        <h1>CSK (app name)</h1>
+        <div class="company-logo">
+            <img src="./imgs/csk_logo.png" alt="">
+        </div>
         <div class="right-section">
             <div class="dropdown">
-                <button class="dropbtn">Login ▼</button>
-                <div class="dropdown-content">
+                <button class="dropbtn" onclick="toggleDropdown()">Login ▼</button>
+                <div id="dropdownContent" class="dropdown-content">
                     <a href="admin_login.php">Admin</a>
                     <a href="login.php">Employee</a>
                 </div>
@@ -97,5 +99,23 @@ $conn->close();
             <a href="forgot_password.php">Forgot Password?</a>
         </div>
     </div>
+    <script>
+        function toggleDropdown() {
+        const dropdown = document.getElementById('dropdownContent');
+        dropdown.classList.toggle('show');
+        }   
+
+    // Close the dropdown when clicking outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            const dropdowns = document.getElementsByClassName('dropdown-content');
+            for (let i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].classList.contains('show')) {
+                    dropdowns[i].classList.remove('show');
+                }
+            }
+        }
+    }
+    </script>
 </body>
 </html>

@@ -79,7 +79,9 @@ $result = $conn->query($sql);
 </head>
 <body>
     <section class="sidebar">
-        <h1>CSK - Admin</h1>
+        <div class="company-logo">
+            <img src="../imgs/csk_logo.png" alt="">
+        </div>
         <div class="btn-container">
             <button class="btn-tabs" data-tab="home"><i class="fa-solid fa-house"></i> Home</button>
             <button class="btn-tabs" data-tab="manage-users"><i class="fa-solid fa-users-gear"></i> Manage Users</button>
@@ -115,7 +117,7 @@ $result = $conn->query($sql);
                     <span>Id</span>
                     <span>Date</span>
                     <span>Customer Name</span>
-                    <span>Item</span>
+                    <span>Category</span>
                     <span>Price</span>
                 </div>
                 <div class="home-data-container">
@@ -123,7 +125,7 @@ $result = $conn->query($sql);
                         <span>1</span>
                         <span>Oct 24, 2024</span>
                         <span>CVSU - Bacoor</span>
-                        <span>Fan</span>
+                        <span>Expense</span>
                         <span>₱45</span>
                     </div>                
                 </div>
