@@ -10,7 +10,7 @@
 <body>
     <div class="sidebar">
         <div class="brand">
-            <h2>CSK - (LOGO)</h2>
+            <img src="./imgs/csk_logo.png" alt="">
         </div>
         <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
         <a href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>

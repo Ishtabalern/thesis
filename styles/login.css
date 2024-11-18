@@ -7,6 +7,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
 }
 
 /* Navbar styling */
@@ -114,9 +115,9 @@ body {
 }
 
 .container h1 {
-    font-size: 28px;
+    font-size: 24px;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .container h2 {
