@@ -19,25 +19,23 @@ if ($conn->connect_error) {
 // Handle updating employee details
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     $employee_id = $_POST['employee_id'];
-    $username = $_POST['username'];
-    $new_password = $_POST['password'] ? password_hash($_POST['password'], PASSWORD_DEFAULT) : null;
+    $new_password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : null;
 
-    // Update query
+    // Update query: Only update if a new password is provided
     if ($new_password) {
-        $stmt = $conn->prepare("UPDATE user SET username = ?, password = ? WHERE employee_id = ?");
-        $stmt->bind_param("ssi", $username, $new_password, $employee_id);
-    } else {
-        $stmt = $conn->prepare("UPDATE user SET username = ? WHERE employee_id = ?");
-        $stmt->bind_param("si", $username, $employee_id);
-    }
-    
-    if ($stmt->execute()) {
-        $message = "Employee details updated successfully.";
-    } else {
-        $message = "Error updating employee: " . $stmt->error;
-    }
+        $stmt = $conn->prepare("UPDATE user SET password = ? WHERE employee_id = ?");
+        $stmt->bind_param("si", $new_password, $employee_id);
 
-    $stmt->close();
+        if ($stmt->execute()) {
+            $message = "Password updated successfully.";
+        } else {
+            $message = "Error updating password: " . $stmt->error;
+        }
+
+        $stmt->close();
+    } else {
+        $message = "No changes made. Password field was empty.";
+    }
 }
 
 if (isset($_GET['id'])) {
@@ -75,7 +73,6 @@ $result = $conn->query($sql);
     <title>CSK - Admin Home</title>
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <section class="sidebar">
@@ -91,52 +88,11 @@ $result = $conn->query($sql);
     </section>
 
     <main class="content">
-        <section id="home" class="tab-content">
-            <header class="header">
-                <h2>Home</h2>
-                <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
-                    <button>Admin</button>
-                </div>
-            </header>
-
-            <section class="overall-data">
-                <div>
-                    <p>Total Expenses</p>
-                    <h1>23</h1>
-                </div>
-                <div>
-                    <p>Latest Income</p>
-                    <h1>23</h1>
-                </div>
-            </section>
-
-            <section class="transaction-history">
-                <h3>Transaction History</h3>
-                <div class="home-header">
-                    <span>Id</span>
-                    <span>Date</span>
-                    <span>Customer Name</span>
-                    <span>Category</span>
-                    <span>Price</span>
-                </div>
-                <div class="home-data-container">
-                    <div class="home-data">
-                        <span>1</span>
-                        <span>Oct 24, 2024</span>
-                        <span>CVSU - Bacoor</span>
-                        <span>Expense</span>
-                        <span>₱45</span>
-                    </div>                
-                </div>
-            </section>
-        </section>
-
         <section id="manage-users" class="tab-content">
             <header class="header">
                 <h2>Manage Users</h2>
                 <div class="buttons">
-                <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
                     <button>Admin</button>
                 </div>
             </header>
@@ -161,8 +117,37 @@ $result = $conn->query($sql);
                     </div>
                 </div>
 
-            <!--passowrd reset request here-->
-                
+                <!-- Password reset requests section -->
+                <section class="password-reset-requests">
+                    <h2>Password Reset Requests</h2>
+                    <?php if ($result->num_rows > 0): ?>
+                        <table>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Username</th>
+                                <th>Request Date</th>
+                                <th>Action</th>
+                            </tr>
+                            <?php while($row = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($row['employee_id']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['username']); ?></td>
+                                    <td><?php echo htmlspecialchars($row['request_date']); ?></td>
+                                    <td>
+                                        <a href="AdminHome.php?id=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this request?');">Delete Request</a>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </table>
+                    <?php else: ?>
+                        <p>No password reset requests at the moment.</p>
+                    <?php endif; ?>
+
+                    <?php if (isset($message)): ?>
+                        <p><?php echo htmlspecialchars($message); ?></p>
+                    <?php endif; ?>
+                </section>
+
                 <table id="account" class="account-table active">
                     <thead>
                         <tr>
@@ -184,15 +169,13 @@ $result = $conn->query($sql);
                                             <?php echo htmlspecialchars($employee['employee_id']); ?>
                                         </p>
                                     </td>
-                                    
-
 
                                     <td>
                                         <input class="password" type="password" name="password" placeholder="New Password (leave blank if unchanged)">
                                     </td>
 
                                     <td>
-                                    <?php echo htmlspecialchars($employee['created_at']); ?>
+                                        <?php echo htmlspecialchars($employee['created_at']); ?>
                                     </td>
                                     <td>
                                         <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee['employee_id']); ?>">
@@ -203,76 +186,11 @@ $result = $conn->query($sql);
                         <?php endwhile; ?>
                     </tbody>
                 </table>
-
-                <table id="pending" class="account-table">
-                    <!-- Pending Account Table Here -->
-                </table>
             </section>
         </section>
 
-        <section id="system-logs" class="tab-content">
-            <header class="header">
-                <h2>Audit Logs</h2>
-                <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
-                    <button>Admin</button>
-                </div>
-            </header>
+        <!-- Other sections here... -->
 
-            <section class="transaction-history">
-                <div class="documents-captured-container">
-                    <h3>Documents Captured</h3>
-
-                    <div class="search">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" placeholder="Search Username">
-                    </div>
-                </div>
-                
-                <table id="account" class="documents-captured-table active">
-                    <thead class="table-header">
-                        <tr>
-                            <th></th>
-                            <th>Timestamp</th>
-                            <th>Name</th>
-                            <th>Action</th>
-                            <th>Category</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-data">
-                            <tr>
-                                <td>1</td>
-                                <td>13:43 PM, 11/11/24</td>
-                                <td>
-                                    <div class="data-employee-name">
-                                        <p>Jan dela Cruz</p>
-                                        <p style="font-size:11px; color:#7a7a7a">Employee</p>
-                                    </div>                                  
-                                </td>
-                                <td>Scanned a Document</td>
-                                <td>Expense</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>13:43 PM, 11/11/24</td>
-                                <td>Jan dela Cruz Employee</td>
-                                <td>Scanned a Document</td>
-                                <td>Expense</td>
-                            </tr>
-                  
-                    </tbody>
-                </table>
-
-            </section>
-        
-        </section>
-
-
-
-        <section id="settings" class="tab-content">
-            <h2>Settings</h2>
-            <p>Configure system settings here.</p>
-        </section>
     </main>
 
     <script src="admin.js"></script>
