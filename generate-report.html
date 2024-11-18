@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link rel="stylesheet" href="styles/generate-report.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+   <section class="sidebar">
+      <div class="brand">
+          <img src="./imgs/csk_logo.png" alt="">
+      </div>
+      <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
+      <a href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+      <a href="records.php" ><i class="fa-solid fa-file"></i>Financial Records</a>
+      <a href="#" class="active"><i class="fa-solid fa-file-export"></i>Generate Report</a>
+      <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>
+  </section>
+
+
+  <main class="dashboard">
+      <div class="top-bar">
+          <h1>Generate Report</h1>
+          <div class="user-controls">
+              <button class="logout-btn">Log out</button>
+              <div class="dropdown">
+                  <button class="dropbtn">Employee ▼</button>
+              </div>
+          </div>
+      </div>
+
+      <section class="client-dropdown-section">
+         <div class="dropdown-client-category">
+            <button class="buttons"><span>Client</span> <span>▼</span></button>
+           <div class="dropdown-content">
+             <button>7/11 - Salawag Branch</button>
+             <button>7/11 - Paliparan Branch</button>
+           </div>
+         </div>
+       
+         <div class="dropdown-client-category">
+           <button class="buttons"><span>Category</span> <span>▼</span></button>
+           <div class="dropdown-content">
+             <button>Sales</button>
+             <button>Expense</button>
+           </div>
+         </div>
+       </section>
+
+       <section class="sales">
+         <div class="sales-box">
+            <div class="sales-head">
+               <h3>Sales</h3>
+               <i class="fa-solid fa-signal"></i>
+            </div>
+            
+            <div class="sales-content">
+               <p style="font-size: 25px; color: #001F5D;">₱ 100</p>
+               <p style="font-size: 12px; color:#c2c2c2 ;">Monthly current sales</p>
+            </div>
+         </div>
+
+          <div class="sales-box">
+            <div class="sales-head">
+               <h3>Sales</h3>
+               <i class="fa-solid fa-signal"></i>
+            </div>
+            
+            <div class="sales-content">
+               <p style="font-size: 25px; color: #001F5D;">₱ 100</p>
+               <p style="font-size: 12px; color:#c2c2c2 ;">Monthly current sales</p>
+            </div>
+         </div>
+       </section>
+       
+       <section class="chart">
+         <h1>Sales Chart</h1>
+         <div class="chart-container">
+            <canvas id="myChart"  width="300"  height="100" ></canvas>
+         </div>
+         
+       </section>
+       
+   </main>
+
+   <script>
+      const ctx = document.getElementById('myChart').getContext('2d');
+      Chart.defaults.backgroundColor = '#9BD0F5';
+      Chart.defaults.borderColor = '#1ABC9C';
+      Chart.defaults.font.size = 15;
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+          datasets: [{
+            label: 'Sales',
+            data: [120, 190, 30, 50, 200],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)'
+            ],    
+            borderWidth: 2
+          },
+          {
+            label: 'Sales',
+            data: [100, 23, 55, 555, 1100],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)'
+            ],    
+            borderWidth: 2
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    </script>
+
+</body>
+</html>
