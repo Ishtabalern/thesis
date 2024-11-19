@@ -66,7 +66,7 @@ body {
    display: flex;
    flex-direction: column;
    height: 100vh;
-   overflow-y: hidden;
+   overflow-y: auto;
 }
 
 .top-bar {
@@ -139,8 +139,13 @@ body {
    align-items: center;
    justify-content: space-between;
    padding: 0px 15px;
+   transition: 0.2s ease;
  }
  
+ .buttons:hover{
+   background-color: #eeeeee;
+ }
+
  .dropdown-content {
    background-color: #fff;
    display: none; /* Hide by default */
@@ -170,18 +175,35 @@ body {
    background-color: #f0f0f0;
  }
  
- .dropdown-client-category:hover .dropdown-content {
+ .dropdown-content.show{
    display: flex;
    
  }
  
-.sales{
+
+ .tab-content,
+ .sales-container {
+   visibility: hidden;
+   opacity: 0;
+   transition: opacity 0.3s ease-in-out;
+ }
+ 
+ .tab-content.active,
+ .sales-container.active {
+   visibility: visible;
+   opacity: 1;
+ }
+
+
+
+.sales-box-container{
    display: flex;
    align-items: center;
    gap: 3rem;
 }
 
-.sales .sales-box{
+
+.sales-box-container .sales-box{
    width: 250px ;
    height: 200px;
    background-color: #fff;
