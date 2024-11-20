@@ -1,23 +1,37 @@
-export function chart(canvas, { labels, data, label }) {
-  new Chart(canvas.getContext('2d'), {
-    type: 'line',
+export function chart() {
+  const ctx = document.getElementById('myChart').getContext('2d');
+
+  // Create the chart
+  new Chart(ctx, {
+    type: 'line', // Specify the chart type
     data: {
-      labels: labels,
-      datasets: [
-        {
-          label: label,
-          data: data,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 2,
-        },
-      ],
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // X-axis labels
+      datasets: [{
+        label: 'Sales',
+        data: [120, 190, 30, 50, 200], // Data points
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ],
+        borderWidth: 1
+      }]
     },
     options: {
-      responsive: true,
       scales: {
-        y: { beginAtZero: true },
-      },
-    },
+        y: {
+          beginAtZero: true // Start the Y-axis at 0
+        }
+      }
+    }
   });
 }

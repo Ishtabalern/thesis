@@ -24,14 +24,16 @@ $username = $_SESSION['username'];
 </head>
 <body>
     <div class="sidebar">
-        <div class="brand">
+        <div class="company-logo">
             <img src="./imgs/csk_logo.png" alt="">
         </div>
-        <a href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
-        <a href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
-        <a href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
-        <a href="#"><i class="fa-solid fa-file-export"></i>Generate Report</a>
-        <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>
+        <div class="btn-container">
+            <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
+            <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+            <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
+            <a class="btn-tabs" href="#"><i class="fa-solid fa-file-export"></i>Generate Report</a>
+            <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
+        </div>
     </div>
 
     <div class="dashboard">
