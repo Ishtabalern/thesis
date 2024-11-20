@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admin = $result->fetch_assoc();
 
     if ($admin && password_verify($admin_pass, $admin['password'])) {
-        $_SESSION['admin_logged_in'] = true;
+        $_SESSION['admin_logged_in'] = true && $_SESSION['logged_in'] = true;
         header("Location: admin/adminhome.php");
         exit();
     } else {

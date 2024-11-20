@@ -1,3 +1,18 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "cskdb";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +21,8 @@
     <title>Dashboard - Financial Records</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles/records.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 <body>
     <div class="sidebar">
@@ -45,46 +62,57 @@
             </div>
 
             <div class="data-table">
-                <table>
+                <table id="recordsTable">
                     <thead>
                         <tr>
                             <th>Id</th>
                             <th>Date</th>
-                            <th>Customer Name</th>
-                            <th>Item</th>
+                            <th>Vendor</th>
                             <th>Category</th>
-                            <th>Price</th>
+                            <th>Total Price</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Oct 24, 2024</td>
-                            <td>CVSU - Bacoor</td>
-                            <td>Fan</td>
-                            <td>Sales</td>
-                            <td>₱45</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Oct 24, 2024</td>
-                            <td>CVSU - Imus</td>
-                            <td>Fan</td>
-                            <td>Expense</td>
-                            <td>₱45</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Oct 24, 2024</td>
-                            <td>CVSU - Indang</td>
-                            <td>Fan</td>
-                            <td>Sales</td>
-                            <td>₱45</td>
-                        </tr>
+                        <?php
+                        $sql = "SELECT id, date, vendor, 'N/A' AS category, total FROM receipts";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row["id"] . "</td>";
+                                echo "<td>" . $row["date"] . "</td>";
+                                echo "<td>" . $row["vendor"] . "</td>";
+                                echo "<td>" . $row["category"] . "</td>";
+                                echo "<td>₱" . $row["total"] . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>No records found</td></tr>";
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#recordsTable').DataTable({
+                paging: true,
+                searching: true,
+                order: [[0, 'asc']], // Default sort by Id
+                columnDefs: [
+                    { orderable: true, targets: [0, 1, 4] }, // Enable sorting for Id, Date, and Total Price
+                    { orderable: false, targets: [2, 3] }   // Disable sorting for Vendor and Category
+                ]
+            });
+        });
+    </script>
 </body>
 </html>
