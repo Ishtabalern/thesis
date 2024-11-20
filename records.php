@@ -74,7 +74,7 @@ if ($conn->connect_error) {
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT id, date, vendor, 'N/A' AS category, total FROM receipts";
+                        $sql = "SELECT id, date, vendor, category, total FROM receipts";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
