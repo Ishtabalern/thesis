@@ -21,19 +21,22 @@ if ($conn->connect_error) {
     <title>Dashboard - Financial Records</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles/records.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 <body>
     <div class="sidebar">
-        <div class="brand">
+        <div class="company-logo">
             <img src="./imgs/csk_logo.png" alt="">
         </div>
-        <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
-        <a href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
-        <a href="records.php" class="active"><i class="fa-solid fa-file"></i>Financial Records</a>
-        <a href="#"><i class="fa-solid fa-file-export"></i>Generate Report</a>
-        <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>
+        <div class="btn-container">
+            <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
+            <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+            <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
+            <a class="btn-tabs" href="generate-report.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
+            <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
+        </div>
     </div>
 
     <div class="dashboard">

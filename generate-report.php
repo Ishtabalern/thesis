@@ -5,20 +5,23 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Document</title>
    <link rel="stylesheet" href="styles/generate-report.css">
+   <link rel="stylesheet" href="styles/sidebar.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-   <section class="sidebar">
-      <div class="brand">
-          <img src="./imgs/csk_logo.png" alt="">
-      </div>
-      <a href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
-      <a href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
-      <a href="records.php" ><i class="fa-solid fa-file"></i>Financial Records</a>
-      <a href="generate-report.php" class="active"><i class="fa-solid fa-file-export"></i>Generate Report</a>
-      <a href="#"><i class="fa-solid fa-gear"></i>Settings</a>
-  </section>
+    <div class="sidebar">
+        <div class="company-logo">
+            <img src="./imgs/csk_logo.png" alt="">
+        </div>
+        <div class="btn-container">
+            <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
+            <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+            <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
+            <a class="btn-tabs" href="generate-report.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
+            <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
+        </div>
+    </div>
 
 
   <main class="dashboard">
