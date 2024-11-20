@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Login successful: Set session variables
             $_SESSION['employee_id'] = $employee_id;
             $_SESSION['username'] = $db_username;
+            $_SESSION['logged_in'] = true;
 
             // Redirect to dashboard
             header("Location: dashboard.php");
