@@ -26,7 +26,63 @@ body {
     font-family: Arial, sans-serif;
     background-color: #F0F0F0;
 }
+<<<<<<< HEAD
 /* Sidebar Styling */
+=======
+
+.sidebar{
+    position: relative;
+    flex-shrink: 0;
+    width: 230px;
+    max-width: 500px;
+    background-color: var(--greenBG);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    padding: 20px 0;
+    overflow: auto;
+  }
+  
+  .sidebar > .company-logo,.btn-container{
+     margin-bottom: 20px;
+  }
+  
+  .sidebar .company-logo{
+     padding: 20px;
+  
+  }
+  
+  
+  .btn-container{
+     display: var(--flex);
+     flex-direction: column;
+     width: 100%;
+     
+  }
+  
+  
+  .btn-container .btn-tabs{
+     margin-bottom: 8px;
+     text-align: left;
+     padding: 10px;
+     font-size: 15px;
+     color: var(--whiteBG);
+     cursor: pointer;
+     border-radius: 6px;
+     border: none;
+     transition: background 0.3s;
+     background-color: transparent;
+  }
+  
+  .btn-container .btn-tabs:hover {
+     background-color: var(--whiteBG);
+     color: #31B58F;
+  
+  }
+
+
+>>>>>>> ec8303d6246334a4c9eb655605e740c2f1e80304
 .sidebar {
     position: fixed;
     top: 0;
