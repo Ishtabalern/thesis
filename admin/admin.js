@@ -57,3 +57,25 @@ document.querySelectorAll('.active-account').forEach((users) => {
         document.getElementById(target).classList.add('active');
     });
 });
+
+
+
+//search bar
+  // Get references to elements
+  const searchBar = document.getElementById('search-bar');
+  const tableData = document.querySelectorAll('.table-data tr');
+
+  // Add event listener for search functionality
+  searchBar.addEventListener('keyup', () => {
+      const searchTerm = searchBar.value.toLowerCase();
+
+      tableData.forEach(row => {
+          const name = row.querySelector('.data-employee-name p').textContent.toLowerCase();
+          
+          if (name.includes(searchTerm)) {
+              row.style.display = '';
+          } else {
+              row.style.display = 'none';
+          }
+      });
+  });

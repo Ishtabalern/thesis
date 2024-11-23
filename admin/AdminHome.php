@@ -91,7 +91,8 @@ $result = $conn->query($sql);
         <section id="home" class="tab-content">
             <?php include('F:/xampp/htdocs/thesis/dashboard.php'); ?>
         </section>
-        <section id="manage-users" class="tab-content">
+        
+        <section id="manage-users" class="tab-content">         
             <header class="header">
                 <h2>Manage Users</h2>
                 <div class="buttons">
@@ -154,6 +155,7 @@ $result = $conn->query($sql);
                 <table id="account" class="account-table active">
                     <thead>
                         <tr>
+                            <th>1</th>
                             <th>Username</th>
                             <th>Password</th>
                             <th>Date Created</th>
@@ -163,8 +165,9 @@ $result = $conn->query($sql);
                     <tbody>
                         <?php while ($employee = $employees->fetch_assoc()): ?>
                             <tr>
+                                <td>1</td>
                                 <form action="" method="POST">
-                                    <td >
+                                    <td>
                                         <p style="">
                                         <?php echo htmlspecialchars($employee['username']); ?>
                                         </p>
@@ -191,6 +194,78 @@ $result = $conn->query($sql);
                 </table>
             </section>
         </section>
+
+        <section id="system-logs" class="tab-content">
+            <header class="header">
+                <h2>Audit Logs</h2>
+                <div class="buttons">
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <button>Admin</button>
+                </div>
+            </header>
+
+            <section class="transaction-history">
+                <div class="documents-captured-container">
+                    <h3>Documents Captured</h3>
+
+                    <div class="search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search Username" id="search-bar">
+                    </div>
+                </div>
+                
+                <table id="account" class="documents-captured-table active">
+                    <thead class="table-header">
+                        <tr>
+                            <th></th>
+                            <th>Timestamp</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-data">
+                        <tr>
+                            <td>1</td>
+                            <td>13:43 PM, 11/11/24</td>
+                            <td>
+                                <div class="data-employee-name">
+                                    <p>Jan dela Cruz</p>
+                                    <p style="font-size:11px; color:#7a7a7a">Employee</p>
+                                </div>                                  
+                            </td>
+                            <td>Scanned a Document</td>
+                            <td>Expense</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>14:15 PM, 11/11/24</td>
+                            <td>
+                                <div class="data-employee-name">
+                                    <p>Maria Santos</p>
+                                    <p style="font-size:11px; color:#7a7a7a">Manager</p>
+                                </div>                                  
+                            </td>
+                            <td>Approved a Request</td>
+                            <td>Approval</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>09:22 AM, 11/12/24</td>
+                            <td>
+                                <div class="data-employee-name">
+                                    <p>Juan dela Cruz</p>
+                                    <p style="font-size:11px; color:#7a7a7a">Employee</p>
+                                </div>                                  
+                            </td>
+                            <td>Updated a Record</td>
+                            <td>Update</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
 
         <!-- Other sections here... -->
 
