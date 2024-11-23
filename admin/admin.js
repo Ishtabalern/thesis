@@ -1,11 +1,14 @@
- // JavaScript to toggle active tab content and store selection in localStorage
- document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.btn-tabs');
     const contents = document.querySelectorAll('.tab-content');
 
     // Get the last active tab from localStorage or default to 'home'
     const activeTab = localStorage.getItem('activeTab') || 'home';
-    document.getElementById(activeTab).classList.add('active');
+    const activeElement = document.getElementById(activeTab);
+    
+    if (activeElement) {
+        activeElement.classList.add('active');
+    }
 
     tabs.forEach(tabButton => {
         tabButton.addEventListener('click', () => {
@@ -22,7 +25,6 @@
         });
     });
 });
-
 
 
 /*manage user tablink

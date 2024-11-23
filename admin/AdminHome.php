@@ -89,7 +89,7 @@ $result = $conn->query($sql);
 
     <main class="content">
         <section id="home" class="tab-content">
-        <?php include('F:/xampp/htdocs/thesis/dashboard.php'); ?>
+            <?php include('F:/xampp/htdocs/thesis/dashboard.php'); ?>
         </section>
         <section id="manage-users" class="tab-content">
             <header class="header">
