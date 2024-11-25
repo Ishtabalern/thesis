@@ -87,17 +87,13 @@ body {
 
 
 
-
-
-
-
 /* Dashboard styling */
 .dashboard {
     margin-left: 250px;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .top-bar {
