@@ -121,8 +121,50 @@ $result = $conn->query($sql);
                     </div>
                 </div>
 
-                <!-- Password reset requests section -->
-                <section class="password-reset-requests">
+                
+
+                <table id="account" class="account-table active">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Date Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($employee = $employees->fetch_assoc()): ?>
+                            <tr>
+                                <td>1</td>
+                                <form action="" method="POST">
+                                    <td>
+                                        <?php echo htmlspecialchars($employee['username']); ?>
+                                        </p>
+                                        <p style="color:#B8B8B8; font-size:12px; margin-top:10px">
+                                            <?php echo htmlspecialchars($employee['employee_id']); ?>
+                                        </p>
+                                    </td>
+
+                                    <td>
+                                        <input class="password" type="password" name="password" placeholder="New Password (leave blank if unchanged)">
+                                    </td>
+
+                                    <td>
+                                        <?php echo htmlspecialchars($employee['created_at']); ?>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee['employee_id']); ?>">
+                                        <button type="submit" name="update" >Update</button>
+                                    </td>
+                                </form>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </section>
+            <!-- Password reset requests section -->
+            <section class="password-reset-requests">
                     <h2>Password Reset Requests</h2>
                     <?php if ($result->num_rows > 0): ?>
                         <table>
@@ -151,48 +193,6 @@ $result = $conn->query($sql);
                         <p><?php echo htmlspecialchars($message); ?></p>
                     <?php endif; ?>
                 </section>
-
-                <table id="account" class="account-table active">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Username</th>
-                            <th>Password</th>
-                            <th>Date Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($employee = $employees->fetch_assoc()): ?>
-                            <tr>
-                                <td>1</td>
-                                <form action="" method="POST">
-                                    <td>
-                                        <p>
-                                        <?php echo htmlspecialchars($employee['username']); ?>
-                                        </p>
-                                        <p style="color:#B8B8B8; font-size:12px; margin-top:10px">
-                                            <?php echo htmlspecialchars($employee['employee_id']); ?>
-                                        </p>
-                                    </td>
-
-                                    <td>
-                                        <input class="password" type="password" name="password" placeholder="New Password (leave blank if unchanged)">
-                                    </td>
-
-                                    <td>
-                                        <?php echo htmlspecialchars($employee['created_at']); ?>
-                                    </td>
-                                    <td>
-                                        <input type="hidden" name="employee_id" value="<?php echo htmlspecialchars($employee['employee_id']); ?>">
-                                        <button type="submit" name="update" >Update</button>
-                                    </td>
-                                </form>
-                            </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            </section>
         </section>
 
         <section id="system-logs" class="tab-content">

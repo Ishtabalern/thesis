@@ -450,3 +450,89 @@ td .data-employee-name{
    
   
 }
+
+.password-reset-requests {
+   align-self: center;
+   margin-top: 20px;
+   padding: 20px;
+   background-color: var(--whiteBG);
+   box-shadow: var(--shadow);
+   border-radius: 8px;
+}
+
+.password-reset-requests h2 {
+   margin-bottom: 20px;
+   font-size: 20px;
+   color: #333;
+   text-align: center;
+}
+
+.password-reset-table {
+   width: 100%;
+   border-collapse: collapse;
+   background-color: var(--whiteBG);
+   box-shadow: var(--shadow);
+   border-radius: 8px;
+   overflow: hidden;
+}
+
+.password-reset-table th,
+.password-reset-table td {
+   padding: 12px 15px;
+   text-align: center;
+   border-bottom: 1px solid var(--border);
+}
+
+.password-reset-table th {
+   background-color: #00AF7E;
+   color: white;
+   font-weight: bold;
+   text-transform: uppercase;
+   font-size: 14px;
+}
+
+.password-reset-table tr:nth-child(even) {
+   background-color: #f9f9f9;
+}
+
+.password-reset-table tr:hover {
+   background-color: #f1f1f1;
+}
+
+.password-reset-table .approve-btn {
+   background-color: #31B58F;
+   color: white;
+   border: none;
+   padding: 8px 15px;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: 0.3s;
+}
+
+.password-reset-table .approve-btn:hover {
+   background-color: #279E7C;
+}
+
+.password-reset-table .delete-btn {
+   background-color: #BB2727;
+   color: white;
+   border: none;
+   padding: 8px 15px;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: 0.3s;
+}
+
+.password-reset-table .delete-btn:hover {
+   background-color: #A02121;
+}
+
+.message {
+   margin-top: 15px;
+   padding: 10px;
+   color: #4CAF50;
+   background-color: #e8f5e9;
+   border: 1px solid #c8e6c9;
+   border-radius: 4px;
+   text-align: center;
+}
