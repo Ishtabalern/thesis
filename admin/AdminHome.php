@@ -168,7 +168,7 @@ $result = $conn->query($sql);
                                 <td>1</td>
                                 <form action="" method="POST">
                                     <td>
-                                        <p style="">
+                                        <p>
                                         <?php echo htmlspecialchars($employee['username']); ?>
                                         </p>
                                         <p style="color:#B8B8B8; font-size:12px; margin-top:10px">

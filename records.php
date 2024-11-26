@@ -11,6 +11,34 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+// Fetch the count of receipts
+$receipt_count = 0;
+$result = $conn->query("SELECT COUNT(*) AS total FROM receipts");
+if ($result && $row = $result->fetch_assoc()) {
+    $receipt_count = $row['total'];
+}
+
+// Handle data update
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
+    $updatedData = json_decode($_POST['updatedData'], true);
+
+    foreach ($updatedData as $row) {
+        $id = $row['id'];
+        $date = $row['date'];
+        $vendor = $row['vendor'];
+        $category = $row['category'];
+        $total = $row['total'];
+
+        $stmt = $conn->prepare("UPDATE receipts SET date = ?, vendor = ?, category = ?, total = ? WHERE id = ?");
+        $stmt->bind_param("sssdi", $date, $vendor, $category, $total, $id);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    echo "Data updated successfully!";
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +59,7 @@ if ($conn->connect_error) {
             <img src="./imgs/csk_logo.png" alt="">
         </div>
         <div class="btn-container">
-            <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
+            <a class="btn-tabs" href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
             <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
@@ -52,16 +80,10 @@ if ($conn->connect_error) {
 
         <!-- Main Content -->
         <div class="main-content">
-            <div class="category-buttons">
-                <button class="btn add-category-btn">Add Category</button>
-                <button class="btn delete-category-btn">Delete Category</button>
-            </div>
-
             <div class="record-summary">
-                <button class="summary-btn">All Receipt<br>20</button>
+                <button class="summary-btn">All Receipt<br><?php echo $receipt_count; ?></button>
                 <button class="summary-btn">Sales<br>5</button>
                 <button class="summary-btn">Expense<br>15</button>
-                <input type="text" class="search-bar" placeholder="Search">
             </div>
 
             <div class="data-table">
@@ -81,13 +103,13 @@ if ($conn->connect_error) {
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
+                            while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $row["id"] . "</td>";
-                                echo "<td>" . $row["date"] . "</td>";
-                                echo "<td>" . $row["vendor"] . "</td>";
-                                echo "<td>" . $row["category"] . "</td>";
-                                echo "<td>₱" . $row["total"] . "</td>";
+                                echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
+                                echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
+                                echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
+                                echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -96,6 +118,7 @@ if ($conn->connect_error) {
                         ?>
                     </tbody>
                 </table>
+                <button id="saveChanges" class="btn save-btn">Save Changes</button>
             </div>
         </div>
     </div>
@@ -106,14 +129,29 @@ if ($conn->connect_error) {
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#recordsTable').DataTable({
-                paging: true,
-                searching: true,
-                order: [[0, 'asc']], // Default sort by Id
-                columnDefs: [
-                    { orderable: true, targets: [0, 1, 4] }, // Enable sorting for Id, Date, and Total Price
-                    { orderable: false, targets: [2, 3] }   // Disable sorting for Vendor and Category
-                ]
+            $('#recordsTable').DataTable();
+
+            $('#saveChanges').click(function () {
+                const updatedData = [];
+                $('#recordsTable tbody tr').each(function () {
+                    const row = $(this);
+                    const id = row.find('td:eq(0)').text(); // Id
+                    const date = row.find('td:eq(1)').text();
+                    const vendor = row.find('td:eq(2)').text();
+                    const category = row.find('td:eq(3)').text();
+                    const total = row.find('td:eq(4)').text();
+
+                    updatedData.push({ id, date, vendor, category, total });
+                });
+
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: { updatedData: JSON.stringify(updatedData) },
+                    success: function (response) {
+                        alert(response);
+                    }
+                });
             });
         });
     </script>
