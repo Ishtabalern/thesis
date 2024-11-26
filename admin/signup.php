@@ -62,6 +62,7 @@ $conn->close();
             <input type="password" name="password" placeholder="Password" required>
             <input type="password" name="confirm_password" placeholder="Re Enter Password" required>
             <button type="submit">Create Account</button>
+            <a href="AdminHome.php" class="back">Back to Home</a>
         </form>
 </div>
     

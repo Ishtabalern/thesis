@@ -28,10 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
         $date = $row['date'];
         $vendor = $row['vendor'];
         $category = $row['category'];
+        $type =$row['type'];
         $total = $row['total'];
 
-        $stmt = $conn->prepare("UPDATE receipts SET date = ?, vendor = ?, category = ?, total = ? WHERE id = ?");
-        $stmt->bind_param("sssdi", $date, $vendor, $category, $total, $id);
+        $stmt = $conn->prepare("UPDATE receipts SET date = ?, vendor = ?, category = ?, type = ?, total = ? WHERE id = ?");
+        $stmt->bind_param("ssssdi", $date, $vendor, $category, $type, $total, $id);
         $stmt->execute();
         $stmt->close();
     }
@@ -94,12 +95,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                             <th>Date</th>
                             <th>Vendor</th>
                             <th>Category</th>
+                            <th>Type</th>
                             <th>Total Price</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT id, date, vendor, category, total FROM receipts";
+                        $sql = "SELECT id, date, vendor, category, type, total FROM receipts";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
@@ -109,6 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                                 echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
                                 echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
                                 echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
+                                echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
                                 echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
                                 echo "</tr>";
                             }
@@ -139,9 +142,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                     const date = row.find('td:eq(1)').text();
                     const vendor = row.find('td:eq(2)').text();
                     const category = row.find('td:eq(3)').text();
-                    const total = row.find('td:eq(4)').text();
+                    const type = row.find('td:eq(4)').text();
+                    const total = row.find('td:eq(5)').text();
 
-                    updatedData.push({ id, date, vendor, category, total });
+                    updatedData.push({ id, date, vendor, category, type, total });
                 });
 
                 $.ajax({

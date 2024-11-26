@@ -171,3 +171,13 @@ table thead tr th{
 tbody tr td{
  font-size: 14px;
 }
+
+.chart-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#salesExpensesChart {
+  max-width: 600px;
+  margin: 0 auto;
+}

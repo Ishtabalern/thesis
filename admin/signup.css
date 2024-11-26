@@ -56,6 +56,7 @@ input {
 
 button {
    padding: 10px 20px;
+   margin-bottom: 10px;
    background-color: #4CAF50;
    color: white;
    border: none;
@@ -63,6 +64,18 @@ button {
    cursor: pointer;
    width: 100%;
    max-width: 300px;
+}
+
+.back{
+   color: white;
+   background-color: #BB2727;
+   padding: 10px 20px;
+   max-width: 300px;
+   border: none;
+   border-radius: 4px;
+}
+.back:hover{
+   background-color: #d31b1b;
 }
 
 button:hover {
