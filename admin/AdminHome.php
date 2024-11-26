@@ -155,7 +155,7 @@ $result = $conn->query($sql);
                 <table id="account" class="account-table active">
                     <thead>
                         <tr>
-                            <th>1</th>
+                            <th></th>
                             <th>Username</th>
                             <th>Password</th>
                             <th>Date Created</th>

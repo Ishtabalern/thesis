@@ -18,7 +18,7 @@
           <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
           <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
           <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
-          <a class="btn-tabs" href="generate-report.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
+          <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
           <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
       </div>
   </div>
@@ -50,24 +50,61 @@
          <header>Monthly Financial Report</header>
          
          <div class="overall" >
-            <div class="client-monthly" style="background-color: black;">
-               <span>asd</span>
-               <span>asd</span>
+            <div class="client-monthly" >
+               <span>Client Balance 
+                  (Last Month)</span>
+               <span>₱ 20</span>
             </div>
-            <div class="client-monthly" style="background-color: green;">
-               <span>asd</span>
-               <span>asd</span>
+            <div class="client-monthly" >
+               <span>Monthly Balance</span>
+               <span>₱ 20000</span>
             </div>
          </div>
 
          <div class="tables-container">
             
-            <div class="table">
+            <div class="table" style="border-right: 1px solid #919191; ">
+               <table>
+                  <thead>
+                     <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Amount</th>
+                     </tr>
+                  </thead>
 
+                  <tbody>
+                     <tr>
+                        <td>1.</td>
+                        <td>1/1/24</td>
+                        <td>Sales</td>
+                        <td>69</td>
+                     </tr>
+                  </tbody>                
+               </table>
             </div>
 
             <div class="table">
+               <table>
+                  <thead>
+                     <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Amount</th>
+                     </tr>
+                  </thead>
 
+                  <tbody>
+                     <tr>
+                        <td>1.</td>
+                        <td>1/1/24</td>
+                        <td>Expense on materials </td>
+                        <td>69</td>
+                     </tr>
+                  </tbody>                
+               </table>
             </div>
          </div>
        </section>
