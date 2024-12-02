@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Generate Report</title>
+   <link rel="stylesheet" href="styles/generate-employee.css">
+   <link rel="stylesheet" href="styles/sidebar.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+   <div class="sidebar">
+      <div class="company-logo">
+          <img src="./imgs/csk_logo.png" alt="">
+      </div>
+      <div class="btn-container">
+          <a class="btn-tabs" href="dashboard.php"><i class="fa-solid fa-house"></i>Home</a>
+          <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+          <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
+          <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
+          <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
+      </div>
+   </div>
+
+   <main class="dashboard">
+      <div class="top-bar">
+          <h1>Generate Report</h1>
+          <div class="user-controls"> 
+              <button class="logout-btn">Log out</button>
+              <div class="dropdown">
+                  <button class="dropbtn">Employee ▼</button>
+              </div>
+          </div>
+      </div>
+
+      <section class="client-content">
+         <div class="header-section">
+            <header>Clients and Information</header>
+            <button> Add Clients  </button>
+         </div>
+         
+         <table>
+            <tbody>
+               <tr class="table-row">
+                  <td style="width: 50px;">1.</td>
+                  <td style="text-align: left; max-width: 400px; width: 700px;">7-Evelyn, Salawag Branch </td>
+                  <td style="text-align: left;">Sales, Transactions </td>                
+               </tr>
+            </tbody>
+         </table>
+
+         <div class="modal" id="orderModal">
+            <div class="modalContents">
+                <h2>Are you sure with your orders?</h2>                   
+                  <div class="modal-content-container">
+                     <div class="clientName-and-button">
+                        <h3>Name: <span>7-Evelyn, Salawag Branch</span></h3>  
+                        
+                        <button>Ok</button>
+                     </div> 
+                       
+                     <div class="filters-table">
+                           <div class="filter-tab">
+                              <h3>Filter</h3>
+                              <div class="ranges">
+                                 <div class="range-radio">
+                                    <label for="">All</label>
+                                    <input type="radio" name="range">
+                                 </div>
+                                 <div class="range-input">
+                                    <label>Range: </label>
+                                    <input type="text" name="range">
+                                    &#x2012; 
+                                    <input type="text">
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="table-container">
+                              <table>
+                                 <thead>
+                                    <tr>
+                                       <th>#</th>
+                                       <th>Date</th>
+                                       <th>Vendor</th>
+                                       <th>Amount</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody>
+                                    <tr>
+                                       <td>1.</td>
+                                       <td>6/1/24</td>
+                                       <td>Sales</td>
+                                       <td>₱123</td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </div>
+                     </div> 
+
+                  </div>
+                          
+                    
+                             
+            </div>
+    
+        </div>
+      </section>
+
+
+   </main>
+
+   <script>
+
+   
+   document.querySelector('.table-row').addEventListener('click', () => {
+      let modal = document.querySelector('.modal');
+      modal.style.display = 'block';
+   });
+
+   // Close modal when clicking outside
+   window.onclick = function (event) {
+      let modal = document.querySelector('.modal');
+      // Check if the click was outside the modal
+      if (event.target === modal) {
+         modal.style.display = 'none';
+      }
+   };
+
+   </script>
+</body>
+</html>

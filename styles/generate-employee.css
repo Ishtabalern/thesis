@@ -1,0 +1,322 @@
+* {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   text-decoration: none;
+   box-sizing: border-box;
+   scroll-behavior: smooth;
+   font-family: Arial, sans-serif;
+  
+}
+
+:root{
+   --whiteBG :#fff;
+   --greenBG : #00AF7E;
+   --flex: flex;
+   --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+   --border: #D0D0D0;
+}
+
+.client-content{
+   background-color: #fff;
+   border-radius: 5px;
+   border: 1px solid #DEDEDE;
+   height: 720px;
+   width: 100%; /* Set fixed width */
+   margin-top: 10px;
+   overflow: hidden;
+}
+
+.header-section{
+   border-bottom: 1px solid var(--border);
+   padding: 15px 20px;
+   display: var(--flex);
+   align-items: center;
+   justify-content: space-between;
+   
+}
+
+
+.header-section header{
+   font-size: 1.5rem;
+   font-weight: bold;
+   color: #434343;
+}
+
+
+.header-section button{
+   color: #03b583;
+   padding: 10px;
+   background-color: #fff;
+   border: 1px solid #00AF7E;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: background-color 0.15s, color 0.15s;
+}
+
+.header-section button:hover{
+   color: #fff;
+   background-color: #03b583;
+}
+
+.header-section button:active{
+   opacity: 0.5;
+   transform: scale(0.94);
+}
+
+
+
+table, th, td {
+   border-collapse: collapse;
+   border: 1px solid rgb(144, 144, 144);
+   text-align: center;
+   font-family: 'Nunito', sans-serif;
+   font-size: 13px;
+   padding: 10px;
+   border-left:none ;
+   border-right:none ;
+   border-color: var(--border) ;
+  
+ }
+ 
+ table {
+   border: none;
+   width: 100%;
+   height: 0px;
+   overflow: hidden;
+ }
+ 
+ /* table header */
+ table thead tr th{
+  padding: 8px;
+  border:none;
+  color: #7a7a7a;
+  
+ }
+  /* table body datas*/
+ tbody tr td{
+  font-size: 16px;
+ }
+
+ .table-row {
+   cursor: pointer;
+   transition: background-color 0.15s;
+  }
+
+ .table-row:hover {
+  background-color: #f8f8f8;
+ } 
+
+ .table-row:active {
+   transform: scale(0.999);
+  } 
+
+   /* 
+
+  
+   */
+   .modal{
+   display: none;
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   z-index: 1000;
+   left: 0;
+   top: 0;
+   overflow: auto;
+   background-color: rgb(0,0,0);
+   background-color: rgba(0,0,0,0.4);
+   padding-top: 60px;
+   }
+
+   .modal .modalContents{
+       background-color: #fefefe;
+       margin: 5% auto;
+       padding: 20px;
+       border: 1px solid #888;
+       width: 1100px;
+       max-width: 90%;
+       border-radius: 10px;
+       box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
+       min-height: 500px;
+
+   }
+
+   .modalContents h2{
+       text-align: center; 
+       color: #5a5a5a;
+   }
+
+   .modal-content-container{
+      display: var(--flex);
+      
+   }
+
+   .modal-content-container .clientName-and-button{
+      display: var(--flex);
+      flex-direction: column;
+      justify-content: space-between;
+      width: 35%;
+      min-height: 410px;
+     
+   }
+
+   .clientName-and-button h3{
+      padding: 10px;
+      margin-top: 10px;
+      display: var(--flex);
+      align-items: center;
+      gap: 10px;
+   }
+   h3 span{
+      font-weight: 100;
+      border: 1px solid var(--border);
+      color: var(--greenBG);
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 5px;
+      overflow: hidden;          /* Hides any overflowed text */
+      white-space: nowrap;       /* Prevents the text from wrapping */
+      text-overflow: ellipsis;   /* Adds ellipsis if text overflows */
+      width: 300px;              /* Fixed width for the span */
+      display: inline-block;     /* Ensures the span behaves like a block with a fixed width */
+   }
+
+   .clientName-and-button button{
+      padding: 10px;
+      width: 150px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+   }
+
+   .clientName-and-button button:active{
+     transform: scale(0.98); 
+   }
+
+   .modal-content-container .filters-table{
+      display: var(--flex);
+      flex-direction: column;
+      width: 65%;
+      min-height: 410px;
+
+   }
+
+   .filters-table .filter-tab{
+      display: var(--flex);
+      flex-direction: column;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-top: 10px;
+
+   }
+
+   .ranges{
+      display: var(--flex);
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+      gap: 2rem;
+   }
+
+   label{
+      font-size: 17px;
+   }
+
+   .range-radio {
+      align-items: center;
+      display: var(--flex);
+      gap: 10px;
+      
+
+   }
+
+   .range-radio input[type="radio"]{
+      height: 20px;
+      width: 20px;
+
+   }
+
+   .range-input{
+      display: inline-block;  
+      overflow: hidden;          /* Hides any overflowed text */
+      white-space: nowrap;       /* Prevents the text from wrapping */
+      text-overflow: ellipsis;   /* Adds ellipsis if text overflows */
+      
+   }
+
+   .range-input input[type="text"]{
+      padding: 5px;    
+      outline-color: var(--border);   
+      border: 1px solid #808080;    
+      border-radius: 4px;
+   }
+
+   .filters-table .table-container{
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      max-height: 300px; /* Adjust as needed */
+      overflow-y: auto;
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
