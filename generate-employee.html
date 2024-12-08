@@ -104,6 +104,96 @@
             </div>
     
         </div>
+
+      </section>
+
+      <section class="client-data-tab">
+        <div class="back-btn"><button class="back">Back</button></div>
+         <div class="client-content-data">
+            <header>Monthly Financial Report</header>
+   
+            <section class="chart-section">
+               <header>Sales vs Expenses Chart</header>
+               <canvas id="salesExpensesChart" width="400" height="200"></canvas>
+            </section>
+   
+            
+            <div class="overall">
+               <div class="client-monthly">
+                  <span>Client Balance (Last Month)</span>
+                  <span>₱ 20</span>
+               </div>
+               <div class="client-monthly">
+                  <span>Monthly Balance</span>
+                  <span>₱ 20000</span>
+               </div>
+            </div>
+   
+            <div class="tables-container">
+               <div class="table" style="border-right: 1px solid #919191;">
+                  <table>
+                     <thead>
+                        <tr>
+                           <th>#</th>
+                           <th>Date</th>
+                           <th>Vendor</th>
+                           <th>Amount</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <?php
+                        if ($salesRecords->num_rows > 0) {
+                            $index = 1;
+                            while ($row = $salesRecords->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>{$index}.</td>";
+                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['vendor']) . "</td>";
+                                echo "<td>₱" . htmlspecialchars($row['total']) . "</td>";
+                                echo "</tr>";
+                                $index++;
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No sales records found</td></tr>";
+                        }
+                        ?>
+                     </tbody>                
+                  </table>
+               </div>
+   
+               <div class="table">
+                  <table>
+                     <thead>
+                        <tr>
+                           <th>#</th>
+                           <th>Date</th>
+                           <th>Vendor</th>
+                           <th>Amount</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <?php
+                        if ($expenseRecords->num_rows > 0) {
+                            $index = 1;
+                            while ($row = $expenseRecords->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>{$index}.</td>";
+                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['vendor']) . "</td>";
+                                echo "<td>₱" . htmlspecialchars($row['total']) . "</td>";
+                                echo "</tr>";
+                                $index++;
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No expense records found</td></tr>";
+                        }
+                        ?>
+                     </tbody>                
+                  </table>
+               </div>
+            </div>
+         </div>
+
       </section>
 
 
@@ -111,20 +201,77 @@
 
    <script>
 
+   //table
+
+   //const labels = <?php echo json_encode($dates); ?>; // Dates from PHP
+   //const salesData = <?php echo json_encode($sales); ?>; // Sales data
+   //const expenseData = <?php echo json_encode($expenses); ?>; // Expenses data
+
+   // Create a Chart.js line chart
    
+
+   //table
+ 
+
+   //-modal
+   document.addEventListener("DOMContentLoaded", () => {
+   // Open modal when table-row is clicked
    document.querySelector('.table-row').addEventListener('click', () => {
-      let modal = document.querySelector('.modal');
+      const modal = document.querySelector('.modal');
       modal.style.display = 'block';
    });
 
-   // Close modal when clicking outside
+   // Close modal when clicking outside of it
    window.onclick = function (event) {
-      let modal = document.querySelector('.modal');
-      // Check if the click was outside the modal
+      const modal = document.querySelector('.modal');
       if (event.target === modal) {
          modal.style.display = 'none';
       }
    };
+
+   // Variables to track actions
+   let allClicked = false;
+
+   // Handle 'All' checkbox click
+   document.querySelector('input[name="range"]').addEventListener('click', (e) => {
+      if (e.target.checked) {
+         // Show the table in tables-container
+         const tablesContainer = document.querySelector('.tables-container');
+         tablesContainer.style.display = 'block';
+         allClicked = true; // Set 'All' as clicked
+      }
+   });
+
+   // Handle 'Ok' button click
+   document.querySelector('.clientName-and-button button').addEventListener('click', () => {
+      if (allClicked) {
+         // Remove client-content and show client-data-tab
+         const clientContent = document.querySelector('.client-content');
+         const clientDataTab = document.querySelector('.client-data-tab');
+         const modal = document.querySelector('.modal');
+
+         clientContent.style.display = 'none'; // Hide client-content
+         clientDataTab.style.display = 'block'; // Show client-content-data
+         modal.style.display = 'none'; // Close modal
+
+         // Reset tracking
+         allClicked = false;
+      } else {
+         alert("Please select 'All' before proceeding.");
+      }
+   });
+
+   // Handle 'Back' button click
+   document.querySelector('.back').addEventListener('click', () => {
+      const clientContent = document.querySelector('.client-content');
+      const clientDataTab = document.querySelector('.client-data-tab');
+
+      clientContent.style.display = 'block'; // Show client-content
+      clientDataTab.style.display = 'none'; // Hide client-data-tab
+   });
+});
+
+  
 
    </script>
 </body>

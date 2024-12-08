@@ -56,6 +56,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%; /* Full width in expanded mode */
+    margin-top: 10px;
 }
 
 .btn-container .btn-tabs {
@@ -63,7 +64,7 @@ body {
     align-items: center;
     margin-bottom: 8px;
     padding: 10px;
-    font-size: 15px;
+    font-size: 17px;
     color: var(--whiteBG);
     cursor: pointer;
     border-radius: 6px;
@@ -91,13 +92,17 @@ body {
 
 /* Company Logo */
 .sidebar .company-logo img {
-    max-width: 40px; /* Icon size in collapsed mode */
+    max-width: 60px; /* Icon size in collapsed mode */
     height: auto;
     transition: max-width 0.3s ease; /* Smooth transition for logo */
+    background-color:#f7f7f7 ;
+    border-radius: 7px;
+
 }
 
 .sidebar:hover .company-logo img {
     max-width: 100%; /* Full width for logo in expanded mode */
+    
 }
 
 
