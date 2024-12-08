@@ -47,7 +47,7 @@
 
                 <div class="scanner-dropdown">
                     <select>
-                        <option value="epson">Epson Scanner - Ready</option>
+                        <option value="epson">Raspberry Pi 4</option>
                     </select>
                 </div>
             </div>
@@ -61,5 +61,25 @@
             </div>
         </div>
     </div>
+    <script>
+        document.querySelector('.scan-btn').addEventListener('click', () => {
+            fetch('http://<your-pi-ip>:5000/run-script', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Script ran successfully:\n' + data.output);
+                } else {
+                    alert('Error running script:\n' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Failed to connect to the server:\n' + error);
+            });
+        });
+    </script>
+
 </body>
 </html>
