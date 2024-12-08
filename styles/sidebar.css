@@ -15,7 +15,7 @@
 
 :root{
     --whiteBG :#fff;
-    --greenBG : #00AF7E;
+    --greenBG : #0B440F;
     --flex: flex;
     --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
     --border: #D0D0D0;
@@ -25,64 +25,81 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #F0F0F0;
+  
 }
 
+/* Sidebar Styling */
 .sidebar {
     position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 230px; /* Consistent width */
-    background-color: #00AF7E; /* Unified color variable */
+    top: 10px;
+    left: 10px;
+    bottom: 10px;
+    width: 70px; /* Initial width (icon-only mode) */
+    background-color: #062335;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 20px;
+    padding: 20px 10px; /* Inner padding for spacing */
+    border-radius: 10px;
     color: white;
-    overflow: auto;
+    overflow: hidden;
+    transition: width 0.3s ease; /* Smooth transition */
 }
 
-/* Company Logo */
-.sidebar .company-logo {
-    margin-bottom: 20px;
-    text-align: center;
+/* Expanded Sidebar on Hover */
+.sidebar:hover {
+    width: 230px; /* Expanded width to show text */
 }
 
-.sidebar .company-logo img {
-    max-width: 100%;
-    height: auto;
-    padding: 10px;
-}
-
-/* Button Container */
+/* Sidebar Items */
 .btn-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 100%; /* Full width in expanded mode */
 }
 
-/* Sidebar Buttons */
 .btn-container .btn-tabs {
+    display: flex;
+    align-items: center;
     margin-bottom: 8px;
-    text-align: left;
     padding: 10px;
     font-size: 15px;
     color: var(--whiteBG);
     cursor: pointer;
     border-radius: 6px;
-    border: none;
-    transition: background 0.3s;
     background-color: transparent;
+    white-space: nowrap; /* Prevents text wrapping */
+    overflow: hidden; /* Hides text in collapsed mode */
+    text-overflow: ellipsis;
+    transition: background-color 0.15s, color 0.15s;
 }
 
 .btn-container .btn-tabs i {
     margin-right: 10px;
+    min-width: 30px; /* Fixed width for consistent icon alignment */
+    text-align: center;
+}
+
+.sidebar:hover .btn-tabs {
+    overflow: visible; /* Shows text content when expanded */
 }
 
 .btn-container .btn-tabs:hover {
     background-color: var(--whiteBG);
-    color: #31B58F;
+    color: var(--greenBG);
 }
+
+/* Company Logo */
+.sidebar .company-logo img {
+    max-width: 40px; /* Icon size in collapsed mode */
+    height: auto;
+    transition: max-width 0.3s ease; /* Smooth transition for logo */
+}
+
+.sidebar:hover .company-logo img {
+    max-width: 100%; /* Full width for logo in expanded mode */
+}
+
 
 
 
