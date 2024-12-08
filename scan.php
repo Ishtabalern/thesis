@@ -29,7 +29,7 @@
         <div class="top-bar">
             <h1>Capture Documents</h1>
             <div class="user-controls">
-                <button class="logout-btn">Log out</button>
+                <a href="logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>
@@ -63,7 +63,7 @@
     </div>
     <script>
         document.querySelector('.scan-btn').addEventListener('click', () => {
-            fetch('http://<your-pi-ip>:5000/run-script', {
+            fetch('http://192.168.1.10:5000/run-script', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             })

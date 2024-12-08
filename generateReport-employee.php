@@ -67,7 +67,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
       <div class="top-bar">
           <h1>Generate Report</h1>
           <div class="user-controls"> 
-              <button class="logout-btn">Log out</button>
+              <a href="logout.php"><button class="logout-btn">Log out</button></a>
               <div class="dropdown">
                   <button class="dropbtn">Employee ▼</button>
               </div>

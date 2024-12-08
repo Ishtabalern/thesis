@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
         <div class="top-bar">
             <h1>Financial Records</h1>
             <div class="user-controls">
-                <button class="logout-btn">Log out</button>
+                <a href="logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>
