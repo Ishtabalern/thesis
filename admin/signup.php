@@ -7,8 +7,8 @@ if (!isset($_SESSION['admin_logged_in'])) {
 
 // Database connection parameters
 $servername = "localhost";
-$username = "root"; 
-$password = ""; 
+$username = "admin"; 
+$password = "123"; 
 $dbname = "cskdb";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

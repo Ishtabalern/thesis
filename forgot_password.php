@@ -10,8 +10,8 @@ if (isset($_SESSION['employee_id'])) {
 
 // Database connection
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "admin";
+$password = "123";
 $dbname = "cskdb";
 
 // Create connection

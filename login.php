@@ -4,8 +4,8 @@ session_start();
 
 // Database connection parameters
 $servername = "localhost";
-$username = "root"; // Your database username
-$password = ""; // Your database password
+$username = "admin"; // Your database username
+$password = "123"; // Your database password
 $dbname = "cskdb"; // Your database name
 
 // Create connection
