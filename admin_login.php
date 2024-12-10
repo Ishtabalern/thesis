@@ -1,38 +1,53 @@
 <?php
 session_start();
+
+// Database configuration
 $servername = "localhost";
 $username = "admin"; 
 $password = "123"; 
 $dbname = "cskdb";
 
+// Create database connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
+// Check for connection errors
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Initialize message variable
 $message = "";
+
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admin_user = $_POST['username'];
     $admin_pass = $_POST['password'];
 
-    // Validate admin credentials (this example uses a simple check)
+    // Use prepared statements for secure queries
     $stmt = $conn->prepare("SELECT * FROM admins WHERE username = ? LIMIT 1");
     $stmt->bind_param("s", $admin_user);
     $stmt->execute();
     $result = $stmt->get_result();
+
+    // Fetch user data
     $admin = $result->fetch_assoc();
 
     if ($admin && password_verify($admin_pass, $admin['password'])) {
-        $_SESSION['admin_logged_in'] = true && $_SESSION['logged_in'] = true;
-        header("Location: adminhome.php");
+        // Set session variables for authenticated user
+        $_SESSION['admin_logged_in'] = true;
+        $_SESSION['logged_in'] = true;
+
+        // Redirect to admin home page
+        header("Location: admin/adminhome.php");
         exit();
     } else {
+        // Display error message for invalid credentials
         $message = "Invalid username or password.";
     }
     $stmt->close();
 }
 
+// Close the database connection
 $conn->close();
 ?>
 
