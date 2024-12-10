@@ -37,6 +37,10 @@ body {
     font-size: 18px;
 }
 
+.scan-btn:active{
+    transform: scale(0.98);
+}
+
 .scan-btn i {
     font-size: 40px;
     color: #1ABC9C;

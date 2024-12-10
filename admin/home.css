@@ -33,64 +33,105 @@
 
  /*Ensure the sidebar doesn’t overlap the main content on smaller screens. */
 
- .sidebar{
-   position: relative;
-   flex-shrink: 0;
-   width: 230px;
-   max-width: 500px;
-   background-color: var(--greenBG);
+ .sidebar {
+   position: fixed; /* Ensures it stays in place */
+   top: 10px;
+   left: 10px;
+   bottom: 10px;
+   width: 70px; /* Initial width (icon-only mode) */
+   background-color: #062335;
    display: flex;
    flex-direction: column;
    align-items: center;
-   height: 100vh;
-   padding: 20px 0;
-   overflow: auto;
- }
+   padding: 20px 10px; /* Inner padding for spacing */
+   border-radius: 10px;
+   color: white;
+   overflow: hidden;
+   transition: width 0.3s ease; /* Smooth transition */
+   z-index: 100; /* Ensures it's above other content */
+}
  
- .sidebar > .company-logo,.btn-container{
-    margin-bottom: 20px;
- }
+/* Expanded Sidebar on Hover */
+.sidebar:hover {
+   width: 230px; /* Expanded width to show text */
+}
  
- .sidebar .company-logo{
-    padding: 20px;
- 
- }
- 
- 
- .btn-container{
-    display: var(--flex);
-    flex-direction: column;
-    width: 100%;
-    
- }
+.btn-container {
+   display: flex;
+   flex-direction: column;
+   width: 100%; /* Full width in expanded mode */
+   margin-top: 10px;
+}
  
  
  .btn-container button{
+   display: flex;
+   align-items: center;
+    margin-bottom: 8px;
     margin-bottom: 8px;
     text-align: left;
-    padding: 10px;
-    font-size: 15px;
-    color: var(--whiteBG);
-    cursor: pointer;
-    border-radius: 6px;
-    border: none;
-    transition: background 0.3s;
-    background-color: transparent;
+   margin-bottom: 8px;
+    text-align: left;
+   padding: 10px;
+   font-size: 17px;
+   color: var(--whiteBG);
+   cursor: pointer;
+   border-radius: 6px;
+   background-color: transparent;
+   white-space: nowrap; /* Prevents text wrapping */
+   overflow: hidden; /* Hides text in collapsed mode */
+   text-overflow: ellipsis;
+   transition: background-color 0.15s, color 0.15s;
+   border: none;
  }
  
- .btn-container button:hover {
-    background-color: var(--whiteBG);
-    color: #31B58F;
- 
- }
+ .btn-container .btn-tabs i {
+   margin-right: 10px;
+   min-width: 30px; /* Fixed width for consistent icon alignment */
+   text-align: center;
+}
+
+
+.sidebar:hover .btn-tabs {
+   overflow: visible; /* Shows text content when expanded */
+}
+
+.btn-container .btn-tabs:hover {
+   background-color: var(--whiteBG);
+   color: var(--greenBG);
+}
+
+/* Company Logo */
+.sidebar .company-logo img {
+   max-width: 60px; /* Icon size in collapsed mode */
+   height: auto;
+   transition: max-width 0.3s ease; /* Smooth transition for logo */
+   background-color:#f7f7f7 ;
+   border-radius: 7px;
+
+}
+
+.sidebar:hover .company-logo img {
+   max-width: 100%; /* Full width for logo in expanded mode */
+   
+}
+
+
+
+.sidebar:hover ~ .content {
+   margin-left: 240px; /* Match the expanded sidebar width */
+}
+
+
 
   /*Ensure that the parent containers properly manage their children elements to avoid unintended overlaps.*/
  
  .content{
-   flex: 1; /* Ensure it takes the remaining space next to the sidebar */
-   min-width: 0; /* Prevent overflowing content */
+   flex: 1;
+   min-width: 0;
    padding: 30px 20px;
-   overflow-y: auto; /* Manage vertical overflow */
+   margin-left: 80px; /* Adjust based on the sidebar's width */
+   overflow-y: auto;
  }
  
  header{
@@ -535,4 +576,387 @@ td .data-employee-name{
    border: 1px solid #c8e6c9;
    border-radius: 4px;
    text-align: center;
+}
+
+
+
+ /*capture documents css*/
+ 
+
+ .scan-content {
+   display: flex;
+   justify-content: space-between;
+   padding-top: 20px;
+   flex-wrap: wrap; /* Allow content to wrap on smaller screens */
+}
+
+/* Scan and Scanner options side by side */
+.scan-options {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 20px;
+   padding: 10%;
+   width: 200px; /* Adjust for better responsiveness */
+}
+
+.scan-btn {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   width: 150px;
+   height: 150px;
+   background-color: white;
+   border: 2px solid #ddd;
+   border-radius: 10px;
+   cursor: pointer;
+   font-size: 18px;
+}
+
+.scan-btn:active{
+   transform: scale(0.98);
+}
+
+.scan-btn i {
+   font-size: 40px;
+   color: #1ABC9C;
+}
+
+.scanner-dropdown select {
+   padding: 10px;
+   font-size: 16px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+}
+
+/* Receipt viewer */
+.receipt-card {
+   background-color: white;
+   width: 100%; /* Full width for responsiveness */
+   max-width: 600px;
+   padding: 30px;
+   border-radius: 10px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border: 2px solid #ddd;
+   min-height: 400px;
+   margin: 20px 0;
+}
+
+.document-placeholder {
+   text-align: center;
+}
+
+.document-placeholder i {
+   font-size: 50px;
+   color: #999;
+}
+
+.document-placeholder p {
+   font-size: 18px;
+   color: #999;
+   margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+   .main-content {
+       flex-direction: column;
+       align-items: center;
+   }
+
+   .scan-options, .receipt-card {
+       width: 100%;
+   }
+
+}
+
+
+
+/* financial records content */
+.records-content {
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+}
+
+.category-buttons {
+   display: flex;
+   gap: 10px;
+}
+
+.btn {
+   padding: 10px 20px;
+   font-size: 16px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.add-category-btn {
+   background-color: #2ECC71;
+   color: white;
+}
+
+.delete-category-btn {
+   background-color: #E74C3C;
+   color: white;
+}
+
+.record-summary {
+   display: flex;
+   gap: 10px;
+   align-items: center;
+}
+
+.summary-btn {
+   background-color: white;
+   padding: 15px 20px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   cursor: pointer;
+   text-align: center;
+}
+
+.search-bar {
+   padding: 10px;
+   font-size: 16px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+}
+
+.data-table {
+   background-color: white;
+   padding: 20px;
+   border-radius: 10px;
+   border: 1px solid #ddd;
+}
+
+.data-table table {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+   padding: 10px;
+   text-align: left;
+   border-bottom: 1px solid #ddd;
+}
+
+.data-table th {
+   background-color: #f2f2f2;
+}
+
+.data-table tbody tr:hover {
+   background-color: #f1f1f1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+   .dashboard {
+       margin-left: 0;
+   }
+
+   .sidebar {
+       width: 100px;
+       padding: 10px;
+   }
+
+   .sidebar a {
+       font-size: 14px;
+   }
+
+   .sidebar .brand h2 {
+       font-size: 16px;
+   }
+
+   .main-content {
+       padding: 0;
+   }
+
+   .category-buttons, .record-summary, .data-table {
+       flex-direction: column;
+       align-items: center;
+   }
+
+   .summary-btn {
+       width: 100%;
+       text-align: left;
+   }
+}
+
+
+
+/* generate-report */
+
+
+
+
+.client-dropdown-section {
+   padding: 10px 0;
+   display: flex;
+   align-items: center;
+   justify-content: flex-start; /* Align items horizontally */
+   gap: 20px; /* Add spacing between dropdowns */
+   flex-wrap: wrap;
+
+
+ }
+ 
+ .dropdown-client-category {
+   position: relative; /* Make the dropdown content positioned relative to this container */
+ }
+ 
+ .dropdown-client-category .buttons {
+   width: 200px;
+   cursor: pointer;
+   height: 40px;
+   border-radius: 5px;
+   border: 1px solid #ACACAC;
+   font-family: "Outfit", sans-serif;
+   font-weight: 300;
+   background-color: #fff;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0px 15px;
+   transition: 0.2s ease;
+ }
+ 
+ .dropdown-client-category .buttons:hover{
+   background-color: #eeeeee;
+ }
+
+ .dropdown-content {
+   background-color: #fff;
+   display: none; /* Hide by default */
+   flex-direction: column;
+   position: absolute; /* Position relative to parent */
+   top: 100%; /* Align just below the button */
+   left: 0;
+   width: 200px;
+   border: 1px solid #ACACAC;
+   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+   z-index: 10; /* Ensure it stays on top of other elements */
+   
+  
+ }
+ 
+ .dropdown-content button {
+   width: 100%;
+   cursor: pointer;
+   height: 40px;
+   border: none;
+   background: none;
+   text-align: left;
+   padding: 5px 10px;
+ }
+ 
+ .dropdown-content button:hover {
+   background-color: #f0f0f0;
+ }
+ 
+ .dropdown-content.show{
+   display: flex;
+   
+ }
+
+
+ .generate-report-content{
+   background-color: #fff;
+   border-radius: 5px;
+   border: 1px solid #DEDEDE;
+   height: 720px;
+   width: 100%; /* Set fixed width */
+   margin-top: 10px;
+   overflow: hidden;
+}
+
+.generate-report-content .generate-report-header{
+   border-bottom: 1px solid var(--border);
+   padding: 15px 10px;
+   text-align: center;
+   font-size: 1rem;
+   font-weight: bold;
+   color: #434343;
+}
+
+
+.generate-report-content .overall{
+   display: var(--flex);
+   align-items: center;
+}
+
+.overall .client-monthly{
+   width: 50%;
+   height: 70px;
+   display: var(--flex);
+   align-items: center;
+   justify-content: space-around;
+   border-bottom: 1px solid #DEDEDE;
+
+}
+
+.client-monthly span{
+  color: rgb(59, 59, 59);
+}
+
+
+.tables-container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+.tables-container .table{
+
+  width: 50%;
+
+}
+
+
+table, th, td {
+  border-collapse: collapse;
+  border: 1px solid rgb(144, 144, 144);
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  padding: 10px;
+  border-left:none ;
+  border-right:none ;
+  border-color: var(--border) ;
+}
+
+table {
+  border: none;
+  width: 100%;
+  height: 0px;
+}
+
+table thead tr th{
+ padding: 8px;
+ border:none;
+ color: #7a7a7a;
+ 
+}
+
+tbody tr td{
+ font-size: 14px;
+}
+
+.chart-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#salesExpensesChart {
+  max-width: 600px;
+  margin: 0 auto;
 }

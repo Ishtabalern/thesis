@@ -79,3 +79,24 @@ document.querySelectorAll('.active-account').forEach((users) => {
           }
       });
   });
+
+
+  //scanner
+
+  document.querySelector('.scan-btn').addEventListener('click', () => {
+    fetch('http://192.168.1.2:5000/run-script', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Script ran successfully:\n' + data.output);
+        } else {
+            alert('Error running script:\n' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Failed to connect to the server:\n' + error);
+    });
+});

@@ -63,6 +63,69 @@ $employees = $conn->query("SELECT id, username, employee_id, created_at FROM use
 // Fetch pending password reset requests
 $sql = "SELECT r.id, r.employee_id, e.username, r.request_date FROM password_reset_requests r JOIN user e ON r.employee_id = e.employee_id WHERE r.status = 'pending'";
 $result = $conn->query($sql);
+
+
+//------------ financial records
+  //  - Fetch the count of receipts
+  $receipt_count = 0;
+  $result = $conn->query("SELECT COUNT(*) AS total FROM receipts");
+  if ($result && $row = $result->fetch_assoc()) {
+      $receipt_count = $row['total'];
+  }
+
+  // Handle data update
+  if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
+      $updatedData = json_decode($_POST['updatedData'], true);
+
+      foreach ($updatedData as $row) {
+          $id = $row['id'];
+          $date = $row['date'];
+          $vendor = $row['vendor'];
+          $category = $row['category'];
+          $type =$row['type'];
+          $total = $row['total'];
+
+          $stmt = $conn->prepare("UPDATE receipts SET date = ?, vendor = ?, category = ?, type = ?, total = ? WHERE id = ?");
+          $stmt->bind_param("ssssdi", $date, $vendor, $category, $type, $total, $id);
+          $stmt->execute();
+          $stmt->close();
+      }
+
+      echo "Data updated successfully!";
+      exit();
+  }
+
+
+
+
+//------------ generate report
+
+// Fetch sales and expense data grouped by date
+$query = "
+    SELECT date, 
+           SUM(CASE WHEN type = 'Sales' THEN total ELSE 0 END) AS totalSales,
+           SUM(CASE WHEN type = 'Expense' THEN total ELSE 0 END) AS totalExpenses
+    FROM receipts 
+    GROUP BY date 
+    ORDER BY date
+";
+$result = $conn->query($query);
+
+$dates = [];
+$sales = [];
+$expenses = [];
+
+while ($row = $result->fetch_assoc()) {
+    $dates[] = $row['date'];
+    $sales[] = $row['totalSales'] ?? 0;
+    $expenses[] = $row['totalExpenses'] ?? 0;
+}
+
+// Fetch records for "Sales" and "Expenses"
+$salesRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE type = 'Sales'");
+$expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE type = 'Expense'");
+
+
 ?>
 
 <!DOCTYPE html>
@@ -73,6 +136,11 @@ $result = $conn->query($sql);
     <title>CSK - Admin Home</title>
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <section class="sidebar">
@@ -81,6 +149,9 @@ $result = $conn->query($sql);
         </div>
         <div class="btn-container">
             <button class="btn-tabs" data-tab="home"><i class="fa-solid fa-house"></i> Home</button>
+            <button class="btn-tabs" data-tab="capture-documents"><i class="fa-solid fa-camera"></i>Capture Documents</button>
+            <button class="btn-tabs" data-tab="financial-records"><i class="fa-solid fa-file"></i>Financial Records</button>
+            <button class="btn-tabs" data-tab="generate-report"><i class="fa-solid fa-file-export"></i>Generate Report</button>
             <button class="btn-tabs" data-tab="manage-users"><i class="fa-solid fa-users-gear"></i> Manage Users</button>
             <button class="btn-tabs" data-tab="system-logs"><i class="fa-solid fa-file-circle-check"></i> Audit Logs</button>
             <button class="btn-tabs" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
@@ -92,6 +163,203 @@ $result = $conn->query($sql);
             <?php include('F:/xampp/htdocs/thesis/dashboard.php'); ?>
         </section>
         
+        <section id="capture-documents" class="tab-content">
+            <header class="header">
+                <h2>Capture Documents</h2>
+                <div class="buttons">
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <button>Admin</button>
+                </div>
+            </header>
+
+            <div class="scan-content">
+                <!-- Scan and Scanner dropdown side by side -->
+                <div class="scan-options">
+                    <button class="scan-btn">
+                        <i class="fa-solid fa-qrcode"></i><br>
+                        Scan
+                    </button>
+
+                    <div class="scanner-dropdown">
+                        <select>
+                            <option value="epson">Raspberry Pi 4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Receipts viewer -->
+                <div class="receipt-card">
+                    <div class="document-placeholder">
+                        <i class="fa-solid fa-plus"></i>
+                        <p>Scanned Documents / Receipt Here</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financial-records" class="tab-content">
+            <header class="header">
+                <h2>Financial Records</h2>
+                <div class="buttons">
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <button>Admin</button>
+                </div>
+            </header>
+
+            <div class="records-content">
+                <div class="record-summary">
+                    <button class="summary-btn">All Receipt<br><?php echo $receipt_count; ?></button>
+                    <button class="summary-btn">Sales<br>5</button>
+                    <button class="summary-btn">Expense<br>15</button>
+                </div>
+
+                <div class="data-table">
+                    <table id="recordsTable">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Date</th>
+                                <th>Vendor</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $sql = "SELECT id, date, vendor, category, type, total FROM receipts";
+                            $result = $conn->query($sql);
+
+                            if ($result && $result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($row["id"]) . "</td>";
+                                    echo "<td contenteditable='true' data-column='date'>" . htmlspecialchars($row["date"]) . "</td>";
+                                    echo "<td contenteditable='true' data-column='vendor'>" . htmlspecialchars($row["vendor"]) . "</td>";
+                                    echo "<td contenteditable='true' data-column='category'>" . htmlspecialchars($row["category"]) . "</td>";
+                                    echo "<td contenteditable='true' data-column='type'>" . htmlspecialchars($row["type"]) . "</td>";
+                                    echo "<td contenteditable='true' data-column='total'>" . htmlspecialchars($row["total"]) . "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='6'>No records found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <button id="saveChanges" class="btn save-btn">Save Changes</button>
+                </div>
+            </div>
+
+            
+        </section>
+
+        <section id="generate-report" class="tab-content">
+            <header class="header">
+                <h2>Generate Report</h2>
+                <div class="buttons">
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <button>Admin</button>
+                </div>
+            </header>
+            
+
+            <section class="client-dropdown-section">
+                <div class="dropdown-client-category">
+                    <button class="buttons"><span class="label-client">Client</span> <span>▼</span></button>
+                    <div class="dropdown-content">
+                    <button class="btn-client" data-id="client-one">7/11 - Salawag Branch</button>
+                    <button class="btn-client" data-id="client-two">7/11 - Paliparan Branch</button>
+                    </div>     
+                </div>
+            </section>
+            
+            <section class="generate-report-content">
+                <div class="generate-report-header">Monthly Financial Report</div>
+
+                <section class="chart-section">
+                    <div class="generate-report-header">Sales vs Expenses Chart</div>
+                    <canvas id="salesExpensesChart" width="400" height="200"></canvas>
+                </section>
+
+         
+                <div class="overall">
+                    <div class="client-monthly">
+                    <span>Client Balance (Last Month)</span>
+                    <span>₱ 20</span>
+                    </div>
+                    <div class="client-monthly">
+                    <span>Monthly Balance</span>
+                    <span>₱ 20000</span>
+                    </div>
+                </div>
+
+                <div class="tables-container">
+                    <div class="table" style="border-right: 1px solid #919191;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Vendor</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($salesRecords->num_rows > 0) {
+                                    $index = 1;
+                                    while ($row = $salesRecords->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>{$index}.</td>";
+                                        echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['vendor']) . "</td>";
+                                        echo "<td>₱" . htmlspecialchars($row['total']) . "</td>";
+                                        echo "</tr>";
+                                        $index++;
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='4'>No sales records found</td></tr>";
+                                }
+                                ?>
+                            </tbody>                
+                        </table>
+                    </div>
+
+                    <div class="table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Vendor</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($expenseRecords->num_rows > 0) {
+                                    $index = 1;
+                                    while ($row = $expenseRecords->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>{$index}.</td>";
+                                        echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['vendor']) . "</td>";
+                                        echo "<td>₱" . htmlspecialchars($row['total']) . "</td>";
+                                        echo "</tr>";
+                                        $index++;
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='4'>No expense records found</td></tr>";
+                                }
+                                ?>
+                            </tbody>                
+                        </table>
+                    </div>
+                </div>
+            </section>     
+        </section>
+
         <section id="manage-users" class="tab-content">         
             <header class="header">
                 <h2>Manage Users</h2>
@@ -272,6 +540,102 @@ $result = $conn->query($sql);
     </main>
 
     <script src="admin.js"></script>
+    
+    <!-- Financial Records -->                    
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#recordsTable').DataTable();
+
+            $('#saveChanges').click(function () {
+                const updatedData = [];
+                $('#recordsTable tbody tr').each(function () {
+                    const row = $(this);
+                    const id = row.find('td:eq(0)').text(); // Id
+                    const date = row.find('td:eq(1)').text();
+                    const vendor = row.find('td:eq(2)').text();
+                    const category = row.find('td:eq(3)').text();
+                    const type = row.find('td:eq(4)').text();
+                    const total = row.find('td:eq(5)').text();
+
+                    updatedData.push({ id, date, vendor, category, type, total });
+                });
+
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: { updatedData: JSON.stringify(updatedData) },
+                    success: function (response) {
+                        alert(response);
+                    }
+                });
+            });
+        });
+    </script>      
+
+
+     <!-- generate report JS -->
+    <script>
+        // Pass PHP data to JavaScript
+        const labels = <?php echo json_encode($dates); ?>; // Dates from PHP
+        const salesData = <?php echo json_encode($sales); ?>; // Sales data
+        const expenseData = <?php echo json_encode($expenses); ?>; // Expenses data
+
+        // Create a Chart.js line chart
+        const ctx = document.getElementById('salesExpensesChart').getContext('2d');
+        const salesExpensesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels, // Dates
+                datasets: [
+                    {
+                    label: 'Sales (₱)',
+                    data: salesData, // Sales amounts
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue line
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)', // Light blue area
+                    tension: 0.3,
+                    fill: true
+                    },
+                    {
+                    label: 'Expenses (₱)',
+                    data: expenseData, // Expense amounts
+                    borderColor: 'rgba(255, 99, 132, 1)', // Red line
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)', // Light red area
+                    tension: 0.3,
+                    fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                    position: 'top',
+                    }
+                },
+                scales: {
+                    x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                    },
+                    y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount (₱)'
+                    }
+                    }
+                }
+            }
+        });
+    </script>
+
 </body>
 </html>
 
