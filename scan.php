@@ -63,7 +63,7 @@
     </div>
     <script>
         document.querySelector('.scan-btn').addEventListener('click', () => {
-            fetch('http://192.168.1.2:5000/run-script', {
+            fetch('http://raspberrypi:5000/run-script', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
             })
