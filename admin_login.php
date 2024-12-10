@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['logged_in'] = true;
 
             // Redirect to admin home page
-            header("Location: admin/adminhome.php");
+            header("Location: admin/AdminHome.php");
             exit();
         } else {
             $message = "Invalid password.";
