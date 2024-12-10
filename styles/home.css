@@ -1,0 +1,538 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: Arial, sans-serif;
+   
+ }
+ 
+ :root{
+    --whiteBG :#fff;
+    --greenBG : #00AF7E;
+    --flex: flex;
+    --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+    --border: #D0D0D0;
+ }
+ 
+ /*Ensure that the parent containers properly manage their children elements to avoid unintended overlaps.*/
+ 
+ body{
+   display: flex;
+   flex-direction: row; /* Ensures sidebar and content align side by side */
+   height: 100vh;
+   margin: 0;
+   background-color: #F2F2F2;
+ }
+ 
+ span{
+   cursor: default;
+ }
+
+ /*Ensure the sidebar doesn’t overlap the main content on smaller screens. */
+
+ .sidebar{
+   position: relative;
+   flex-shrink: 0;
+   width: 230px;
+   max-width: 500px;
+   background-color: var(--greenBG);
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   height: 100vh;
+   padding: 20px 0;
+   overflow: auto;
+ }
+ 
+ .sidebar > .company-logo,.btn-container{
+    margin-bottom: 20px;
+ }
+ 
+ .sidebar .company-logo{
+    padding: 20px;
+ 
+ }
+ 
+ 
+ .btn-container{
+    display: var(--flex);
+    flex-direction: column;
+    width: 100%;
+    
+ }
+ 
+ 
+ .btn-container button{
+    margin-bottom: 8px;
+    text-align: left;
+    padding: 10px;
+    font-size: 15px;
+    color: var(--whiteBG);
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    transition: background 0.3s;
+    background-color: transparent;
+ }
+ 
+ .btn-container button:hover {
+    background-color: var(--whiteBG);
+    color: #31B58F;
+ 
+ }
+
+  /*Ensure that the parent containers properly manage their children elements to avoid unintended overlaps.*/
+ 
+ .content{
+   flex: 1; /* Ensure it takes the remaining space next to the sidebar */
+   min-width: 0; /* Prevent overflowing content */
+   padding: 30px 20px;
+   overflow-y: auto; /* Manage vertical overflow */
+ }
+ 
+ header{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   background-color: var(--whiteBG);
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: var(--shadow);
+   margin-bottom: 20px;
+ 
+ }
+ 
+ 
+ .buttons button{
+    margin-right: 20px;
+    padding: 8px;
+    width: 80px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+ }
+ 
+ .overall-data{
+    margin-top: 20px;
+    background-color: var(--whiteBG);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    min-height: 130px;
+    box-shadow: var(--shadow) ;
+    border-radius: 8px;
+ }
+ 
+ .overall-data div p{
+    font-size: 23px;
+ }
+ 
+ .overall-data div h1{
+    text-align: center;
+    margin-top: 10px;
+    font-size: 30px;
+ 
+ }
+ 
+
+  
+ /*Fix .transaction-history CSS:*/
+
+ .transaction-history {
+   margin-top: 20px;
+   background-color: var(--whiteBG);
+   padding: 20px;
+   max-height: calc(100vh - 250px); /* Dynamically adjust height */
+   overflow-y: auto;
+   box-shadow: var(--shadow);
+   border-radius: 8px;
+   width: 90%; 
+   margin: auto;
+
+}
+
+ 
+ .transaction-history .home-header{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 10px 20px; /* Adds spacing between columns */
+    text-align: center;
+    padding: 10px;
+ }
+ 
+ .home-data-container .home-data{
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 10px 20px; /* Adds spacing between columns */
+    text-align: center;
+    border: 1px rgb(227, 227, 227) solid;
+    padding: 10px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    
+ }
+ 
+ /*tablinks*/
+ 
+ 
+ /*Ensure the sections (#home, #manage-users, etc.) do not overlap when switching tabs.*/
+ .tab-content {
+   display: none;
+   flex-direction: column;
+   gap: 20px; /* Add spacing between children */
+}
+
+.tab-content.active {
+   display: flex;
+}
+ 
+ /*manage user*/
+
+ /*Updated CSS for Manage Users Section:*/
+ .manage-users-content{
+   margin: 20px auto;
+   background-color: var(--whiteBG);
+   box-shadow: var(--shadow);
+   border-radius: 8px;
+   min-height: 420px;
+   width: 90%; /* Adjusted for better responsiveness */
+   overflow: hidden; /* Prevents overflow */
+   display: flex;
+   flex-direction: column; /* Ensures proper stacking */
+ 
+ }
+ 
+ .manage-users-content .accounts{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 20px;
+   border-bottom: 1px solid var(--border);
+   gap: 10px; /* Adds space between items */
+   flex-wrap: wrap; /* Prevents items from overlapping on smaller screens */
+
+ }
+
+ .accounts .account-request-create-section{
+ display: flex;
+    align-items: center;
+    gap: 15px; /* Space between sections */
+    flex-wrap: wrap; /* Ensures wrapping on smaller screens */
+}
+
+ .accounts .active-account{
+    align-items: center;
+    display: var(--flex);
+    cursor: pointer;
+    padding: 5px 20px;
+    
+ }
+
+ .create-account{
+   margin-left: auto; /* Align to the right */
+   min-width: 130px;
+ }
+
+ .search{
+   background-color: white;
+   height: 30px;
+   display: var(--flex);
+   align-items: center;
+   padding: 0px 10px;
+   justify-content: space-between;
+   border: 1px solid var(--greenBG);
+   border-radius: 8px;
+
+ }
+
+ .search  input{
+   padding: 0px 10px;
+   height: 100%;
+   width: 150px;
+   background-color: transparent;
+   border: none;
+   outline: none;
+
+ }
+ 
+ .create-account button{
+   width: 100%;
+    height: 30px;
+    cursor: pointer;
+    background-color: var(--whiteBG);
+    color: var(--greenBG);
+    border: 1px solid var(--greenBG);
+    border-radius: 4px;
+ }
+
+
+
+   /*manage user
+   
+    .manage-user-data-container .manage-user-data{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 10px 20px; 
+    text-align: center;
+    border-bottom: 1px var(--border) solid;
+    border-top: 1px var(--border) solid;
+    padding: 10px;
+    background-color: #ffffff;
+    font-size: 14px;
+    
+ }
+     
+   */
+
+
+.account-table, th, td {
+    border-collapse: collapse;
+    border: 1px solid rgb(144, 144, 144);
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    padding: 10px;
+    border-left:none ;
+    border-right:none ;
+    border-color: var(--border) ;
+}
+
+.account-table {
+    border: none;
+    width: 100%;
+    height: 0px;
+}
+
+.account-table thead tr th{
+   padding: 8px;
+   border:none;
+   color: #7a7a7a;
+   
+}
+
+tbody tr td{
+   font-size: 15px;
+}
+
+
+.user-profile-and-name{
+   display: var(--flex);
+   align-items: center;
+   justify-content: center;
+   gap: 1rem;
+   margin-right: 1.4rem;
+}
+
+.user-profile-and-name .user-logo{
+   width: 30px;
+   height: 30px;
+   border-radius: 50%;
+   background-color: black;
+   
+   
+}
+
+.user-profile-and-name .name-email{
+   display: var(--flex);
+   flex-direction: column;
+   text-align: left;
+   gap: 3px;
+
+}
+
+.name-email .name{
+  font-size: 16px;
+
+}
+
+.name-email .email{
+   font-size: 10px;
+   color: rgb(152, 151, 151);
+}
+
+td button{
+   width: 70px;
+   max-width: 80px;
+   height: 30px;
+   cursor: pointer;
+   border-radius: 10px;
+   border: 1px solid var(--greenBG);
+   color: var(--greenBG);
+   background-color: var(--whiteBG);
+
+}
+
+td .edit{
+   background-color: #07C900;
+   transition: 0.3s ease;
+}
+
+
+td .edit:hover{
+
+   background-color: #11790e;
+}
+
+td .delete{
+   background-color: #D00000;
+   transition: 0.3s ease;
+}
+
+
+td .delete:hover{
+   background-color: #a40101;
+}
+
+
+.account-table {
+   display: none;
+}
+
+.account-table.active {
+   display: table;
+}
+
+
+.password{
+   padding: 10px;
+   border-radius: 4px;
+   border: 1px solid var(--greenBG);
+}
+
+/*documents captured tab*/
+
+.documents-captured-container{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
+
+.documents-captured-table, th, td {
+   border-collapse: collapse;
+   border: 1px solid rgb(144, 144, 144);
+   text-align: center;
+   font-family: 'Nunito', sans-serif;
+   font-size: 13px;
+   padding: 10px;
+   border-left:none ;
+   border-right:none ;
+   border-color: var(--border) ;
+}
+
+.documents-captured-table {
+   border: none;
+   width: 100%;
+   height: 0px;
+   margin-top: 15px;
+}
+.documents-captured-table thead tr th{
+  padding: 8px;
+  border:none;
+  color: #7a7a7a;
+  margin-top: 15px;
+  
+}
+
+.table-data tr td{
+  font-size: 13px;
+}
+
+td .data-employee-name{
+   display: flex;
+   flex-direction: column;
+   
+  
+}
+
+.password-reset-requests {
+   align-self: center;
+   margin-top: 20px;
+   padding: 20px;
+   background-color: var(--whiteBG);
+   box-shadow: var(--shadow);
+   border-radius: 8px;
+}
+
+.password-reset-requests h2 {
+   margin-bottom: 20px;
+   font-size: 20px;
+   color: #333;
+   text-align: center;
+}
+
+.password-reset-table {
+   width: 100%;
+   border-collapse: collapse;
+   background-color: var(--whiteBG);
+   box-shadow: var(--shadow);
+   border-radius: 8px;
+   overflow: hidden;
+}
+
+.password-reset-table th,
+.password-reset-table td {
+   padding: 12px 15px;
+   text-align: center;
+   border-bottom: 1px solid var(--border);
+}
+
+.password-reset-table th {
+   background-color: #00AF7E;
+   color: white;
+   font-weight: bold;
+   text-transform: uppercase;
+   font-size: 14px;
+}
+
+.password-reset-table tr:nth-child(even) {
+   background-color: #f9f9f9;
+}
+
+.password-reset-table tr:hover {
+   background-color: #f1f1f1;
+}
+
+.password-reset-table .approve-btn {
+   background-color: #31B58F;
+   color: white;
+   border: none;
+   padding: 8px 15px;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: 0.3s;
+}
+
+.password-reset-table .approve-btn:hover {
+   background-color: #279E7C;
+}
+
+.password-reset-table .delete-btn {
+   background-color: #BB2727;
+   color: white;
+   border: none;
+   padding: 8px 15px;
+   border-radius: 4px;
+   cursor: pointer;
+   transition: 0.3s;
+}
+
+.password-reset-table .delete-btn:hover {
+   background-color: #A02121;
+}
+
+.message {
+   margin-top: 15px;
+   padding: 10px;
+   color: #4CAF50;
+   background-color: #e8f5e9;
+   border: 1px solid #c8e6c9;
+   border-radius: 4px;
+   text-align: center;
+}
