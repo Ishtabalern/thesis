@@ -160,7 +160,47 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
 
     <main class="content">
         <section id="home" class="tab-content">
-            <?php include('F:/xampp/htdocs/thesis/dashboard.php'); ?>
+        <div class="dashboard">
+        <div class="top-bar">
+            <h1>Home</h1>
+            <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
+            <div class="user-controls">
+                <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+            </div>
+        </div>
+
+        <div class="subcontainer">
+            <div class="report-card">
+                <h2>Total Expenses</h2>
+                <h3>₱ 69</h3>
+            </div>
+            <div class="report-card">
+                <h2>Latest Income</h2>
+                <h3>₱ 69</h3>
+            </div>
+        </div>
+
+        <div class="transaction-container">
+            <h2>Transaction History</h2>
+            <ul class="transaction-list">
+                <li>
+                    <span class="id">1</span>
+                    <span class="date">Oct 24, 2024</span>
+                    <span class="location">CVSU - Bacoor</span>
+                    <span class="item">Fan</span>
+                    <span class="price">₱45</span>
+                </li>
+                <li>
+                    <span class="id">2</span>
+                    <span class="date">Oct 24, 2024</span>
+                    <span class="location">CVSU - Bacoor</span>
+                    <span class="item">Fan</span>
+                    <span class="price">₱45</span>
+                </li>
+                <!-- Repeat for more transactions -->
+            </ul>
+        </div>
+    </div>
         </section>
         
         <section id="capture-documents" class="tab-content">

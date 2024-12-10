@@ -1,49 +1,53 @@
 <?php
+// Start the session
 session_start();
 
-// Database configuration
+// Database connection parameters
 $servername = "localhost";
-$username = "admin"; 
-$password = "123"; 
-$dbname = "cskdb";
+$username = "admin"; // Your database username
+$password = "123";   // Your database password
+$dbname = "cskdb";   // Your database name
 
-// Create database connection
+// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check for connection errors
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Initialize message variable
-$message = "";
-
-// Handle form submission
+// Handle login form submission
+$message = ""; // To store login status message
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $admin_user = $_POST['username'];
-    $admin_pass = $_POST['password'];
+    $admin_username = $_POST['username'];
+    $admin_password = $_POST['password'];
 
-    // Use prepared statements for secure queries
-    $stmt = $conn->prepare("SELECT * FROM admins WHERE username = ? LIMIT 1");
-    $stmt->bind_param("s", $admin_user);
+    // Prepare and execute query to check if the admin exists
+    $stmt = $conn->prepare("SELECT username, password FROM admins WHERE username = ?");
+    $stmt->bind_param("s", $admin_username);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->store_result();
 
-    // Fetch user data
-    $admin = $result->fetch_assoc();
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($db_username, $db_password);
+        $stmt->fetch();
 
-    if ($admin && password_verify($admin_pass, $admin['password'])) {
-        // Set session variables for authenticated user
-        $_SESSION['admin_logged_in'] = true;
-        $_SESSION['logged_in'] = true;
+        if (password_verify($admin_password, $db_password)) {
+            // Login successful: Set session variables
+            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['username'] = $db_username;
+            $_SESSION['logged_in'] = true;
 
-        // Redirect to admin home page
-        header("Location: admin/adminhome.php");
-        exit();
+            // Redirect to admin home page
+            header("Location: admin/adminhome.php");
+            exit();
+        } else {
+            $message = "Invalid password.";
+        }
     } else {
-        // Display error message for invalid credentials
-        $message = "Invalid username or password.";
+        $message = "Username not found.";
     }
+
     $stmt->close();
 }
 

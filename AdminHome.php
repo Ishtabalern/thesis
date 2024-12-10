@@ -71,7 +71,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSK - Admin Home</title>
-    <link rel="stylesheet" href="styles/home.css">
+    <link rel="stylesheet" href="styles/admin-home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -81,6 +81,9 @@ $result = $conn->query($sql);
         </div>
         <div class="btn-container">
             <button class="btn-tabs" data-tab="home"><i class="fa-solid fa-house"></i> Home</button>
+            <button class="btn-tabs" data-tab="capture-documents"><i class="fa-solid fa-camera"></i>Capture Documents</button>
+            <button class="btn-tabs" data-tab="financial-records"><i class="fa-solid fa-file"></i>Financial Records</button>
+            <button class="btn-tabs" data-tab="generate-report"><i class="fa-solid fa-file-export"></i>Generate Report</button>
             <button class="btn-tabs" data-tab="manage-users"><i class="fa-solid fa-users-gear"></i> Manage Users</button>
             <button class="btn-tabs" data-tab="system-logs"><i class="fa-solid fa-file-circle-check"></i> Audit Logs</button>
             <button class="btn-tabs" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
@@ -271,7 +274,7 @@ $result = $conn->query($sql);
 
     </main>
 
-    <script src="admin.js"></script>
+    <script src="script/admin.js"></script>
 </body>
 </html>
 
