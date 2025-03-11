@@ -108,11 +108,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $row["id"] . "</td>";
-                                echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
-                                echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
-                                echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
-                                echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
-                                echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
+                                echo "<td>" . $row["date"] . "</td>";
+                                echo "<td>" . $row["vendor"] . "</td>";
+                                echo "<td>" . $row["category"] . "</td>";
+                                echo "<td>" . $row["type"] . "</td>";
+                                echo "<td>" . $row["total"] . "</td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -121,7 +121,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                         ?>
                     </tbody>
                 </table>
-                <button id="saveChanges" class="btn save-btn">Save Changes</button>
             </div>
         </div>
     </div>
@@ -133,30 +132,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
     <script>
         $(document).ready(function () {
             $('#recordsTable').DataTable();
-
-            $('#saveChanges').click(function () {
-                const updatedData = [];
-                $('#recordsTable tbody tr').each(function () {
-                    const row = $(this);
-                    const id = row.find('td:eq(0)').text(); // Id
-                    const date = row.find('td:eq(1)').text();
-                    const vendor = row.find('td:eq(2)').text();
-                    const category = row.find('td:eq(3)').text();
-                    const type = row.find('td:eq(4)').text();
-                    const total = row.find('td:eq(5)').text();
-
-                    updatedData.push({ id, date, vendor, category, type, total });
-                });
-
-                $.ajax({
-                    url: '',
-                    method: 'POST',
-                    data: { updatedData: JSON.stringify(updatedData) },
-                    success: function (response) {
-                        alert(response);
-                    }
-                });
-            });
         });
     </script>
 </body>

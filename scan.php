@@ -1,3 +1,76 @@
+<?php
+$servername = "localhost";
+$username = "admin";
+$password = "123";
+$dbname = "cskdb";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch the count of receipts
+$receipt_count = 0;
+$result = $conn->query("SELECT COUNT(*) AS total FROM scanned_receipts");
+if ($result && $row = $result->fetch_assoc()) {
+    $receipt_count = $row['total'];
+}
+
+// Fetch clients for dropdown
+$clients = [];
+$clientResult = $conn->query("SELECT name FROM clients");
+while ($clientRow = $clientResult->fetch_assoc()) {
+    $clients[] = $clientRow['name'];
+}
+
+// Handle data update
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
+    $updatedData = json_decode($_POST['updatedData'], true);
+
+    foreach ($updatedData as $row) {
+        $id = $row['id'];
+        $date = $row['date'];
+        $vendor = $row['vendor'];
+        $category = $row['category'];
+        $type =$row['type'];
+        $total = $row['total'];
+
+        $stmt = $conn->prepare("UPDATE scanned_receipts SET date = ?, vendor = ?, category = ?, type = ?, total = ? WHERE id = ?");
+        $stmt->bind_param("ssssdi", $date, $vendor, $category, $type, $total, $id);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    echo "Data updated successfully!";
+    exit();
+}
+
+// Handle Generate Report
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
+    $selectedClient = $_POST['client'];
+
+    // Transfer data to receipts table
+    $sql = "INSERT INTO receipts (id, date, vendor, category, type, total, img_url, client) 
+            SELECT id, date, vendor, category, type, total, img_url, ? 
+            FROM scanned_receipts";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $selectedClient);
+    $stmt->execute();
+
+    // Clear the scanned_receipts table
+    if ($stmt->affected_rows > 0) {
+        $conn->query("DELETE FROM scanned_receipts");
+        echo "<script>alert('Report generated successfully and data moved to receipts table.');</script>";
+    } else {
+        echo "<script>alert('Error: No data moved. Check for SQL issues.');</script>";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +80,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles/scan.css">
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         /* Include the CSS below directly in your HTML for simplicity or link to an external CSS file */
     </style>
@@ -61,7 +135,92 @@
             </div>
         </div>
     </div>
+    <div class="receipt-table">
+    <div class="data-table">
+                <table id="recordsTable">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Date</th>
+                            <th>Vendor</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Total Price</th>
+                            <th>Receipt Image</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $sql = "SELECT id, date, vendor, category, type, total, img_url FROM scanned_receipts";
+                        $result = $conn->query($sql);
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row["id"] . "</td>";
+                                echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
+                                echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
+                                echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
+                                echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
+                                echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
+                                echo "<td>" . $row["img_url"] . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>No records found</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <button id="saveChanges" class="btn save-btn">Save Changes</button>
+                <!-- Client Dropdown -->
+                <form method="POST">
+                    <label for="client">Select Client:</label>
+                    <select name="client" id="client" required>
+                        <option value="" disabled selected>Select a client</option>
+                        <?php foreach ($clients as $client): ?>
+                            <option value="<?php echo htmlspecialchars($client); ?>">
+                                <?php echo htmlspecialchars($client); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
+                </form>
+            </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
+        $(document).ready(function () {
+            $('#recordsTable').DataTable();
+
+            $('#saveChanges').click(function () {
+                const updatedData = [];
+                $('#recordsTable tbody tr').each(function () {
+                    const row = $(this);
+                    const id = row.find('td:eq(0)').text(); // Id
+                    const date = row.find('td:eq(1)').text();
+                    const vendor = row.find('td:eq(2)').text();
+                    const category = row.find('td:eq(3)').text();
+                    const type = row.find('td:eq(4)').text();
+                    const total = row.find('td:eq(5)').text();
+
+                    updatedData.push({ id, date, vendor, category, type, total });
+                });
+
+                $.ajax({
+                    url: '',
+                    method: 'POST',
+                    data: { updatedData: JSON.stringify(updatedData) },
+                    success: function (response) {
+                        alert(response);
+                    }
+                });
+            });
+        });
+
         document.querySelector('.scan-btn').addEventListener('click', () => {
             fetch('http://raspberrypi:5000/run-script', {
                 method: 'POST',
