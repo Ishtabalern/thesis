@@ -262,6 +262,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                 <th>Vendor</th>
                                 <th>Category</th>
                                 <th>Type</th>
+                                <th>Receipt</th>
                                 <th>Total Price</th>
                             </tr>
                         </thead>
@@ -278,6 +279,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     echo "<td contenteditable='true' data-column='vendor'>" . htmlspecialchars($row["vendor"]) . "</td>";
                                     echo "<td contenteditable='true' data-column='category'>" . htmlspecialchars($row["category"]) . "</td>";
                                     echo "<td contenteditable='true' data-column='type'>" . htmlspecialchars($row["type"]) . "</td>";
+                                    echo "<td><button onclick='showModal()'>View</button></td>";
                                     echo "<td contenteditable='true' data-column='total'>" . htmlspecialchars($row["total"]) . "</td>";
                                     echo "</tr>";
                                 }
@@ -288,6 +290,16 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                         </tbody>
                     </table>
                     <button id="saveChanges" class="btn save-btn">Save Changes</button>
+                    
+                    <div class="reciept-modal" id="modal">
+                        <section class="modal-content">
+                            <h2>Reciept</h2>
+                            <div class="reciept-container">
+                                Reciept Here
+                            </div>
+                        </section>
+                    </div>
+                   
                 </div>
             </div>
 
@@ -579,10 +591,33 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
 
     </main>
 
+    <!-- Modal-->  
+
+    <script>
+
+     var modal = document.getElementById("reciept-modal");
+
+       function showModal() {
+        document.getElementById("modal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById("modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
+
     <script src="admin.js"></script>
     
-    <!-- Financial Records -->                    
-
+    <!-- Financial Records modal-->                    
+        
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
@@ -676,6 +711,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
         });
     </script>
 
+    
 </body>
 </html>
 
