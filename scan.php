@@ -167,7 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='5'>No records found</td></tr>";
+                            
                         }
                         ?>
                     </tbody>
