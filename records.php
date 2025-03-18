@@ -92,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                     <thead>
                         <tr>
                             <th>Id</th>
+                            <th>Client</th>
                             <th>Date</th>
                             <th>Vendor</th>
                             <th>Category</th>
@@ -101,13 +102,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT id, date, vendor, category, type, total FROM receipts";
+                        $sql = "SELECT id, client, date, vendor, category, type, total FROM receipts";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $row["id"] . "</td>";
+                                echo "<td>" . $row["client"] . "</td>";
                                 echo "<td>" . $row["date"] . "</td>";
                                 echo "<td>" . $row["vendor"] . "</td>";
                                 echo "<td>" . $row["category"] . "</td>";
