@@ -21,10 +21,11 @@ if ($result && $row = $result->fetch_assoc()) {
 
 // Fetch clients for dropdown
 $clients = [];
-$clientResult = $conn->query("SELECT name FROM clients");
+$clientResult = $conn->query("SELECT id, name FROM clients");
 while ($clientRow = $clientResult->fetch_assoc()) {
-    $clients[] = $clientRow['name'];
+    $clients[] = $clientRow;
 }
+
 
 // Handle data update
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
@@ -47,13 +48,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
     echo "Data updated successfully!";
     exit();
 }
+// Handle adding new client & report generation
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['client'])) {
+    $selectedClient = $_POST['client'];
+
+    // If user selects "Add New Client" option
+    if ($selectedClient === "add_client" && !empty($_POST['new_client'])) {
+        $newClient = $_POST['new_client'];
+
+        // Insert the new client into the database
+        $stmt = $conn->prepare("INSERT INTO clients (name) VALUES (?)");
+        $stmt->bind_param("s", $newClient);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            $newClientId = $stmt->insert_id; // Get the newly inserted client ID
+            echo "<script>alert('New client added successfully!');</script>";
+            $selectedClient = $newClientId; // Use the new client ID
+        } else {
+            echo "<script>alert('Error adding new client.');</script>";
+        }
+
+        $stmt->close();
+    }
+
+    // If a valid client (old or new) is selected, generate the report
+    if ($selectedClient !== "add_client") {
+        $sql = "INSERT INTO receipts (id, date, vendor, category, type, total, img_url, client_id) 
+                SELECT id, date, vendor, category, type, total, img_url, ? 
+                FROM scanned_receipts";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $selectedClient);
+        $stmt->execute();
+
+        if ($stmt->affected_rows > 0) {
+            $conn->query("DELETE FROM scanned_receipts");
+            echo "<script>alert('Report generated successfully and data moved to receipts table.');</script>";
+        } else {
+            echo "<script>alert('Error: No data moved. Check for SQL issues.');</script>";
+        }
+    }
+}
 
 // Handle Generate Report
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
     $selectedClient = $_POST['client'];
 
     // Transfer data to receipts table
-    $sql = "INSERT INTO receipts (id, date, vendor, category, type, total, img_url, client) 
+    $sql = "INSERT INTO receipts (id, date, vendor, category, type, total, img_url, client_id) 
             SELECT id, date, vendor, category, type, total, img_url, ? 
             FROM scanned_receipts";
 
@@ -175,18 +218,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
                 <button id="saveChanges" class="btn save-btn">Save Changes</button>
                 <!-- Client Dropdown -->
                 <form method="POST">
-                    <label for="client">Select Client:</label>
-                    <select name="client" id="client" required>
-                        <option value="" disabled selected>Select a client</option>
-                        <?php foreach ($clients as $client): ?>
-                            <option value="<?php echo htmlspecialchars($client); ?>">
-                                <?php echo htmlspecialchars($client); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                        <label for="client">Select Client:</label>
+                        <select name="client" id="client" required onchange="toggleNewClientInput()">
+                            <option value="" disabled selected>Select a client</option>
+                            <?php foreach ($clients as $client): ?>
+                                <option value="<?php echo htmlspecialchars($client['id']); ?>">
+                                    <?php echo htmlspecialchars($client['name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                            <option value="add_client">➕ Add New Client</option>
+                        </select>
 
-                    <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
-                </form>
+                        <!-- New Client Input (Hidden by Default) -->
+                        <input type="text" name="new_client" id="new_client" placeholder="Enter new client name" style="display:none;">
+
+                        <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
+                    </form>
             </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -220,6 +267,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
                 });
             });
         });
+
+        function toggleNewClientInput() {
+            var clientDropdown = document.getElementById('client');
+            var newClientInput = document.getElementById('new_client');
+
+            if (clientDropdown.value === 'add_client') {
+                newClientInput.style.display = 'block';
+            } else {
+                newClientInput.style.display = 'none';
+            }
+        }
 
         document.querySelector('.scan-btn').addEventListener('click', () => {
             fetch('http://raspberrypi:5000/run-script', {

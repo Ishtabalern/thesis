@@ -19,27 +19,19 @@ if ($result && $row = $result->fetch_assoc()) {
     $receipt_count = $row['total'];
 }
 
-// Handle data update
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
-    $updatedData = json_decode($_POST['updatedData'], true);
-
-    foreach ($updatedData as $row) {
-        $id = $row['id'];
-        $date = $row['date'];
-        $vendor = $row['vendor'];
-        $category = $row['category'];
-        $type =$row['type'];
-        $total = $row['total'];
-
-        $stmt = $conn->prepare("UPDATE receipts SET date = ?, vendor = ?, category = ?, type = ?, total = ? WHERE id = ?");
-        $stmt->bind_param("ssssdi", $date, $vendor, $category, $type, $total, $id);
-        $stmt->execute();
-        $stmt->close();
-    }
-
-    echo "Data updated successfully!";
-    exit();
+// Fetch distinct client names for dropdown
+$clientResult = $conn->query("SELECT DISTINCT client_id FROM receipts");
+$clients = [];
+while ($row = $clientResult->fetch_assoc()) {
+    $clients[] = $row['client_id'];
 }
+
+$clientFilter = isset($_GET['client_id']) ? $_GET['client_id'] : '';
+$sql = "SELECT id, client_id, date, vendor, category, type, total FROM receipts";
+if (!empty($clientFilter)) {
+    $sql .= " WHERE client_id = '" . $conn->real_escape_string($clientFilter) . "'";
+}
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -78,6 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                 </div>
             </div>
         </div>
+        
 
         <!-- Main Content -->
         <div class="main-content">
@@ -85,6 +78,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                 <button class="summary-btn">All Receipt<br><?php echo $receipt_count; ?></button>
                 <button class="summary-btn">Sales<br>5</button>
                 <button class="summary-btn">Expense<br>15</button>
+                <!-- Client Dropdown Filter -->
+        <label for="clientFilter">Filter by Client:</label>
+        <select id="clientFilter">
+            <option value="">All Clients</option>
+            <?php foreach ($clients as $client) { ?>
+                <option value="<?php echo htmlspecialchars($client); ?>" <?php echo ($client === $clientFilter) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($client); ?>
+                </option>
+            <?php } ?>
+        </select>
+
             </div>
 
             <div class="data-table">
@@ -102,14 +106,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT id, client, date, vendor, category, type, total FROM receipts";
+                        $sql = "SELECT id, client_id, date, vendor, category, type, total FROM receipts";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $row["id"] . "</td>";
-                                echo "<td>" . $row["client"] . "</td>";
+                                echo "<td>" . $row["client_id"] . "</td>";
                                 echo "<td>" . $row["date"] . "</td>";
                                 echo "<td>" . $row["vendor"] . "</td>";
                                 echo "<td>" . $row["category"] . "</td>";
@@ -134,6 +138,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
     <script>
         $(document).ready(function () {
             $('#recordsTable').DataTable();
+
+            $('#clientFilter').on('change', function () {
+                const selectedClient = $(this).val();
+                window.location.href = '?client=' + encodeURIComponent(selectedClient);
+            });
         });
     </script>
 </body>
