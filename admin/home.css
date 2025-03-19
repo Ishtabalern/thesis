@@ -38,7 +38,7 @@
    top: 10px;
    left: 10px;
    bottom: 10px;
-   width: 70px; /* Initial width (icon-only mode) */
+   width: 230px; /* Expanded width to show text */
    background-color: #062335;
    display: flex;
    flex-direction: column;
@@ -51,10 +51,7 @@
    z-index: 100; /* Ensures it's above other content */
 }
  
-/* Expanded Sidebar on Hover */
-.sidebar:hover {
-   width: 230px; /* Expanded width to show text */
-}
+
  
 .btn-container {
    display: flex;
@@ -103,23 +100,12 @@
 
 /* Company Logo */
 .sidebar .company-logo img {
-   max-width: 60px; /* Icon size in collapsed mode */
+   max-width: 100%; /* Icon size in collapsed mode */
    height: auto;
    transition: max-width 0.3s ease; /* Smooth transition for logo */
    background-color:#f7f7f7 ;
    border-radius: 7px;
 
-}
-
-.sidebar:hover .company-logo img {
-   max-width: 100%; /* Full width for logo in expanded mode */
-   
-}
-
-
-
-.sidebar:hover ~ .content {
-   margin-left: 240px; /* Match the expanded sidebar width */
 }
 
 
@@ -132,6 +118,7 @@
    padding: 30px 20px;
    margin-left: 80px; /* Adjust based on the sidebar's width */
    overflow-y: auto;
+   margin-left: 240px; /* Match the expanded sidebar width */
  }
  
  header{
@@ -963,7 +950,6 @@ tbody tr td{
 
 /* Dashboard styling */
 .dashboard {
-   margin-left: 250px;
    padding: 20px;
    display: flex;
    flex-direction: column;
@@ -1211,15 +1197,15 @@ tbody tr td{
    background-color: #f5f5f5;
  }
  
-
- .company-view {
+/*
+.company-view {
    background-color: #fff;
    padding: 20px;
    border-radius: 5px;
    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
  }
- 
- .company-view button {
+
+  .company-view button {
    margin: 5px 0;
    padding: 10px;
    border-radius: 5px;
@@ -1231,3 +1217,86 @@ tbody tr td{
    background-color: #dc3545;
    color: white;
  }
+
+*/
+ 
+ 
+.company-view {
+ }
+
+ .forms-container{
+   display: flex;
+   align-items: center;
+   gap: 16px;
+ }
+
+ .company-buttons{
+   background-color: #fff;
+   padding: 10px;
+   border-radius: 5px;
+   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+   max-width: 250px;
+   width: 30%;
+   min-height: 700px;
+   display: flex;
+   flex-direction: column;
+ }
+
+ .client-company{
+   text-align: center;
+ }
+
+ .client-company > *{
+   margin-top: 10px;
+ }
+
+ .client-company .back-btn, 
+.forms-btns button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  width: 80px;
+  background-color: #dc3545;
+  color: white;
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth scaling */
+}
+
+.forms-btns button {
+  width: 90%;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  color: rgb(108, 108, 108);
+}
+
+/* Interactive Scale on Hover */
+.client-company .back-btn:hover, 
+.forms-btns button:hover {
+  transform: scale(1.05); /* Slight increase on hover */
+}
+
+/* Click Effect */
+.client-company .back-btn:active, 
+.forms-btns button:active {
+  transform: scale(0.95); /* Slight shrink on click */
+}
+
+/* Form container styling */
+.forms-btns {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 15px;
+}
+
+.company-contents{
+   background-color: white;
+   width: 100%;
+   min-height: 700px;
+   border-radius: 5px;
+   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}

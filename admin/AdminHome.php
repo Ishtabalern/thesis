@@ -157,6 +157,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
 
     <main class="content">
         <section id="home" class="tab-content">
+<<<<<<< Updated upstream
         <div class="dashboard">
         <div class="top-bar">
             <h1>Home</h1>
@@ -167,39 +168,49 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             </form>
             </div>
         </div>
+=======
+            <div class="dashboard">
+                <div class="top-bar">
+                    <h1>Home</h1>
+                    <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
+                    <div class="user-controls">
+                        <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                    </div>
+                </div>
+>>>>>>> Stashed changes
 
-        <div class="subcontainer">
-            <div class="report-card">
-                <h2>Total Expenses</h2>
-                <h3>₱ 69</h3>
-            </div>
-            <div class="report-card">
-                <h2>Latest Income</h2>
-                <h3>₱ 69</h3>
-            </div>
-        </div>
+                <div class="subcontainer">
+                    <div class="report-card">
+                        <h2>Total Expenses</h2>
+                        <h3>₱ 69</h3>
+                    </div>
+                    <div class="report-card">
+                        <h2>Latest Income</h2>
+                        <h3>₱ 69</h3>
+                    </div>
+                </div>
 
-        <div class="transaction-container">
-            <h2>Transaction History</h2>
-            <ul class="transaction-list">
-                <li>
-                    <span class="id">1</span>
-                    <span class="date">Oct 24, 2024</span>
-                    <span class="location">CVSU - Bacoor</span>
-                    <span class="item">Fan</span>
-                    <span class="price">₱45</span>
-                </li>
-                <li>
-                    <span class="id">2</span>
-                    <span class="date">Oct 24, 2024</span>
-                    <span class="location">CVSU - Bacoor</span>
-                    <span class="item">Fan</span>
-                    <span class="price">₱45</span>
-                </li>
-                <!-- Repeat for more transactions -->
-            </ul>
-        </div>
-    </div>
+                <div class="transaction-container">
+                    <h2>Transaction History</h2>
+                    <ul class="transaction-list">
+                        <li>
+                            <span class="id">1</span>
+                            <span class="date">Oct 24, 2024</span>
+                            <span class="location">CVSU - Bacoor</span>
+                            <span class="item">Fan</span>
+                            <span class="price">₱45</span>
+                        </li>
+                        <li>
+                            <span class="id">2</span>
+                            <span class="date">Oct 24, 2024</span>
+                            <span class="location">CVSU - Bacoor</span>
+                            <span class="item">Fan</span>
+                            <span class="price">₱45</span>
+                        </li>
+                        <!-- Repeat for more transactions -->
+                    </ul>
+                </div>
+            </div>
         </section>
         
         <section id="capture-documents" class="tab-content">
@@ -443,7 +454,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                     </div>
                     
                     <ol>
-                    <li><a href="company.html">7 - Evelyn</a></li>
+                    <li><a href="company.html">7 - Eleven</a></li>
                     </ol>
                 </div>
 
@@ -456,22 +467,36 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                     </div>
                     
                     <ol>
-                    <li><a href="independent.html">Jan D. LuLu</a></li>
+                    <li><a href="independent.html">Jan D</a></li>
                     </ol>
                 </div>
             </div>
 
             <!-- Company View -->
             <div class="company-view" style="display:none;">
-                <h3>Company</h3>
-                <p id="client-name">7 - Evelyn</p>
-                <button class="back-btn" onclick="goBack()">Back</button>
-                <button>Trial Balance</button>
-                <button>Income Statement</button>
-                <button>Owner's Equity</button>
-                <button>Balance Sheet</button>
-                <button>Statement of Cash Flow</button>
-                <div class="content-area"></div>
+                <div class="forms-container">
+                    <div class="company-buttons">
+                        
+                        <div class="client-company">
+                            <h3>Company</h3>
+                            <p id="client-name">7 - Eleven</p>
+                            <button class="back-btn" onclick="goBack()">Back</button>
+                        </div>
+                       
+                        <div class="forms-btns">
+                            <button onclick="openTab(event, 'Trial Balance')">Trial Balance</button>
+                            <button onclick="openTab(event, 'Income Statement')">Income Statement</button>
+                            <button onclick="openTab(event, 'Owner\'s Equity')">Owner's Equity</button>
+                            <button onclick="openTab(event, 'Balance Sheet')">Balance Sheet</button>
+                            <button onclick="openTab(event, 'Statement of Cash Flow')">Statement of Cash Flow</button>
+                        </div>
+            
+                    </div>
+                    
+                    <div class="company-contents">
+                         <h3 id="tab-content">Click a tab to see the content here.</h3>
+                    </div>
+                </div>     
             </div>
 
         </section>
@@ -656,6 +681,19 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
         <!-- Other sections here... -->
 
     </main>
+
+    
+    <!-- client tablink -->
+    <script>
+        function openTab(event, tabName) {
+        const content = document.getElementById('tab-content');
+        content.textContent = `You have selected: ${tabName}`;
+        }
+
+        function goBack() {
+        alert('Going back!');
+        }
+    </script>
 
     <!-- Client Script -->
     <script>
