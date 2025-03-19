@@ -20,18 +20,39 @@ if ($result && $row = $result->fetch_assoc()) {
 }
 
 // Fetch distinct client names for dropdown
-$clientResult = $conn->query("SELECT DISTINCT client_id FROM receipts");
 $clients = [];
-while ($row = $clientResult->fetch_assoc()) {
-    $clients[] = $row['client_id'];
+$clientResult = $conn->query("SELECT DISTINCT clients.id, clients.name 
+                              FROM receipts 
+                              LEFT JOIN clients ON receipts.client_id = clients.id");
+
+if ($clientResult->num_rows > 0) {
+    while ($row = $clientResult->fetch_assoc()) {
+        $clients[] = ['id' => $row['id'], 'name' => $row['name']];
+    }
 }
 
-$clientFilter = isset($_GET['client_id']) ? $_GET['client_id'] : '';
-$sql = "SELECT id, client_id, date, vendor, category, type, total FROM receipts";
-if (!empty($clientFilter)) {
-    $sql .= " WHERE client_id = '" . $conn->real_escape_string($clientFilter) . "'";
+// Filter by client if selected
+$clientFilter = $_GET['client_id'] ?? null;
+
+$sql = "SELECT receipts.id, COALESCE(clients.name, 'Unknown') AS client_name, receipts.date, receipts.vendor, 
+               receipts.category, receipts.type, receipts.total 
+        FROM receipts 
+        LEFT JOIN clients ON receipts.client_id = clients.id";
+
+if ($clientFilter !== null && $clientFilter !== "") {
+    $sql .= " WHERE receipts.client_id = ?";
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt) {
+        $stmt->bind_param("s", $clientFilter);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    } else {
+        die("Error preparing statement: " . $conn->error);
+    }
+} else {
+    $result = $conn->query($sql);
 }
-$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +64,6 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles/records.css">
     <link rel="stylesheet" href="styles/sidebar.css">
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 <body>
@@ -70,25 +90,24 @@ $result = $conn->query($sql);
                 </div>
             </div>
         </div>
-        
 
-        <!-- Main Content -->
         <div class="main-content">
             <div class="record-summary">
                 <button class="summary-btn">All Receipt<br><?php echo $receipt_count; ?></button>
                 <button class="summary-btn">Sales<br>5</button>
                 <button class="summary-btn">Expense<br>15</button>
-                <!-- Client Dropdown Filter -->
-        <label for="clientFilter">Filter by Client:</label>
-        <select id="clientFilter">
-            <option value="">All Clients</option>
-            <?php foreach ($clients as $client) { ?>
-                <option value="<?php echo htmlspecialchars($client); ?>" <?php echo ($client === $clientFilter) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($client); ?>
-                </option>
-            <?php } ?>
-        </select>
 
+                <!-- Client Dropdown Filter -->
+                <label for="clientFilter">Filter by Client:</label>
+                <select id="clientFilter">
+                    <option value="">All Clients</option>
+                    <?php foreach ($clients as $client) { ?>
+                        <option value="<?php echo htmlspecialchars($client['id']); ?>" 
+                            <?php echo ($client['id'] == $clientFilter) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($client['name'] ?? "Unknown"); ?>
+                        </option>
+                    <?php } ?>
+                </select>
             </div>
 
             <div class="data-table">
@@ -106,14 +125,11 @@ $result = $conn->query($sql);
                     </thead>
                     <tbody>
                         <?php
-                        $sql = "SELECT id, client_id, date, vendor, category, type, total FROM receipts";
-                        $result = $conn->query($sql);
-
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
                                 echo "<td>" . $row["id"] . "</td>";
-                                echo "<td>" . $row["client_id"] . "</td>";
+                                echo "<td>" . $row["client_name"] . "</td>";  
                                 echo "<td>" . $row["date"] . "</td>";
                                 echo "<td>" . $row["vendor"] . "</td>";
                                 echo "<td>" . $row["category"] . "</td>";
@@ -122,7 +138,7 @@ $result = $conn->query($sql);
                                 echo "</tr>";
                             }
                         } else {
-                            echo "<tr><td colspan='5'>No records found</td></tr>";
+                            echo "<tr><td colspan='7'>No records found</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -131,17 +147,13 @@ $result = $conn->query($sql);
         </div>
     </div>
 
-    <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#recordsTable').DataTable();
-
             $('#clientFilter').on('change', function () {
-                const selectedClient = $(this).val();
-                window.location.href = '?client=' + encodeURIComponent(selectedClient);
+                window.location.href = '?client_id=' + encodeURIComponent($(this).val());
             });
         });
     </script>
