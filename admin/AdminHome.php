@@ -505,7 +505,9 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <header class="header">
                 <h2>Manage Users</h2>
                 <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <form action="logout.php" method="post">
+                        <button type="submit" class="logout-btn">Log out</button>
+                    </form>
                     <button>Admin</button>
                 </div>
             </header>
