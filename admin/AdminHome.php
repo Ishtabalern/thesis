@@ -94,10 +94,6 @@ $result = $conn->query($sql);
       echo "Data updated successfully!";
       exit();
   }
-
-
-
-
 //------------ generate report
 
 // Fetch sales and expense data grouped by date
@@ -166,7 +162,9 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <h1>Home</h1>
             <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
             <div class="user-controls">
-                <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+            <form action="logout.php" method="post">
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
             </div>
         </div>
 
@@ -208,7 +206,9 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <header class="header">
                 <h2>Capture Documents</h2>
                 <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                <form action="logout.php" method="post">
+                    <button type="submit" class="logout-btn">Log out</button>
+                </form>
                     <button>Admin</button>
                 </div>
             </header>
@@ -242,7 +242,9 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <header class="header">
                 <h2>Financial Records</h2>
                 <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                <form action="logout.php" method="post">
+                    <button type="submit" class="logout-btn">Log out</button>
+                </form>
                     <button>Admin</button>
                 </div>
             </header>
@@ -311,7 +313,9 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <header class="header">
                 <h2>Generate Report</h2>
                 <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                <form action="logout.php" method="post">
+                    <button type="submit" class="logout-btn">Log out</button>
+                </form>
                     <button>Admin</button>
                 </div>
             </header>
@@ -418,7 +422,9 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <header class="header">
                 <h2>Client</h2>
                 <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                <form action="logout.php" method="post">
+                    <button type="submit" class="logout-btn">Log out</button>
+                </form>
                     <button>Admin</button>
                 </div> 
             </header>
@@ -577,7 +583,9 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <header class="header">
                 <h2>Audit Logs</h2>
                 <div class="buttons">
-                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                <form action="logout.php" method="post">
+                    <button type="submit" class="logout-btn">Log out</button>
+                </form>
                     <button>Admin</button>
                 </div>
             </header>
