@@ -126,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['client'])) {
     </style>
 </head>
 <body>
-<div class="sidebar">
+    <div class="sidebar">
         <div class="company-logo">
             <img src="./imgs/csk_logo.png" alt="">
         </div>
@@ -175,199 +175,198 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['client'])) {
             </div>
         </div>
     </div>
+
     <div class="receipt-table">
-    <div class="data-table">
-                <table id="recordsTable">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Date</th>
-                            <th>Vendor</th>
-                            <th>Category</th>
-                            <th>Type</th>
-                            <th>Total Price</th>
-                            <th>Receipt Image</th>
+        <div class="data-table">
+            <table id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Date</th>
+                        <th>Vendor</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Total Price</th>
+                        <th>Receipt Image</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+                </thead>
+                <tbody>
+                    <?php
                         $sql = "SELECT id, date, vendor, category, type, total, img_url FROM scanned_receipts";
                         $result = $conn->query($sql);
 
                         if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . $row["id"] . "</td>";
-                                echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
-                                echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
-                                echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
-                                echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
-                                echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
-                                echo "<td>" . $row["img_url"] . "</td>";
-                                echo "</tr>";
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row["id"] . "</td>";
+                            echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
+                            echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
+                            echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
+                            echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
+                            echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
+                            echo "<td>" . $row["img_url"] . "</td>";
+                            echo "</tr>";
                             }
                         } else {
-                            
-                        }
-                        ?>
-                    </tbody>
-                </table>
-                <button id="saveChanges" class="btn save-btn">Save Changes</button>
-                <!-- Client Dropdown -->
-                <form id="clientForm" method="POST">
-                        <label for="client">Select Client:</label>
-                        <select id="clientSelect" name="client">
-                            <option value="">-- Select Client --</option>
-                            <option value="add_client">+ Add New Client</option>
-                            <?php
-                            $result = $conn->query("SELECT id, name FROM clients ORDER BY name ASC");
-                            while ($row = $result->fetch_assoc()) {
-                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </form>
+                                    
+                                }
+                    ?>
+                </tbody>
+            </table>
 
-                    <!-- New Client Modal -->
-                    <div id="newClientModal" style="display: none;">
-                        <label for="new_client_name">New Client Name:</label>
-                        <input type="text" id="new_client_name">
-                        <button id="confirmNewClient">Confirm</button>
-                    </div>
+            <button id="saveChanges" class="btn save-btn">Save Changes</button>
+            <!-- Client Dropdown -->
+            <form id="clientForm" method="POST">
+                <label for="client">Select Client:</label>
+                <select id="clientSelect" name="client">
+                    <option value="">-- Select Client --</option>
+                    <option value="add_client">+ Add New Client</option>
+                    <?php
+                    $result = $conn->query("SELECT id, name FROM clients ORDER BY name ASC");
+                    while ($row = $result->fetch_assoc()) {
+                    echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                    }
+                    ?>
+                </select>
+            </form>
 
-                    <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
-
+            <!-- New Client Modal -->
+            <div id="newClientModal" style="display: none;">
+                <label for="new_client_name">New Client Name:</label>
+                <input type="text" id="new_client_name">
+                <button id="confirmNewClient">Confirm</button>
             </div>
+            <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
+        </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-    $(document).ready(function () {
-        $('#recordsTable').DataTable(); // Initialize DataTable
+        $(document).ready(function () {
+            $('#recordsTable').DataTable(); // Initialize DataTable
 
-        // Save Changes (Update scanned_receipts)
-        $('#saveChanges').click(function () {
-            const updatedData = [];
-            $('#recordsTable tbody tr').each(function () {
-                const row = $(this);
-                const id = row.find('td:eq(0)').text(); // Receipt ID
-                const date = row.find('td:eq(1)').text();
-                const vendor = row.find('td:eq(2)').text();
-                const category = row.find('td:eq(3)').text();
-                const type = row.find('td:eq(4)').text();
-                const total = row.find('td:eq(5)').text();
+            // Save Changes (Update scanned_receipts)
+            $('#saveChanges').click(function () {
+                const updatedData = [];
+                $('#recordsTable tbody tr').each(function () {
+                    const row = $(this);
+                    const id = row.find('td:eq(0)').text(); // Receipt ID
+                    const date = row.find('td:eq(1)').text();
+                    const vendor = row.find('td:eq(2)').text();
+                    const category = row.find('td:eq(3)').text();
+                    const type = row.find('td:eq(4)').text();
+                    const total = row.find('td:eq(5)').text();
 
-                updatedData.push({ id, date, vendor, category, type, total });
-            });
+                    updatedData.push({ id, date, vendor, category, type, total });
+                });
 
-            $.ajax({
-                url: 'update_scanned_receipts.php', // PHP script to update scanned_receipts
-                method: 'POST',
-                data: { updatedData: JSON.stringify(updatedData) },
-                success: function (response) {
-                    alert(response);
-                },
-                error: function () {
-                    alert("Error updating receipts.");
-                }
-            });
-        });
-
-        // Toggle new client modal when "Add New Client" is selected
-        $('#clientSelect').change(function () {
-            if ($(this).val() === 'add_client') {
-                $('#newClientModal').show();
-            } else {
-                $('#newClientModal').hide();
-            }
-        });
-
-        // Confirm new client via AJAX
-        $('#confirmNewClient').click(function () {
-            let newClientName = $('#new_client_name').val().trim();
-            let clientDropdown = $('#clientSelect');
-
-            if (newClientName === "") {
-                alert("Please enter a valid client name.");
-                return;
-            }
-
-            $.ajax({
-                url: 'create_client.php', // PHP script to add new client
-                method: 'POST',
-                data: { new_client: newClientName },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-                        alert("Client added successfully!");
-
-                        // Add new client to the dropdown
-                        let newOption = new Option(newClientName, response.client_id, true, true);
-                        clientDropdown.append(newOption);
-
-                        // Hide modal and clear input field
-                        $('#newClientModal').hide();
-                        $('#new_client_name').val("");
-                    } else {
-                        alert(response.message || "Error adding client.");
+                $.ajax({
+                    url: 'update_scanned_receipts.php', // PHP script to update scanned_receipts
+                    method: 'POST',
+                    data: { updatedData: JSON.stringify(updatedData) },
+                    success: function (response) {
+                        alert(response);
+                    },
+                    error: function () {
+                        alert("Error updating receipts.");
                     }
-                },
-                error: function () {
-                    alert("Error communicating with the server.");
-                }
+                });
             });
-        });
 
-        // Generate Report (Move Data from scanned_receipts to receipts table)
-        $('.save-btn[name="generateReport"]').click(function () {
-            let selectedClient = $('#clientSelect').val();
-
-            if (!selectedClient) {
-                alert("Please select a client before generating a report.");
-                return;
-            }
-
-            $.ajax({
-                url: 'generate_report.php', // PHP script to handle report generation
-                method: 'POST',
-                data: { client: selectedClient },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-                        alert("Report generated successfully!");
-                        location.reload(); // Refresh the page after success
-                    } else {
-                        alert(response.message || "Error generating report.");
-                    }
-                },
-                error: function () {
-                    alert("Error communicating with the server.");
-                }
-            });
-        });
-
-        // Scan button triggers script on Raspberry Pi
-        $('.scan-btn').click(() => {
-            fetch('http://raspberrypi:5000/run-script', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Script ran successfully:\n' + data.output);
+            // Toggle new client modal when "Add New Client" is selected
+            $('#clientSelect').change(function () {
+                if ($(this).val() === 'add_client') {
+                    $('#newClientModal').show();
                 } else {
-                    alert('Error running script:\n' + data.error);
+                    $('#newClientModal').hide();
                 }
-            })
-            .catch(error => {
-                alert('Failed to connect to the server:\n' + error);
+            });
+
+            // Confirm new client via AJAX
+            $('#confirmNewClient').click(function () {
+                let newClientName = $('#new_client_name').val().trim();
+                let clientDropdown = $('#clientSelect');
+
+                if (newClientName === "") {
+                    alert("Please enter a valid client name.");
+                    return;
+                }
+
+                $.ajax({
+                    url: 'create_client.php', // PHP script to add new client
+                    method: 'POST',
+                    data: { new_client: newClientName },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Client added successfully!");
+
+                            // Add new client to the dropdown
+                            let newOption = new Option(newClientName, response.client_id, true, true);
+                            clientDropdown.append(newOption);
+
+                            // Hide modal and clear input field
+                            $('#newClientModal').hide();
+                            $('#new_client_name').val("");
+                        } else {
+                            alert(response.message || "Error adding client.");
+                        }
+                    },
+                    error: function () {
+                        alert("Error communicating with the server.");
+                    }
+                });
+            });
+
+            // Generate Report (Move Data from scanned_receipts to receipts table)
+            $('.save-btn[name="generateReport"]').click(function () {
+                let selectedClient = $('#clientSelect').val();
+
+                if (!selectedClient) {
+                    alert("Please select a client before generating a report.");
+                    return;
+                }
+
+                $.ajax({
+                    url: 'generate_report.php', // PHP script to handle report generation
+                    method: 'POST',
+                    data: { client: selectedClient },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Report generated successfully!");
+                            location.reload(); // Refresh the page after success
+                        } else {
+                            alert(response.message || "Error generating report.");
+                        }
+                    },
+                    error: function () {
+                        alert("Error communicating with the server.");
+                    }
+                });
+            });
+
+            // Scan button triggers script on Raspberry Pi
+            $('.scan-btn').click(() => {
+                fetch('http://raspberrypi:5000/run-script', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Script ran successfully:\n' + data.output);
+                    } else {
+                        alert('Error running script:\n' + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('Failed to connect to the server:\n' + error);
+                });
             });
         });
-    });
 </script>
-
-
 </body>
 </html>
