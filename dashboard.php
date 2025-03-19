@@ -9,8 +9,37 @@ if (!isset($_SESSION['logged_in']) && !isset($_SESSION['logged_in'])) {
     exit();
 }
 
+// Database connection
+$servername = "localhost";
+$username = "admin";  // Change if necessary
+$password = "123";     // Change if necessary
+$dbname = "cskdb";     // Your database name
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
 // Get the username from the session
 $username = $_SESSION['username'];
+
+// Fetch the count of Expense
+$expense_count = 0;
+$result = $conn->query("SELECT SUM(total) AS total_expense FROM receipts WHERE type='Expense'");
+if ($result && $row = $result->fetch_assoc()) {
+    $expense_count = $row['total_expense'] ?? 0;
+}
+
+// Fetch the count of Sales
+$sales_count = 0;
+$result = $conn->query("SELECT SUM(total) AS total_sales FROM receipts WHERE type='Sales'");
+if ($result && $row = $result->fetch_assoc()) {
+    $sales_count = $row['total_sales'] ?? 0;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -51,11 +80,11 @@ $username = $_SESSION['username'];
         <div class="subcontainer">
             <div class="report-card">
                 <h2>Total Expenses</h2>
-                <h3>₱ 69</h3>
+                <h3>P<?php echo $expense_count; ?></h3>
             </div>
             <div class="report-card">
                 <h2>Latest Income</h2>
-                <h3>₱ 69</h3>
+                <h3>P<?php echo $sales_count; ?></h3>
             </div>
         </div>
 
