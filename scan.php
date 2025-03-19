@@ -26,8 +26,38 @@ while ($clientRow = $clientResult->fetch_assoc()) {
     $clients[] = $clientRow;
 }
 
+// Handle AJAX request for new client creation
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['new_client'])) {
+    $newClient = trim($_POST['new_client']);
 
-// Handle data update
+    // Check if client already exists
+    $checkStmt = $conn->prepare("SELECT id FROM clients WHERE name = ?");
+    $checkStmt->bind_param("s", $newClient);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+
+    if ($checkStmt->num_rows > 0) {
+        echo json_encode(["success" => false, "message" => "Client already exists."]);
+        $checkStmt->close();
+        exit();
+    }
+    $checkStmt->close();
+
+    // Insert new client
+    $stmt = $conn->prepare("INSERT INTO clients (name) VALUES (?)");
+    $stmt->bind_param("s", $newClient);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+        echo json_encode(["success" => true, "client_id" => $stmt->insert_id, "client_name" => $newClient]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error adding client."]);
+    }
+    $stmt->close();
+    exit();
+}
+
+// Handle data updates (for editing receipts)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
     $updatedData = json_decode($_POST['updatedData'], true);
 
@@ -36,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
         $date = $row['date'];
         $vendor = $row['vendor'];
         $category = $row['category'];
-        $type =$row['type'];
+        $type = $row['type'];
         $total = $row['total'];
 
         $stmt = $conn->prepare("UPDATE scanned_receipts SET date = ?, vendor = ?, category = ?, type = ?, total = ? WHERE id = ?");
@@ -48,71 +78,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
     echo "Data updated successfully!";
     exit();
 }
-// Handle adding new client & report generation
+
+// Handle report generation (moving data to receipts table)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['client'])) {
     $selectedClient = $_POST['client'];
 
-    // If user selects "Add New Client" option
-    if ($selectedClient === "add_client" && !empty($_POST['new_client'])) {
-        $newClient = $_POST['new_client'];
-
-        // Insert the new client into the database
-        $stmt = $conn->prepare("INSERT INTO clients (name) VALUES (?)");
-        $stmt->bind_param("s", $newClient);
-        $stmt->execute();
-
-        if ($stmt->affected_rows > 0) {
-            $newClientId = $stmt->insert_id; // Get the newly inserted client ID
-            echo "<script>alert('New client added successfully!');</script>";
-            $selectedClient = $newClientId; // Use the new client ID
-        } else {
-            echo "<script>alert('Error adding new client.');</script>";
-        }
-
-        $stmt->close();
+    // Ensure selectedClient is a valid ID
+    if (!is_numeric($selectedClient) || empty($selectedClient)) {
+        echo json_encode(["success" => false, "message" => "Invalid client selected."]);
+        exit();
     }
 
-    // If a valid client (old or new) is selected, generate the report
-    if ($selectedClient !== "add_client") {
-        $sql = "INSERT INTO receipts (id, date, vendor, category, type, total, img_url, client_id) 
-                SELECT id, date, vendor, category, type, total, img_url, ? 
-                FROM scanned_receipts";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $selectedClient);
-        $stmt->execute();
-
-        if ($stmt->affected_rows > 0) {
-            $conn->query("DELETE FROM scanned_receipts");
-            echo "<script>alert('Report generated successfully and data moved to receipts table.');</script>";
-        } else {
-            echo "<script>alert('Error: No data moved. Check for SQL issues.');</script>";
-        }
-    }
-}
-
-// Handle Generate Report
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
-    $selectedClient = $_POST['client'];
-
-    // Transfer data to receipts table
-    $sql = "INSERT INTO receipts (id, date, vendor, category, type, total, img_url, client_id) 
-            SELECT id, date, vendor, category, type, total, img_url, ? 
+    // Move receipts from scanned_receipts to receipts table
+    $sql = "INSERT INTO receipts (date, vendor, category, type, total, img_url, client_id) 
+            SELECT date, vendor, category, type, total, img_url, ? 
             FROM scanned_receipts";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $selectedClient);
+    $stmt->bind_param("i", $selectedClient);
     $stmt->execute();
 
-    // Clear the scanned_receipts table
     if ($stmt->affected_rows > 0) {
-        $conn->query("DELETE FROM scanned_receipts");
-        echo "<script>alert('Report generated successfully and data moved to receipts table.');</script>";
+        $conn->query("DELETE FROM scanned_receipts"); // Clear scanned receipts table
+        echo json_encode(["success" => true, "message" => "Report generated successfully!"]);
     } else {
-        echo "<script>alert('Error: No data moved. Check for SQL issues.');</script>";
+        echo json_encode(["success" => false, "message" => "Error: No data moved."]);
     }
+
+    $stmt->close();
+    exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -217,69 +214,141 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
                 </table>
                 <button id="saveChanges" class="btn save-btn">Save Changes</button>
                 <!-- Client Dropdown -->
-                <form method="POST">
+                <form id="clientForm" method="POST">
                         <label for="client">Select Client:</label>
-                        <select name="client" id="client" required onchange="toggleNewClientInput()">
-                            <option value="" disabled selected>Select a client</option>
-                            <?php foreach ($clients as $client): ?>
-                                <option value="<?php echo htmlspecialchars($client['id']); ?>">
-                                    <?php echo htmlspecialchars($client['name']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                            <option value="add_client">➕ Add New Client</option>
+                        <select id="clientSelect" name="client">
+                            <option value="">-- Select Client --</option>
+                            <option value="add_client">+ Add New Client</option>
+                            <?php
+                            $result = $conn->query("SELECT id, name FROM clients ORDER BY name ASC");
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                            }
+                            ?>
                         </select>
-
-                        <!-- New Client Input (Hidden by Default) -->
-                        <input type="text" name="new_client" id="new_client" placeholder="Enter new client name" style="display:none;">
-
-                        <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
                     </form>
+
+                    <!-- New Client Modal -->
+                    <div id="newClientModal" style="display: none;">
+                        <label for="new_client_name">New Client Name:</label>
+                        <input type="text" id="new_client_name">
+                        <button id="confirmNewClient">Confirm</button>
+                    </div>
+
+                    <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
+
             </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#recordsTable').DataTable();
+    $(document).ready(function () {
+        $('#recordsTable').DataTable(); // Initialize DataTable
 
-            $('#saveChanges').click(function () {
-                const updatedData = [];
-                $('#recordsTable tbody tr').each(function () {
-                    const row = $(this);
-                    const id = row.find('td:eq(0)').text(); // Id
-                    const date = row.find('td:eq(1)').text();
-                    const vendor = row.find('td:eq(2)').text();
-                    const category = row.find('td:eq(3)').text();
-                    const type = row.find('td:eq(4)').text();
-                    const total = row.find('td:eq(5)').text();
+        // Save Changes (Update scanned_receipts)
+        $('#saveChanges').click(function () {
+            const updatedData = [];
+            $('#recordsTable tbody tr').each(function () {
+                const row = $(this);
+                const id = row.find('td:eq(0)').text(); // Receipt ID
+                const date = row.find('td:eq(1)').text();
+                const vendor = row.find('td:eq(2)').text();
+                const category = row.find('td:eq(3)').text();
+                const type = row.find('td:eq(4)').text();
+                const total = row.find('td:eq(5)').text();
 
-                    updatedData.push({ id, date, vendor, category, type, total });
-                });
+                updatedData.push({ id, date, vendor, category, type, total });
+            });
 
-                $.ajax({
-                    url: '',
-                    method: 'POST',
-                    data: { updatedData: JSON.stringify(updatedData) },
-                    success: function (response) {
-                        alert(response);
-                    }
-                });
+            $.ajax({
+                url: 'update_scanned_receipts.php', // PHP script to update scanned_receipts
+                method: 'POST',
+                data: { updatedData: JSON.stringify(updatedData) },
+                success: function (response) {
+                    alert(response);
+                },
+                error: function () {
+                    alert("Error updating receipts.");
+                }
             });
         });
 
-        function toggleNewClientInput() {
-            var clientDropdown = document.getElementById('client');
-            var newClientInput = document.getElementById('new_client');
-
-            if (clientDropdown.value === 'add_client') {
-                newClientInput.style.display = 'block';
+        // Toggle new client modal when "Add New Client" is selected
+        $('#clientSelect').change(function () {
+            if ($(this).val() === 'add_client') {
+                $('#newClientModal').show();
             } else {
-                newClientInput.style.display = 'none';
+                $('#newClientModal').hide();
             }
-        }
+        });
 
-        document.querySelector('.scan-btn').addEventListener('click', () => {
+        // Confirm new client via AJAX
+        $('#confirmNewClient').click(function () {
+            let newClientName = $('#new_client_name').val().trim();
+            let clientDropdown = $('#clientSelect');
+
+            if (newClientName === "") {
+                alert("Please enter a valid client name.");
+                return;
+            }
+
+            $.ajax({
+                url: 'create_client.php', // PHP script to add new client
+                method: 'POST',
+                data: { new_client: newClientName },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        alert("Client added successfully!");
+
+                        // Add new client to the dropdown
+                        let newOption = new Option(newClientName, response.client_id, true, true);
+                        clientDropdown.append(newOption);
+
+                        // Hide modal and clear input field
+                        $('#newClientModal').hide();
+                        $('#new_client_name').val("");
+                    } else {
+                        alert(response.message || "Error adding client.");
+                    }
+                },
+                error: function () {
+                    alert("Error communicating with the server.");
+                }
+            });
+        });
+
+        // Generate Report (Move Data from scanned_receipts to receipts table)
+        $('.save-btn[name="generateReport"]').click(function () {
+            let selectedClient = $('#clientSelect').val();
+
+            if (!selectedClient) {
+                alert("Please select a client before generating a report.");
+                return;
+            }
+
+            $.ajax({
+                url: 'generate_report.php', // PHP script to handle report generation
+                method: 'POST',
+                data: { client: selectedClient },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        alert("Report generated successfully!");
+                        location.reload(); // Refresh the page after success
+                    } else {
+                        alert(response.message || "Error generating report.");
+                    }
+                },
+                error: function () {
+                    alert("Error communicating with the server.");
+                }
+            });
+        });
+
+        // Scan button triggers script on Raspberry Pi
+        $('.scan-btn').click(() => {
             fetch('http://raspberrypi:5000/run-script', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
@@ -296,7 +365,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['generateReport'])) {
                 alert('Failed to connect to the server:\n' + error);
             });
         });
-    </script>
+    });
+</script>
+
 
 </body>
 </html>
