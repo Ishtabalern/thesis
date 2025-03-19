@@ -152,6 +152,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             <button class="btn-tabs" data-tab="capture-documents"><i class="fa-solid fa-camera"></i>Capture Documents</button>
             <button class="btn-tabs" data-tab="financial-records"><i class="fa-solid fa-file"></i>Financial Records</button>
             <button class="btn-tabs" data-tab="generate-report"><i class="fa-solid fa-file-export"></i>Generate Report</button>
+            <button class="btn-tabs" data-tab="client"><i class="fa-solid fa-file-export"></i>Client</button>
             <button class="btn-tabs" data-tab="manage-users"><i class="fa-solid fa-users-gear"></i> Manage Users</button>
             <button class="btn-tabs" data-tab="system-logs"><i class="fa-solid fa-file-circle-check"></i> Audit Logs</button>
             <button class="btn-tabs" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
@@ -412,6 +413,63 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             </section>     
         </section>
 
+        <section id="client" class="tab-content">
+
+            <header class="header">
+                <h2>Client</h2>
+                <div class="buttons">
+                    <a href="logout.php"><button style="background-color: #BB2727; font-weight: bold; color: #fff;">Log out</button></a>
+                    <button>Admin</button>
+                </div> 
+            </header>
+
+            <div class="add-client">
+                <button>Add Client</button>
+            </div>
+
+            <div class="client-container">
+                <div class="clients">
+                    <div class="header-search">
+                    <h3>Company</h3>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search" />
+                    </div>
+                    </div>
+                    
+                    <ol>
+                    <li><a href="company.html">7 - Evelyn</a></li>
+                    </ol>
+                </div>
+
+                <div class="clients">
+                    <div class="header-search">
+                    <h3>Independent</h3>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search" />
+                    </div>
+                    </div>
+                    
+                    <ol>
+                    <li><a href="independent.html">Jan D. LuLu</a></li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Company View -->
+            <div class="company-view" style="display:none;">
+                <h3>Company</h3>
+                <p id="client-name">7 - Evelyn</p>
+                <button class="back-btn" onclick="goBack()">Back</button>
+                <button>Trial Balance</button>
+                <button>Income Statement</button>
+                <button>Owner's Equity</button>
+                <button>Balance Sheet</button>
+                <button>Statement of Cash Flow</button>
+                <div class="content-area"></div>
+            </div>
+
+        </section>
+
         <section id="manage-users" class="tab-content">         
             <header class="header">
                 <h2>Manage Users</h2>
@@ -590,6 +648,23 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
         <!-- Other sections here... -->
 
     </main>
+
+    <!-- Client Script -->
+    <script>
+        function goBack() {
+        document.querySelector('.company-view').style.display = 'none';
+        document.querySelector('.client-container').style.display = 'flex';
+        }
+
+        document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            document.querySelector('.client-container').style.display = 'none';
+            document.querySelector('.company-view').style.display = 'block';
+            document.getElementById('client-name').innerText = this.textContent;
+        });
+        });
+    </script>
 
     <!-- Modal-->  
 
