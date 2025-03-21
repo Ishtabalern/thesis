@@ -142,11 +142,22 @@ body {
     border-radius: 5px;
 }
 
+.receipt-table{
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
 .data-table {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     border: 1px solid #ddd;
+    
+   
 }
 
 .data-table table {

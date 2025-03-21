@@ -157,6 +157,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
 
     <main class="content">
         <section id="home" class="tab-content">
+<<<<<<< Updated upstream
 
         <div class="dashboard">
         <div class="top-bar">
@@ -168,6 +169,16 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
             </form>
             </div>
         </div>
+=======
+            <div class="dashboard">
+                <div class="top-bar">
+                    <h1>Home</h1>
+                    <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
+                    <div class="user-controls">
+                        <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                    </div>
+                </div>
+>>>>>>> Stashed changes
 
                 <div class="subcontainer">
                     <div class="report-card">

@@ -34,7 +34,7 @@ body {
     top: 10px;
     left: 10px;
     bottom: 10px;
-    width: 70px; /* Initial width (icon-only mode) */
+    width: 230px; /* Expanded width to show text */
     background-color: #062335;
     display: flex;
     flex-direction: column;
@@ -46,10 +46,6 @@ body {
     transition: width 0.3s ease; /* Smooth transition */
 }
 
-/* Expanded Sidebar on Hover */
-.sidebar:hover {
-    width: 230px; /* Expanded width to show text */
-}
 
 /* Sidebar Items */
 .btn-container {
@@ -92,7 +88,7 @@ body {
 
 /* Company Logo */
 .sidebar .company-logo img {
-    max-width: 60px; /* Icon size in collapsed mode */
+    max-width: 100%; /* Icon size in collapsed mode */
     height: auto;
     transition: max-width 0.3s ease; /* Smooth transition for logo */
     background-color:#f7f7f7 ;
