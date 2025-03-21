@@ -157,34 +157,17 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
 
     <main class="content">
         <section id="home" class="tab-content">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-        <div class="dashboard">
-        <div class="top-bar">
-            <h1>Home</h1>
-            <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
-            <div class="user-controls">
-            <form action="logout.php" method="post">
-                <button type="submit" class="logout-btn">Log out</button>
-            </form>
-            </div>
-        </div>
-=======
-=======
->>>>>>> Stashed changes
             <div class="dashboard">
                 <div class="top-bar">
                     <h1>Home</h1>
                     <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
                     <div class="user-controls">
-                        <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                        <form action="logout.php" method="post">
+                            <button type="submit" class="logout-btn">Log out</button>
+                        </form>
                     </div>
                 </div>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
                 <div class="subcontainer">
                     <div class="report-card">
@@ -491,17 +474,233 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                         </div>
                        
                         <div class="forms-btns">
-                            <button onclick="openTab(event, 'Trial Balance')">Trial Balance</button>
-                            <button onclick="openTab(event, 'Income Statement')">Income Statement</button>
-                            <button onclick="openTab(event, 'Owner\'s Equity')">Owner's Equity</button>
-                            <button onclick="openTab(event, 'Balance Sheet')">Balance Sheet</button>
-                            <button onclick="openTab(event, 'Statement of Cash Flow')">Statement of Cash Flow</button>
+                            <button class="tablink" id="income-statement-btn" onclick="openTab('income-statement')">Income Statement</button>
+                            <button class="tablink" id="owners-equity-btn" onclick="openTab('owners-equity')">Owner's Equity</button>
+                            <button class="tablink" id="statement-cashflow-btn" onclick="openTab('statement-cashflow')">Statement of Cash Flow</button>
+                            <button class="tablink" id="trial-balance-btn" onclick="openTab('trial-balance')">Trial Balance</button>           
+                            <button class="tablink" id="balance-sheet-btn" onclick="openTab('balance-sheet')">Balance Sheet</button>
                         </div>
             
                     </div>
                     
-                    <div class="company-contents">
-                         <h3 id="tab-content">Click a tab to see the content here.</h3>
+                    <div id="income-statement" class="company-contents active">
+                        <div class="customer-name"> 
+                            <p>Customer Name</p>
+                            <h3 id="tab-content">Income Statement</h3>
+                        </div>
+                        
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <td class="left bold">REVENUES</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Internet services</td>
+                                    <td class="right">₱ 65,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Printing services</td>
+                                    <td class="right">₱ 54,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Total Revenues</td>
+                                    <td class="right bold">₱ 119,000</td>
+                                </tr>
+
+                                <tr><td colspan="2"><br /></td></tr>
+
+                                <tr>
+                                    <td class="left bold">EXPENSES</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Salaries and wages</td>
+                                    <td class="right">₱ 20,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Internet and communication</td>
+                                    <td class="right">₱ 4,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Water and power</td>
+                                    <td class="right">₱ 5,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Rental</td>
+                                    <td class="right">₱ 5,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Computer supplies</td>
+                                    <td class="right">₱ 5,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Depreciation</td>
+                                    <td class="right">₱ 1,667</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Insurance</td>
+                                    <td class="right">₱ 1,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Interest</td>
+                                    <td class="right">₱ 844</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Taxes and licenses</td>
+                                    <td class="right">₱ 25,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Total Expenses</td>
+                                    <td class="right bold">₱ 67,511</td>
+                                </tr>
+
+                                <tr><td colspan="2"><br /></td></tr>
+
+                                <tr>
+                                    <td class="left bold">INCOME BEFORE TAX</td>
+                                    <td class="right bold">₱ 51,489</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Income tax expense</td>
+                                    <td class="right">₱ 75</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">NET INCOME</td>
+                                    <td class="right bold">₱ 51,414</td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="owners-equity" class="company-contents">
+                        <div class="customer-name"> 
+                            <p>Customer Name</p>
+                            <h3 id="tab-content">Owner's Equity</h3>
+                        </div>
+                        
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <td class="left bold">Client Name, Date</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Investments during the year</td>
+                                    <td class="right">₱ 65,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Net Income for the year</td>
+                                    <td class="right">₱ 1,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Total</td>
+                                    <td class="right bold">₱ 1,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Less: Withrawals</td>
+                                    <td class="right">(₱ 119,000)</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Less: Withrawals</td>
+                                    <td class="right">(₱ 119,000)</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Net Increase in owner's equity</td>
+                                    <td class="right">326,414</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Client, Company, Date</td>
+                                    <td class="right bold">123123123</td>
+                                </tr>
+
+                                
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="statement-cashflow" class="company-contents">
+                        <div class="customer-name"> 
+                            <p>Customer Name</p>
+                            <h3 id="tab-content">Statement of Cash Flow</h3>
+                        </div>
+                        
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <td class="left bold">Cash from sales</td>
+                                    <td class="right">30</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash paid to suppliers</td>
+                                    <td class="right">₱ 65,000</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Total cash from sales</td>
+                                    <td class="right bold">20</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash used to purchase inventory</td>
+                                    <td class="right bold">₱ 1,000</td>
+                                </tr>
+
+                                <tr>
+                                    <td class="left">Cash fused for operational expenses</td>
+                                    <td class="right">(₱ 119,000)</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash from operating activities</td>
+                                    <td class="right">(₱ 119,000)</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash from investing activities</td>
+                                    <td class="right">326,414</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Sales machinery</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Purchase computers</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash from investing activities</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash from financing activities</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Bank loan</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Payment on line of credit</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash from financing activities</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Total cash generated for the year</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Add cash at the beginning of the year</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash at the end of the year</td>
+                                    <td class="right">123123123</td>
+                                </tr>
+
+                                
+                            </table>
+                        </div>
                     </div>
                 </div>     
             </div>
@@ -694,9 +893,22 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
     
     <!-- client tablink -->
     <script>
-        function openTab(event, tabName) {
-        const content = document.getElementById('tab-content');
-        content.textContent = `You have selected: ${tabName}`;
+        function openTab(tabId) {
+            // Hide all tab contents
+            var contents = document.getElementsByClassName('company-contents');
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+
+            // Remove active class from all buttons
+            var buttons = document.getElementsByClassName('tablink');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+
+            // Show the current tab content and set the button as active
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById(tabId + '-btn').classList.add('active');
         }
 
         function goBack() {

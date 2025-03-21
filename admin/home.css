@@ -1299,4 +1299,38 @@ tbody tr td{
    min-height: 700px;
    border-radius: 5px;
    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+   display: none;
 }
+
+.company-contents.active{
+   display: block;
+}
+
+.company-contents .customer-name{
+   text-align: center;
+   margin-top: 15px;
+}
+
+.customer-name > *{
+   margin-top: 10px;
+}
+
+.table table {
+   width: 50%;
+   margin: 20px auto;
+ 
+ }
+.table table td {
+   padding: 8px 10px;
+ }
+
+ .table table .left {
+   text-align: left;
+ }
+
+.table table .right {
+   text-align: right;
+ }
+ .table table .bold {
+   font-weight: bold;
+ }
