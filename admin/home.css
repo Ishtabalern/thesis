@@ -1315,10 +1315,14 @@ tbody tr td{
    margin-top: 10px;
 }
 
+.table {
+   display: flex;
+   flex-direction: row;
+}
+
 .table table {
    width: 50%;
    margin: 20px auto;
- 
  }
 .table table td {
    padding: 8px 10px;
@@ -1333,4 +1337,11 @@ tbody tr td{
  }
  .table table .bold {
    font-weight: bold;
+ }
+ .table table .top {
+   background-color: #00AF7E;
+   color: #fff;
+ }
+ .table table .bottom {
+   background-color: #dddddd;
  }

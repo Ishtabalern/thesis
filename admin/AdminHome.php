@@ -492,8 +492,8 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                         <div class="table">
                             <table>
                                 <tr>
-                                    <td class="left bold">REVENUES</td>
-                                    <td></td>
+                                    <td class="left bold top">REVENUES</td>
+                                    <td class="top"></td>
                                 </tr>
                                 <tr>
                                     <td class="left">Internet services</td>
@@ -504,15 +504,15 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="right">₱ 54,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Total Revenues</td>
-                                    <td class="right bold">₱ 119,000</td>
+                                    <td class="left bold bottom">Total Revenues</td>
+                                    <td class="right bold bottom">₱ 119,000</td>
                                 </tr>
 
                                 <tr><td colspan="2"><br /></td></tr>
 
                                 <tr>
-                                    <td class="left bold">EXPENSES</td>
-                                    <td></td>
+                                    <td class="left bold top">EXPENSES</td>
+                                    <td class="top"></td>
                                 </tr>
                                 <tr>
                                     <td class="left">Salaries and wages</td>
@@ -551,8 +551,8 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="right">₱ 25,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Total Expenses</td>
-                                    <td class="right bold">₱ 67,511</td>
+                                    <td class="left bold bottom">Total Expenses</td>
+                                    <td class="right bold bottom">₱ 67,511</td>
                                 </tr>
 
                                 <tr><td colspan="2"><br /></td></tr>
@@ -566,8 +566,8 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="right">₱ 75</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">NET INCOME</td>
-                                    <td class="right bold">₱ 51,414</td>
+                                    <td class="left bold bottom">NET INCOME</td>
+                                    <td class="right bold bottom">₱ 51,414</td>
                                 </tr>
                                 
                             </table>
@@ -702,6 +702,243 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                             </table>
                         </div>
                     </div>
+
+                    <div id="trial-balance" class="company-contents">
+                        <div class="customer-name"> 
+                            <p>Customer Name</p>
+                            <h3 id="tab-content">Trial Balance</h3>
+                        </div>
+                        
+                        <div class="table">
+                            <table>
+                                <tr>
+                                    <td class="left bold top">Account</td>
+                                    <td class="top">Debit</td>
+                                    <td class="top">Credit</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Cash</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Accounts Receivable</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Inventory</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Leasehold Improvements</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Accounts Payable</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Long Term Liablities</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Common Stock</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Dividends</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Revenues</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cost of Goods Sold</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Rent Expense</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Supplies Expense</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Utilities Expense</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Wages Expense</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Interest Expense</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+
+                                <tr><td colspan="2"><br /></td></tr>
+
+                                <tr>
+                                    <td class="left bottom">Totals</td>
+                                    <td class="bottom">0</td>
+                                    <td class="bottom">0</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="balance-sheet" class="company-contents">
+                        <div class="customer-name"> 
+                            <p>Customer Name</p>
+                            <h3 id="tab-content">Balance Sheet</h3>
+                        </div>
+                        
+                        <div class="table">
+                            <table style="margin-left: 10px; margin-right: 10px;">
+                                <tr>
+                                    <td class="left bold top">Assets</td>
+                                    <td class="right bold top">Amounts</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Current Assets</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Cash</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Accounts</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Inventory</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Prepaid Rent</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold bottom">Total Current Assets</td>
+                                    <td class="right bottom">0</td>
+                                </tr>
+
+                                <tr><td colspan="2"><br /></td></tr>
+
+                                <tr>
+                                    <td class="left bold">Long Term Assets</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Land</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Buildings and Improvements</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Owner's Equity</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Fortunes</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">General Equipment</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Total Fixed Assets</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold bottom">Total Assets</td>
+                                    <td class="right bottom">0</td>
+                                </tr>
+
+                            </table>
+                            <table style="margin-left: 10px; margin-right: 10px;">
+
+                                <tr>
+                                    <td class="left bold top">Liabilities</td>
+                                    <td class="right bold top">Amount</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Current Liabilities</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Account Payable</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Tax Payable</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Wages Payable</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Interest Payable</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold bottom">Total Current Liabilities</td>
+                                    <td class="right bottom">0</td>
+                                </tr>
+
+                                <tr><td colspan="2"><br /></td></tr>
+
+                                <tr>
+                                    <td class="left bold">Long Term Liabilities</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Lean 1</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Bonds Payable</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Notes Payable</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Total Long Term Liabilities</td>
+                                    <td class="right">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold bottom">Total Liabilities</td>
+                                    <td class="right bottom">0</td>
+                                </tr>
+                                
+                            </table>
+                        </div>
+                    </div>
+
+
                 </div>     
             </div>
 
