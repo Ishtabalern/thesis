@@ -49,9 +49,25 @@ if ($result && $row = $result->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Home</title>
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+        <!-- Trigger/Open The Modal -->
+    <button id="myBtn">Open Modal</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Some text in the Modal..</p>
+    </div>
+
+    </div>
+
+
     <div class="sidebar">
         <div class="company-logo">
             <img src="./imgs/csk_logo.png" alt="">
@@ -109,5 +125,6 @@ if ($result && $row = $result->fetch_assoc()) {
             </ul>
         </div>
     </div>
+    <script src="script/dashboard.js"></script>
 </body>
 </html>
