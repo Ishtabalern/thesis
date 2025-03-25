@@ -496,11 +496,11 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="top"></td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Internet services</td>
+                                    <td class="middle">Internet services</td>
                                     <td class="right">₱ 65,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Printing services</td>
+                                    <td class="middle">Printing services</td>
                                     <td class="right">₱ 54,000</td>
                                 </tr>
                                 <tr>
@@ -515,39 +515,39 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="top"></td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Salaries and wages</td>
+                                    <td class="middle">Salaries and wages</td>
                                     <td class="right">₱ 20,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Internet and communication</td>
+                                    <td class="middle">Internet and communication</td>
                                     <td class="right">₱ 4,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Water and power</td>
+                                    <td class="middle">Water and power</td>
                                     <td class="right">₱ 5,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Rental</td>
+                                    <td class="middle">Rental</td>
                                     <td class="right">₱ 5,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Computer supplies</td>
+                                    <td class="middle">Computer supplies</td>
                                     <td class="right">₱ 5,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Depreciation</td>
+                                    <td class="middle">Depreciation</td>
                                     <td class="right">₱ 1,667</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Insurance</td>
+                                    <td class="middle">Insurance</td>
                                     <td class="right">₱ 1,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Interest</td>
+                                    <td class="middle">Interest</td>
                                     <td class="right">₱ 844</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Taxes and licenses</td>
+                                    <td class="middle">Taxes and licenses</td>
                                     <td class="right">₱ 25,000</td>
                                 </tr>
                                 <tr>
@@ -562,7 +562,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="right bold">₱ 51,489</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Income tax expense</td>
+                                    <td class="middle">Income tax expense</td>
                                     <td class="right">₱ 75</td>
                                 </tr>
                                 <tr>
@@ -725,72 +725,72 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Accounts Receivable</td>
+                                    <td class="middle">Accounts Receivable</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Inventory</td>
+                                    <td class="middle">Inventory</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Leasehold Improvements</td>
+                                    <td class="middle">Leasehold Improvements</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Accounts Payable</td>
+                                    <td class="middle">Accounts Payable</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Long Term Liablities</td>
+                                    <td class="middle">Long Term Liablities</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Common Stock</td>
+                                    <td class="middle">Common Stock</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Dividends</td>
+                                    <td class="middle">Dividends</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Revenues</td>
+                                    <td class="middle">Revenues</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cost of Goods Sold</td>
+                                    <td class="middle">Cost of Goods Sold</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Rent Expense</td>
+                                    <td class="middle">Rent Expense</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Supplies Expense</td>
+                                    <td class="middle">Supplies Expense</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Utilities Expense</td>
+                                    <td class="middle">Utilities Expense</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Wages Expense</td>
+                                    <td class="middle">Wages Expense</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Interest Expense</td>
+                                    <td class="middle">Interest Expense</td>
                                     <td>0</td>
                                     <td>0</td>
                                 </tr>
@@ -798,7 +798,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                 <tr><td colspan="2"><br /></td></tr>
 
                                 <tr>
-                                    <td class="left bottom">Totals</td>
+                                    <td class="left bold bottom">Totals</td>
                                     <td class="bottom">0</td>
                                     <td class="bottom">0</td>
                                 </tr>
@@ -823,23 +823,23 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash</td>
+                                    <td class="middle">Cash</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Accounts</td>
+                                    <td class="middle">Accounts</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Inventory</td>
+                                    <td class="middle">Inventory</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Prepaid Rent</td>
+                                    <td class="middle">Prepaid Rent</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold bottom">Total Current Assets</td>
+                                    <td class="middle bold bottom" style="text-indent: 40px;">Total Current Assets</td>
                                     <td class="right bottom">0</td>
                                 </tr>
 
@@ -850,31 +850,31 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Land</td>
+                                    <td class="middle">Land</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Buildings and Improvements</td>
+                                    <td class="middle">Buildings and Improvements</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Owner's Equity</td>
+                                    <td class="middle">Owner's Equity</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Fortunes</td>
+                                    <td class="middle">Fortunes</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">General Equipment</td>
+                                    <td class="middle">General Equipment</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Total Fixed Assets</td>
+                                    <td class="middle bold">Total Fixed Assets</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold bottom">Total Assets</td>
+                                    <td class="middle bold bottom" style="text-indent: 40px;">Total Assets</td>
                                     <td class="right bottom">0</td>
                                 </tr>
 
@@ -890,23 +890,23 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Account Payable</td>
+                                    <td class="middle">Account Payable</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Tax Payable</td>
+                                    <td class="middle">Tax Payable</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Wages Payable</td>
+                                    <td class="middle">Wages Payable</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Interest Payable</td>
+                                    <td class="middle">Interest Payable</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold bottom">Total Current Liabilities</td>
+                                    <td class="middle bold bottom" style="text-indent: 40px;">Total Current Liabilities</td>
                                     <td class="right bottom">0</td>
                                 </tr>
 
@@ -917,23 +917,23 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Lean 1</td>
+                                    <td class="middle">Lean 1</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Bonds Payable</td>
+                                    <td class="middle">Bonds Payable</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Notes Payable</td>
+                                    <td class="middle">Notes Payable</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Total Long Term Liabilities</td>
+                                    <td class="middle bold">Total Long Term Liabilities</td>
                                     <td class="right">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold bottom">Total Liabilities</td>
+                                    <td class="middle bold bottom" style="text-indent: 40px;">Total Liabilities</td>
                                     <td class="right bottom">0</td>
                                 </tr>
                                 
