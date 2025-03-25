@@ -580,39 +580,39 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                             <h3 id="tab-content">Owner's Equity</h3>
                         </div>
                         
-                        <div class="table">
+                        <div class="table" style="border-color: #fff; border: 5px; border-radius: 10px;">
                             <table>
                                 <tr>
-                                    <td class="left bold">Client Name, Date</td>
+                                    <td class="left top bold">Owner's Equity at January 2025</td>
+                                    <td class="top"></td>
+                                </tr>
+                                <tr>
+                                    <td class="left">Add:</td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>Investments during the year</td>
-                                    <td class="right">₱ 65,000</td>
-                                </tr>
-                                <tr>
-                                    <td class="left">Net Income for the year</td>
+                                    <td class="middle">Owner's capital contribution</td>
                                     <td class="right">₱ 1,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Total</td>
+                                    <td class="middle">Net Income</td>
                                     <td class="right bold">₱ 1,000</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Less: Withrawals</td>
+                                    <td class="middle">Subtotal</td>
                                     <td class="right">(₱ 119,000)</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Less: Withrawals</td>
-                                    <td class="right">(₱ 119,000)</td>
+                                    <td class="left bold">Deduct:</td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Net Increase in owner's equity</td>
+                                    <td class="middle">Owner's draws</td>
                                     <td class="right">326,414</td>
                                 </tr>
                                 <tr>
-                                    <td class="left bold">Client, Company, Date</td>
-                                    <td class="right bold">123123123</td>
+                                    <td class="left bold bottom" style="color: #00AF7E;">Owner's Equity at December 2026</td>
+                                    <td class="right bold bottom">123123123</td>
                                 </tr>
 
                                 
@@ -629,73 +629,76 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
                         <div class="table">
                             <table>
                                 <tr>
-                                    <td class="left bold">Cash from sales</td>
-                                    <td class="right">30</td>
+                                    <td class="left bold top">Cash flow statement</td>
+                                    <td class="top"></td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash paid to suppliers</td>
-                                    <td class="right">₱ 65,000</td>
+                                    <td class="left bold">Cash from operating activities</td>
+                                    <td></td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Total cash from sales</td>
+                                    <td class="middle">Net Income</td>
                                     <td class="right bold">20</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash used to purchase inventory</td>
+                                    <td class="middle">Deferred Tax</td>
                                     <td class="right bold">₱ 1,000</td>
                                 </tr>
-
                                 <tr>
-                                    <td class="left">Cash fused for operational expenses</td>
+                                    <td class="middle">Depredation</td>
                                     <td class="right">(₱ 119,000)</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash from operating activities</td>
+                                    <td class="middle" style="text-indent: 40px;">Cash from Accounts Receivable</td>
                                     <td class="right">(₱ 119,000)</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash from investing activities</td>
+                                    <td class="middle" style="text-indent: 40px;">Cash from Inventory</td>
                                     <td class="right">326,414</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Sales machinery</td>
+                                    <td class="middle" style="text-indent: 40px;">Cash from Accounts Payable</td>
                                     <td class="right">123123123</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Purchase computers</td>
+                                    <td class="middle bottom">Subtotal</td>
+                                    <td class="right bottom">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Cash from investing</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="middle">Capital Expenditure/td>
                                     <td class="right">123123123</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash from investing activities</td>
+                                    <td class="middle bottom">Subtotal</td>
+                                    <td class="right bottom">123123123</td>
+                                </tr>
+                                <tr>
+                                    <td class="left bold">Cash from Financing</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td class="middle">Change in Long-Term Debt</td>
                                     <td class="right">123123123</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash from financing activities</td>
+                                    <td class="middle">Change in Revolving Credit Line</td>
                                     <td class="right">123123123</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Bank loan</td>
+                                    <td class="middle">Change in Common Equity</td>
                                     <td class="right">123123123</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Payment on line of credit</td>
+                                    <td class="middle">Dividends</td>
                                     <td class="right">123123123</td>
                                 </tr>
                                 <tr>
-                                    <td class="left">Cash from financing activities</td>
-                                    <td class="right">123123123</td>
-                                </tr>
-                                <tr>
-                                    <td class="left">Total cash generated for the year</td>
-                                    <td class="right">123123123</td>
-                                </tr>
-                                <tr>
-                                    <td class="left">Add cash at the beginning of the year</td>
-                                    <td class="right">123123123</td>
-                                </tr>
-                                <tr>
-                                    <td class="left">Cash at the end of the year</td>
-                                    <td class="right">123123123</td>
+                                    <td class="middle bottom">Subtotal</td>
+                                    <td class="right bottom">123123123</td>
                                 </tr>
 
                                 
