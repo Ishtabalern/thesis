@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link rel="stylesheet" href="client.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+   <section class="sidebar">
+      <div class="company-logo">
+          <img src="../imgs/csk_logo.png" alt="">
+      </div>
+      <div class="btn-container">
+          <button class="btn-tabs" data-tab="home"><i class="fa-solid fa-house"></i> Home</button>
+          <button class="btn-tabs" data-tab="capture-documents"><i class="fa-solid fa-camera"></i>Capture Documents</button>
+          <button class="btn-tabs" data-tab="financial-records"><i class="fa-solid fa-file"></i>Financial Records</button>
+          <button class="btn-tabs" data-tab="generate-report"><i class="fa-solid fa-file-export"></i>Generate Report</button>
+          <button class="btn-tabs" data-tab="client"><i class="fa-solid fa-file-export"></i>Client</button>
+          <button class="btn-tabs" data-tab="manage-users"><i class="fa-solid fa-users-gear"></i> Manage Users</button>
+          <button class="btn-tabs" data-tab="system-logs"><i class="fa-solid fa-file-circle-check"></i> Audit Logs</button>
+          <button class="btn-tabs" data-tab="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+      </div>
+  </section>
+
+
+  <main class="content">
+      <section id="client" class="tab-content">
+
+         <header class="header">
+            <h2>Client</h2>
+            <div class="buttons">
+            <form action="logout.php" method="post">
+               <button type="submit" class="logout-btn">Log out</button>
+            </form>
+               <button>Admin</button>
+            </div> 
+         </header>
+
+         <div class="forms-container">
+            <div class="forms-content">
+               <header>
+                  <h2>Personal information</h2>
+                  <span>1 of 4</span>
+               </header>
+
+               <form action="">
+                  <div class="name-information">
+                     <div class="info">
+                        <label for="first-name">First name</label>
+                        <input type="text" id="first-name" name="first-name" required>
+                     </div>
+               
+                  </div>
+
+                  <div class="customer-information">
+
+                  </div>
+                  <button></button>
+               </form>
+            </div>
+         </div>
+
+      </section>
+  </main>
+
+
+
+
+
+
+
+  <script>
+   document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.btn-tabs');
+    const contents = document.querySelectorAll('.tab-content');
+
+    // Get the last active tab from localStorage or default to 'home'
+    const activeTab = localStorage.getItem('activeTab') || 'home';
+    const activeElement = document.getElementById(activeTab);
+    
+    if (activeElement) {
+        activeElement.classList.add('active');
+    }
+
+      tabs.forEach(tabButton => {
+         tabButton.addEventListener('click', () => {
+               const targetTab = tabButton.getAttribute('data-tab');
+
+               // Remove 'active' class from all content sections
+               contents.forEach(content => content.classList.remove('active'));
+
+               // Add 'active' class to the target content section
+               document.getElementById(targetTab).classList.add('active');
+
+               // Store the currently active tab in localStorage
+               localStorage.setItem('activeTab', targetTab);
+         });
+      });
+   });
+  </script>
+</body>
+</html>

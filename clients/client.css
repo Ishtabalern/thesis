@@ -1,0 +1,203 @@
+* {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   text-decoration: none;
+   box-sizing: border-box;
+   scroll-behavior: smooth;
+   font-family: Arial, sans-serif;
+  
+}
+
+:root{
+   --whiteBG :#fff;
+   --greenBG : #00AF7E;
+   --flex: flex;
+   --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+   --border: #D0D0D0;
+}
+
+
+body{
+   display: flex;
+   flex-direction: row; /* Ensures sidebar and content align side by side */
+   height: 100vh;
+   margin: 0;
+   background-color: #F2F2F2;
+ }
+
+ .sidebar {
+   position: fixed; /* Ensures it stays in place */
+   top: 10px;
+   left: 10px;
+   bottom: 10px;
+   width: 230px; /* Expanded width to show text */
+   background-color: #062335;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 20px 10px; /* Inner padding for spacing */
+   border-radius: 10px;
+   color: white;
+   overflow: hidden;
+   transition: width 0.3s ease; /* Smooth transition */
+   z-index: 100; /* Ensures it's above other content */
+}
+ 
+
+ 
+.btn-container {
+   display: flex;
+   flex-direction: column;
+   width: 100%; /* Full width in expanded mode */
+   margin-top: 10px;
+}
+ 
+
+ .btn-container button{
+   display: flex;
+   align-items: center;
+   margin-bottom: 8px;
+   text-align: left;
+   padding: 10px;
+   font-size: 17px;
+   color: var(--whiteBG);
+   cursor: pointer;
+   border-radius: 6px;
+   background-color: transparent;
+   white-space: nowrap; /* Prevents text wrapping */
+   overflow: hidden; /* Hides text in collapsed mode */
+   text-overflow: ellipsis;
+   transition: background-color 0.15s, color 0.15s;
+   border: none;
+ }
+ 
+ .btn-container .btn-tabs i {
+   margin-right: 10px;
+   min-width: 30px; /* Fixed width for consistent icon alignment */
+   text-align: center;
+}
+
+
+.sidebar:hover .btn-tabs {
+   overflow: visible; /* Shows text content when expanded */
+}
+
+.btn-container .btn-tabs:hover {
+   background-color: var(--whiteBG);
+   color: var(--greenBG);
+}
+
+/* Company Logo */
+.sidebar .company-logo img {
+   max-width: 100%; /* Icon size in collapsed mode */
+   height: auto;
+   transition: max-width 0.3s ease; /* Smooth transition for logo */
+   background-color:#f7f7f7 ;
+   border-radius: 7px;
+
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+   .dashboard {
+       margin-left: 0;
+   }
+
+   .sidebar {
+       width: 100px;
+       padding: 10px;
+   }
+
+   .sidebar a {
+       font-size: 14px;
+       padding: 10px;
+   }
+
+}
+
+
+ .content{
+   flex: 1;
+   min-width: 0;
+   padding: 30px 20px;
+   margin-left: 80px; /* Adjust based on the sidebar's width */
+   overflow-y: auto;
+   margin-left: 240px; /* Match the expanded sidebar width */
+ }
+ 
+ .header{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   background-color: var(--whiteBG);
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: var(--shadow);
+   margin-bottom: 20px;
+ 
+ }
+
+ .buttons button{
+   margin-right: 20px;
+   padding: 8px;
+   width: 80px;
+   border-radius: 8px;
+   border: none;
+   cursor: pointer;
+   box-shadow: var(--shadow);
+}
+
+.logout-btn {
+   background-color: #E74C3C;
+   color: white;
+   padding: 10px 15px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   margin-right: 10px;
+}
+
+.logout-btn:hover {
+   background-color: #C0392B;
+}
+
+/*forms container*/
+.forms-container{
+   height: 500px;
+   max-width: 800px;
+   width: 80%;
+   background-color: #fff;
+   margin: auto;
+   border-radius: 5px;
+   box-shadow: var(--shadow);
+}
+
+.forms-content{
+
+}
+
+.forms-content header{
+   padding: 23px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
+header h2{
+   color: #707070;
+}
+
+header span{
+   color: #BBBBBB;
+   
+}
+
+.forms-content form{
+
+}
+
+form .name-information{
+   
+}
