@@ -165,7 +165,7 @@ body{
 
 /*forms container*/
 .forms-container{
-   height: 500px;
+   height: 600px;
    max-width: 800px;
    width: 80%;
    background-color: #fff;
@@ -199,5 +199,66 @@ header span{
 }
 
 form .name-information{
-   
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+ 
 }
+
+.name-information .info{
+display:flex;
+flex-direction: column;
+
+
+}
+
+.name-information .info .label{ 
+
+
+}
+
+.name-information .info input[type=text]{ 
+   width:150px;
+   border-radius: 4px;
+   padding: 8px;
+   border: 1px solid #B1B1B1;
+   outline: none;
+   margin-top: 5px;
+}
+
+#Suffix {
+   width: 50px;
+ }
+
+/*customer information*/
+
+.customer-information {
+   margin-top: 20px;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 20px;
+
+ }
+ 
+ .customer-information .info {
+   display: block;
+ }
+ 
+ .customer-information .info label {
+   display: block;
+   margin-bottom: 5px;
+   color: #707070;
+ }
+ 
+ 
+ .customer-information .info input[type="text"] {
+   width: 270px;
+   border-radius: 4px;
+   padding: 8px;
+   border: 1px solid #B1B1B1;
+   outline: none;
+ }
+                                                          
+
+
+
