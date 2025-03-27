@@ -165,8 +165,8 @@ body{
 
 /*forms container*/
 .forms-container{
-   height: 600px;
-   max-width: 800px;
+
+   max-width: 740px;
    width: 80%;
    background-color: #fff;
    margin: auto;
@@ -175,18 +175,27 @@ body{
 }
 
 .forms-content{
+   display: flex;
+   flex-direction: column;
 
+}
+
+.forms-content > *{
+ margin-top: 20px;
 }
 
 .forms-content header{
-   padding: 23px;
+   padding: 20px 30px;
    display: flex;
    align-items: center;
    justify-content: space-between;
+
+  
 }
 
-header h2{
+.forms-content header h2{
    color: #707070;
+   
 }
 
 header span{
@@ -201,7 +210,9 @@ header span{
 form .name-information{
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
+
+
  
 }
 
@@ -233,7 +244,7 @@ flex-direction: column;
 /*customer information*/
 
 .customer-information {
-   margin-top: 20px;
+   margin-top: 30px;
    display: flex;
    flex-wrap: wrap;
    gap: 20px;
@@ -242,6 +253,7 @@ flex-direction: column;
  
  .customer-information .info {
    display: block;
+   margin: auto;
  }
  
  .customer-information .info label {
@@ -258,7 +270,66 @@ flex-direction: column;
    border: 1px solid #B1B1B1;
    outline: none;
  }
+
+ form .submit-persnal-info{
+   margin-top: 20px;
+   padding: 20px 45px;
+   display: flex;
+   justify-content: space-between;
+   
+ }
                                                           
+ form .submit-persnal-info button{
+   padding: 10px;
+   width: 90px;
+   border-radius: 5px;
+   border: 1px solid var(--greenBG);
+   color: var(--greenBG);
+   font-weight: bold;
+   background-color: #fff;
+   cursor: pointer;
+ }
 
 
+ /*customer information*/
 
+ form .billing-address{
+   padding: 0px 30px;
+   font-size: 15px;
+   color: #707070;
+ }
+
+
+ 
+ /*notes and attachemnts*/
+
+ form .notes-attachments{
+   
+ }
+
+ 
+ form .notes-attachments .text-area{
+   padding: 0px 30px;
+   display: flex;
+   flex-direction: column;
+ }
+
+
+ form .notes-attachments textarea{
+   padding: 10px;
+   height: 120px;
+   box-sizing: border-box;
+   border-radius: 5px;
+   margin-top: 10px;
+ }
+
+ form .notes-attachments > *{
+   margin-top: 15px;
+ }
+
+
+  form .payment{
+   margin-top: 25px;
+   padding: 0px 30px;
+   color: #707070;
+ }

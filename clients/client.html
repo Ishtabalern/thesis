@@ -38,7 +38,7 @@
             </div> 
          </header>
 
-         <div class="forms-container">
+         <div class="forms-container" style="display: none;">
             <div class="forms-content">
                <header>
                   <h2>Personal information</h2>
@@ -99,10 +99,120 @@
                         <input type="text" id="website" name="website" required>
                      </div>
                   </div>
-                  <button></button>
+                  
+                  <div class="submit-persnal-info">
+                     <button >Next</button>
+                  </div>
+                
                </form>
             </div>
          </div>
+
+         <div class="forms-container" style="display: none;>
+            <div class="forms-content">
+               <header>
+                  <h2>Addresses</h2>
+                  <span>2 of 4</span>
+               </header>
+
+               <form action="">
+                  <h2 class="billing-address">Billing address</h2>
+                  <div class="customer-information">
+                     <div class="info">
+                        <label for="customer-name">Street address 1</label>
+                        <input type="text" id="customer-name" name="customer-name" required>
+                     </div>
+                     <div class="info">
+                        <label for="company-name">Street address 2</label>
+                        <input type="text" id="company-name" name="company-name" required>
+                     </div>
+                     <div class="info">
+                        <label for="email">City</label>
+                        <input type="text" id="email" name="email" required>
+                     </div>
+                     <div class="info">
+                        <label for="phone-number">Province</label>
+                        <input type="text" id="phone-number" name="phone-number" required>
+                     </div>
+                     <div class="info">
+                        <label for="mobile-number">ZIP code</label>
+                        <input type="text" id="mobile-number" name="mobile-number" required>
+                     </div>
+                     <div class="info">
+                        <label for="fax">Country</label>
+                        <input type="text" id="fax" name="fax" required>
+                     </div>
+                  </div>
+                  
+                  <div class="submit-persnal-info">
+                     <button >Back</button>
+                     <button >Next</button>
+                  </div>
+                
+               </form>
+            </div>
+         </div>
+
+         <div class="forms-container">
+            <div class="forms-content">
+               <header>
+                  <h2>Addresses</h2>
+                  <span>3 of 4</span>
+               </header>
+
+               <form action="">
+                  <div class="notes-attachments">
+                      <div class="text-area">
+                        <label for="textarea">Notes</label>
+                        <textarea id="textarea" name="textarea">
+                        </textarea>
+                      </div>
+
+                      <div class="text-area">
+                        <label for="textarea">Attachments</label>
+                        <textarea id="textarea" name="textarea">
+                        </textarea>
+                      </div>
+                  </div>
+
+
+                  <h2 class="payment">Payement</h2>
+                  <div class="customer-information">
+                     <div class="info">
+                        <label for="customer-name">Street address 1</label>
+                        <input type="text" id="customer-name" name="customer-name" required>
+                     </div>
+                     <div class="info">
+                        <label for="company-name">Street address 2</label>
+                        <input type="text" id="company-name" name="company-name" required>
+                     </div>
+                     <div class="info">
+                        <label for="email">City</label>
+                        <input type="text" id="email" name="email" required>
+                     </div>
+                     <div class="info">
+                        <label for="phone-number">Province</label>
+                        <input type="text" id="phone-number" name="phone-number" required>
+                     </div>
+                     <div class="info">
+                        <label for="mobile-number">ZIP code</label>
+                        <input type="text" id="mobile-number" name="mobile-number" required>
+                     </div>
+                     <div class="info">
+                        <label for="fax">Country</label>
+                        <input type="text" id="fax" name="fax" required>
+                     </div>
+                  </div>
+                  
+                  <div class="submit-persnal-info">
+                     <button >Back</button>
+                     <button >Next</button>
+                  </div>
+                
+               </form>
+            </div>
+         </div>
+
 
       </section>
   </main>
@@ -141,6 +251,80 @@
          });
       });
    });
+
+
+
+   //forms
+   // JavaScript to handle multi-step form navigation and validation
+   /*
+       const forms = document.querySelectorAll('.forms-container');
+   let currentFormIndex = 0;
+
+   function showForm(index) {
+   forms.forEach((form, i) => {
+      form.style.display = i === index ? 'block' : 'none';
+   });
+   }
+
+   function validateForm(form) {
+   const inputs = form.querySelectorAll('input');
+   for (const input of inputs) {
+      if (!input.checkValidity()) {
+         alert('Please fill in all required fields correctly.');
+         return false;
+      }
+   }
+   return true;
+   }
+
+   function goToNextForm() {
+   const currentForm = forms[currentFormIndex];
+   if (validateForm(currentForm)) {
+      currentFormIndex++;
+      if (currentFormIndex < forms.length) {
+         showForm(currentFormIndex);
+      }
+   }
+   }
+
+   function goToPreviousForm() {
+   if (currentFormIndex > 0) {
+      currentFormIndex--;
+      showForm(currentFormIndex);
+   }
+   }
+
+   // Add event listeners to buttons
+   document.querySelectorAll('button').forEach(button => {
+   if (button.textContent === 'Next') {
+      button.addEventListener('click', (e) => {
+         e.preventDefault();
+         goToNextForm();
+      });
+   }
+
+   if (button.textContent === 'Back') {
+      button.addEventListener('click', (e) => {
+         e.preventDefault();
+         goToPreviousForm();
+      });
+   }
+
+   if (button.textContent === 'Submit') {
+      button.addEventListener('click', (e) => {
+         e.preventDefault();
+         if (validateForm(forms[currentFormIndex])) {
+         alert('Form submitted successfully!');
+         }
+      });
+   }
+   });
+
+   // Initialize the first form
+   showForm(0);
+
+   */
+  
   </script>
 </body>
 </html>
