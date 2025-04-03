@@ -1,33 +1,88 @@
 body {font-family: Arial, Helvetica, sans-serif;}
 
-/* The Modal (background) */
-.modal {
-  display: flex; /* Hidden by default */
-  flex-direction: column;
-  position: absolute; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  opacity: 1;
+.modalBtn{
+  display: flex;
+  justify-content: center; /* Centers text horizontally */
+  align-items: center; /* Centers text vertically */
+  height: 30px; /* Ensure a fixed height for vertical centering */
+  margin-bottom: 10px;
+  font-size: 17px;
+  color: var(--whiteBG);
+  cursor: pointer;
+  border-radius: 20px;
+  border-color: white;
+  background-color: #062335;
+  border-style: solid;
+  text-align: center;
+  line-height: normal; /* Reset line height to default */
 }
 
-.modal.active{
-    opacity: 1;
+.modalBtn i{
+  margin-right: 10px;
+  min-width: 10px; /* Fixed width for consistent icon alignment */
+  text-align: center;
 }
+
+.modalBtn:hover{
+  border-width: 3px;
+}
+/* Background overlay (keeps the dark effect centered properly) */
+.modal-overlay {
+  display: none; /* Hidden by default */
+  position: fixed; /* Full-screen overlay */
+  z-index: 9;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(41, 41, 41, 0.4); /* Black with opacity */
+}
+
+/* The Modal (background) */
+.newModal {
+  display: none; /* Hidden by default */
+  position: absolute; /* Position it relative to the nearest positioned ancestor */
+  z-index: 10; /* Sit on top */
+  left: -525px;
+  top: 190px;
+  width: 100%; /* Full width */
+}
+
 
 /* Modal Content */
 .modal-content {
+  display: flex;
+  flex-direction: row;
+  margin-right: 200px;
   background-color: #fefefe;
+  border-radius: 20px;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 42%;
+}
+
+.modal-content h3{
+margin-bottom: 30px;
+}
+
+.modal-content ul{
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-content li{
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  width: 170px;
+}
+
+.modal-content a{
+  color: #000;
+}
+.modal-content li:hover{
+  background-color: #e4e4e4b6;
 }
 
 /* The Close Button */
