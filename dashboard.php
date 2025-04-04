@@ -106,10 +106,8 @@ if ($result && $row = $result->fetch_assoc()) {
                     </ul>
                 </div>
             </div>
-
         </div>
     
-
     <div class="sidebar">
         <div class="company-logo">
             <img src="./imgs/csk_logo.png" alt="">
@@ -139,11 +137,11 @@ if ($result && $row = $result->fetch_assoc()) {
         <div class="subcontainer">
             <div class="report-card">
                 <h2>Total Expenses</h2>
-                <h3>P<?php echo $expense_count; ?></h3>
+                <h3>₱<?php echo number_format($expense_count, 2); ?></h3>
             </div>
             <div class="report-card">
                 <h2>Latest Income</h2>
-                <h3>P<?php echo $sales_count; ?></h3>
+                <h3>₱<?php echo number_format($sales_count, 2); ?></h3>
             </div>
         </div>
 

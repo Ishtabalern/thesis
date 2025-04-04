@@ -1,249 +1,278 @@
-/* Body and basic styling */
+body {font-family: Arial, Helvetica, sans-serif;}
 
 * {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    text-decoration: none;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-    font-family: Arial, sans-serif;
-   
- }
-
-
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: Arial, sans-serif;
+ 
+}
 
 :root{
-    --whiteBG :#fff;
-    --greenBG : #0B440F;
-    --flex: flex;
-    --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
-    --border: #D0D0D0;
- }
+  --whiteBG :#fff;
+  --greenBG : #0B440F;
+  --flex: flex;
+  --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+  --border: #D0D0D0;
+}
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #F0F0F0;
-  
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #F0F0F0;
+
 }
 
 /* Sidebar Styling */
 .sidebar {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    bottom: 10px;
-    width: 230px; /* Expanded width to show text */
-    background-color: #062335;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 10px; /* Inner padding for spacing */
-    border-radius: 10px;
-    color: white;
-    overflow: hidden;
-    transition: width 0.3s ease; /* Smooth transition */
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  bottom: 10px;
+  width: 230px; /* Expanded width to show text */
+  background-color: #062335;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px; /* Inner padding for spacing */
+  border-radius: 10px;
+  color: white;
+  overflow: hidden;
+  transition: width 0.3s ease; /* Smooth transition */
 }
 
+.dashboard {
+  margin-left: 250px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn {
+  background-color: #E74C3C;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.logout-btn:hover {
+  background-color: #C0392B;
+}
+
+.dropdown {
+  display: inline-block;
+}
+
+.dropbtn {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
 /* Sidebar Items */
 .btn-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%; /* Full width in expanded mode */
-    margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Full width in expanded mode */
+  margin-top: 10px;
 }
 
 .btn-container .btn-tabs {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    padding: 10px;
-    font-size: 17px;
-    color: var(--whiteBG);
-    cursor: pointer;
-    border-radius: 6px;
-    background-color: transparent;
-    white-space: nowrap; /* Prevents text wrapping */
-    overflow: hidden; /* Hides text in collapsed mode */
-    text-overflow: ellipsis;
-    transition: background-color 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 10px;
+  font-size: 17px;
+  color: var(--whiteBG);
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: transparent;
+  white-space: nowrap; /* Prevents text wrapping */
+  overflow: hidden; /* Hides text in collapsed mode */
+  text-overflow: ellipsis;
+  transition: background-color 0.15s, color 0.15s;
 }
 
 .btn-container .btn-tabs i {
-    margin-right: 10px;
-    min-width: 30px; /* Fixed width for consistent icon alignment */
-    text-align: center;
+  margin-right: 10px;
+  min-width: 30px; /* Fixed width for consistent icon alignment */
+  text-align: center;
 }
 
 .sidebar:hover .btn-tabs {
-    overflow: visible; /* Shows text content when expanded */
+  overflow: visible; /* Shows text content when expanded */
 }
 
 .btn-container .btn-tabs:hover {
-    background-color: var(--whiteBG);
-    color: var(--greenBG);
+  background-color: var(--whiteBG);
+  color: var(--greenBG);
 }
 
 /* Company Logo */
 .sidebar .company-logo img {
-    max-width: 100%; /* Icon size in collapsed mode */
-    height: auto;
-    transition: max-width 0.3s ease; /* Smooth transition for logo */
-    background-color:#f7f7f7 ;
-    border-radius: 7px;
+  max-width: 100%; /* Icon size in collapsed mode */
+  height: auto;
+  transition: max-width 0.3s ease; /* Smooth transition for logo */
+  background-color:#f7f7f7 ;
+  border-radius: 7px;
 
 }
 
 .sidebar:hover .company-logo img {
-    max-width: 100%; /* Full width for logo in expanded mode */
-    
+  max-width: 100%; /* Full width for logo in expanded mode */
+  
+}
+
+.modalBtn{
+  display: flex;
+  justify-content: center; /* Centers text horizontally */
+  align-items: center; /* Centers text vertically */
+  height: 30px; /* Ensure a fixed height for vertical centering */
+  margin-bottom: 10px;
+  font-size: 17px;
+  color: var(--whiteBG);
+  cursor: pointer;
+  border-radius: 20px;
+  border-color: white;
+  background-color: #062335;
+  border-style: solid;
+  text-align: center;
+  line-height: normal; /* Reset line height to default */
+}
+
+.modalBtn i{
+  margin-right: 10px;
+  min-width: 10px; /* Fixed width for consistent icon alignment */
+  text-align: center;
+}
+
+.modalBtn:hover{
+  border-width: 3px;
+}
+/* Background overlay (keeps the dark effect centered properly) */
+.modal-overlay {
+  display: none; /* Hidden by default */
+  position: fixed; /* Full-screen overlay */
+  z-index: 9;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(41, 41, 41, 0.4); /* Black with opacity */
+}
+
+/* The Modal (background) */
+.newModal {
+  display: none; /* Hidden by default */
+  position: absolute; /* Position it relative to the nearest positioned ancestor */
+  z-index: 10; /* Sit on top */
+  left: -525px;
+  top: 190px;
+  width: 100%; /* Full width */
 }
 
 
-
-
-
-/* Dashboard styling */
-.dashboard {
-    margin-left: 250px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+/* Modal Content */
+.modal-content {
+  display: flex;
+  flex-direction: row;
+  margin-right: 200px;
+  background-color: #fefefe;
+  border-radius: 20px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 42%;
 }
 
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
+.modal-content h3{
+margin-bottom: 30px;
 }
 
-.user-controls {
-    display: flex;
-    align-items: center;
+.modal-content ul{
+  margin-right: 20px;
+  margin-bottom: 10px;
 }
 
-.logout-btn {
-    background-color: #E74C3C;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
+.modal-content li{
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  width: 170px;
 }
 
-.logout-btn:hover {
-    background-color: #C0392B;
+.modal-content a{
+  color: #000;
+}
+.modal-content li:hover{
+  background-color: #e4e4e4b6;
 }
 
-.dropdown {
-    display: inline-block;
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-.dropbtn {
-    background-color: white;
-    color: black;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.subcontainer {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-}
-
-.report-card {
-    background-color: white;
-    padding: 20px;
-    width: 48%;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.report-card h2 {
-    font-size: 18px;
-    color: #333;
-}
-
-.report-card h3 {
-    font-size: 32px;
-    color: #1ABC9C;
-}
-
-.transaction-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.transaction-container h2 {
-    font-size: 22px;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.transaction-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.transaction-list li {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #F8F8F8;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.transaction-list li span {
-    flex: 1;
-    text-align: center;
-}
-
-.transaction-list li span.id {
-    flex: 0.5;
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 100px;
-    }
+  .sidebar {
+      width: 100px;
+  }
 
-    .dashboard {
-        margin-left: 100px;
-    }
+  .dashboard {
+      margin-left: 100px;
+  }
 
-    .sidebar a {
-        font-size: 14px;
-        padding: 10px;
-    }
+  .sidebar a {
+      font-size: 14px;
+      padding: 10px;
+  }
 
-    .subcontainer {
-        flex-direction: column;
-    }
+  .subcontainer {
+      flex-direction: column;
+  }
 
-    .report-card {
-        width: 100%;
-        margin-bottom: 20px;
-    }
+  .report-card {
+      width: 100%;
+      margin-bottom: 20px;
+  }
 
-    .transaction-list li span {
-        font-size: 14px;
-    }
+  .transaction-list li span {
+      font-size: 14px;
+  }
 }

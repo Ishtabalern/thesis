@@ -120,7 +120,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['client'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles/scan.css">
     <link rel="stylesheet" href="styles/sidebar.css">
-    <link rel="stylesheet" href="styles/dashboard.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         /* Include the CSS below directly in your HTML for simplicity or link to an external CSS file */

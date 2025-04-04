@@ -124,8 +124,6 @@ $result = $conn->query($sql);
                     </div>
                 </div>
 
-                
-
                 <table id="account" class="account-table active">
                     <thead>
                         <tr>
