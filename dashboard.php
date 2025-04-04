@@ -5,7 +5,7 @@ session_start();
 // Check if the user is logged in as an employee
 if (!isset($_SESSION['logged_in']) && !isset($_SESSION['logged_in'])) {
     // If not logged in, redirect to login page
-    header("Location: login.php");
+    header("Location: sign-in.php");
     exit();
 }
 

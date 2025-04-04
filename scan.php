@@ -1,4 +1,15 @@
 <?php
+
+// Start session to check if the user is logged in
+session_start();
+
+// Check if the user is logged in as an employee
+if (!isset($_SESSION['logged_in']) && !isset($_SESSION['logged_in'])) {
+    // If not logged in, redirect to login page
+    header("Location: sign-in.php");
+    exit();
+}
+
 $servername = "localhost";
 $username = "admin";
 $password = "123";
