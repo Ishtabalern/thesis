@@ -188,7 +188,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
                 <h2>Shortcuts</h2>
                 <div class="shortcut-list">
                     <div class="shortcut-a">
-                        <button class="button-a">
+                        <button class="button-a" onclick="location.href='scan.php'">
                             <i class="fa-solid fa-qrcode" style="font-size: 50px;"></i>
                         </button>
                         <h4>Scan receipts</h4>
