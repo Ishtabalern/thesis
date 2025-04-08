@@ -109,7 +109,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Refund receipt</a></li>
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Delayed credit</a></li>
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Delayed charge</a></li>
-                        <li><a class="btn-tabs" href="dashboard.php" class="active">Add customer</a></li>
+                        <li><a class="btn-tabs" href="client_form.php" class="active">Add customer</a></li>
                     </ul>
                 </div>
                 <div class="flyoutColumn">

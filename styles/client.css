@@ -1,0 +1,270 @@
+* {
+   margin: 0;
+   padding: 0;
+   list-style: none;
+   text-decoration: none;
+   box-sizing: border-box;
+   scroll-behavior: smooth;
+   font-family: Arial, sans-serif;
+  
+}
+
+:root{
+   --whiteBG :#fff;
+   --greenBG : #00AF7E;
+   --flex: flex;
+   --shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
+   --border: #D0D0D0;
+}
+
+
+body{
+   display: flex;
+   flex-direction: row; /* Ensures sidebar and content align side by side */
+   height: 100vh;
+   margin: 0;
+   background-color: #F2F2F2;
+ }
+
+
+
+ .content{
+   flex: 1;
+   min-width: 0;
+   padding: 30px 20px;
+   overflow-y: auto;
+
+ }
+ 
+
+
+/*forms container*/
+.forms-container{
+
+   max-width: 740px;
+   width: 80%;
+   background-color: #fff;
+   margin: auto;
+   border-radius: 5px;
+   box-shadow: var(--shadow);
+}
+
+.forms-content{
+   display: flex;
+   flex-direction: column;
+
+}
+
+.forms-content > *{
+ margin-top: 20px;
+}
+
+.forms-content header{
+   padding: 20px 30px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+
+  
+}
+
+.forms-content header h2{
+   color: #707070;
+   
+}
+
+header span{
+   color: #BBBBBB;
+   
+}
+
+.forms-content form{
+
+}
+
+form .name-information{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+
+ 
+}
+
+.name-information .info{
+display:flex;
+flex-direction: column;
+
+
+}
+
+.name-information .info .label{ 
+
+
+}
+
+.name-information .info input[type=text]{ 
+   width:150px;
+   border-radius: 4px;
+   padding: 8px;
+   border: 1px solid #B1B1B1;
+   outline: none;
+   margin-top: 5px;
+}
+
+#Suffix {
+   width: 50px;
+ }
+
+/*customer information*/
+
+.customer-information {
+   margin-top: 30px;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 20px;
+ }
+ 
+ .customer-information .info {
+   display: block;
+   margin: auto;
+ }
+ 
+ .customer-information .info label {
+   display: block;
+   margin-bottom: 5px;
+   color: #707070;
+ }
+ 
+ 
+ .customer-information .info input[type="text"] {
+   width: 270px;
+   border-radius: 4px;
+   padding: 8px;
+   border: 1px solid #B1B1B1;
+   outline: none;
+ }
+
+ form .submit-persnal-info{
+   margin-top: 20px;
+   padding: 20px 45px;
+   display: flex;
+   justify-content: space-between;
+   
+ }
+                                                          
+ form .submit-persnal-info button{
+   padding: 10px;
+   width: 90px;
+   border-radius: 5px;
+   border: 1px solid var(--greenBG);
+   color: var(--greenBG);
+   font-weight: bold;
+   background-color: #fff;
+   cursor: pointer;
+ }
+
+
+ /*addresses*/
+
+ form .billing-address{
+   padding: 0px 30px;
+   font-size: 15px;
+   color: #707070;
+ }
+
+
+ 
+ /*notes and attachemnts*/
+
+ form .notes-attachments{
+   
+ }
+
+ 
+ form .notes-attachments .text-area{
+   padding: 0px 30px;
+   display: flex;
+   flex-direction: column;
+ }
+
+
+ form .notes-attachments textarea{
+   padding: 10px;
+   height: 120px;
+   box-sizing: border-box;
+   border-radius: 5px;
+   margin-top: 10px;
+ }
+
+ form .notes-attachments > *{
+   margin-top: 15px;
+ }
+
+
+  form .payment{
+   margin-top: 25px;
+   padding: 0px 30px;
+   color: #707070;
+ }
+
+  /*notes and attachemnts*/
+
+  form .taxes, .opening-balance{
+   padding: 0px 30px;
+   font-size: 15px;
+   color: #707070;
+ }
+
+
+
+ .additional-info {
+   margin-top: 30px;
+   margin-bottom: 25px;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 20px;
+}
+
+ .additional-info .info {
+   display: block;
+   margin: auto;
+ }
+
+ .additional-info .info label {
+   display: block;
+   margin-bottom: 5px;
+   color: #707070;
+ }
+ 
+ 
+ .additional-info .info input[type="text"] {
+   width: 270px;
+   border-radius: 4px;
+   padding: 8px;
+   border: 1px solid #B1B1B1;
+   outline: none;
+ }
+
+ /*tax*/
+
+ .additional-info .tax{
+   padding: 0px 44px;
+   display: block;
+ 
+ }
+
+ .additional-info .tax label {
+   display: block;
+   margin-bottom: 5px;
+   color: #707070;
+ }
+ 
+ 
+ .additional-info .tax input[type="text"] {
+   width: 270px;
+   border-radius: 4px;
+   padding: 8px;
+   border: 1px solid #B1B1B1;
+   outline: none;
+ }
