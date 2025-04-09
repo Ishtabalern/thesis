@@ -78,17 +78,12 @@ header span{
    
 }
 
-.forms-content form{
-
-}
 
 form .name-information{
   display: flex;
   align-items: center;
   justify-content: space-evenly;
 
-
- 
 }
 
 .name-information .info{
@@ -98,10 +93,6 @@ flex-direction: column;
 
 }
 
-.name-information .info .label{ 
-
-
-}
 
 .name-information .info input[type=text]{ 
    width:150px;
@@ -176,10 +167,6 @@ flex-direction: column;
 
  
  /*notes and attachemnts*/
-
- form .notes-attachments{
-   
- }
 
  
  form .notes-attachments .text-area{
