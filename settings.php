@@ -49,7 +49,7 @@ if ($result && $row = $result->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Home</title>
     <link rel="stylesheet" href="styles/sidebar.css">
-    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/settings.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -124,49 +124,37 @@ if ($result && $row = $result->fetch_assoc()) {
 
     <div class="dashboard">
         <div class="top-bar">
-            <h1>Home</h1>
-            <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
+            <h1>Settings</h1>
+            <h2>Hello, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
             <div class="user-controls">
                 <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>
-            </div>
+            </div>      
         </div>
 
-        <div class="subcontainer">
-            <div class="report-card">
-                <h2>Total Expenses</h2>
-                <h3>₱<?php echo number_format($expense_count, 2); ?></h3>
-            </div>
-            <div class="report-card">
-                <h2>Latest Income</h2>
-                <h3>₱<?php echo number_format($sales_count, 2); ?></h3>
-            </div>
-        </div>
+         <div class="settings-container">
+            <h3>Manage your account</h3>
+            <p>Here's you control information that spans across all your datas</p>
+            <div class="card-settings">
+               <div class="card">
+                  <a href="#">
+                     <i class="fa-solid fa-lock"></i>
+                     <p>Sign in & security</p>
+                  </a>
+               </div>
 
-        <div class="transaction-container">
-            <h2>Shortcuts</h2>
-            <ul class="transaction-list">
-                <li>
-                    <span class="id">1</span>
-                    <span class="date">Oct 24, 2024</span>
-                    <span class="location">CVSU - Bacoor</span>
-                    <span class="item">Fan</span>
-                    <span class="price">₱45</span>
-                </li>
-                <li>
-                    <span class="id">2</span>
-                    <span class="date">Oct 24, 2024</span>
-                    <span class="location">CVSU - Bacoor</span>
-                    <span class="item">Fan</span>
-                    <span class="price">₱45</span>
-                </li>
-                <!-- Repeat for more transactions -->
-            </ul>
-        </div>
-        <div class="tasks">hello</div>
+               <div class="card">
+                  <a href="#">
+                     <i class="fa-solid fa-user"></i>
+                     <p>Profile</p>
+                  </a>
+               </div>
+            </div>
+         </div>
+      
     </div>
-    <script src="script/dashboard.js"></script>
+
 </body>
 </html>
