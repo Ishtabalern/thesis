@@ -78,7 +78,7 @@ body {
     cursor: pointer;
 }
 
-.subcontainer {
+.third-container {
     display: flex;
     justify-content: space-between;
     margin-bottom: 30px;
@@ -87,7 +87,7 @@ body {
 .report-card {
     background-color: white;
     padding: 20px;
-    width: 48%;
+    width: 25%;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -103,43 +103,107 @@ body {
     color: #1ABC9C;
 }
 
-.transaction-container {
+.shortcut-container {
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
 }
 
-.transaction-container h2 {
+.shortcut-container h2 {
     font-size: 22px;
     color: #333;
     margin-bottom: 20px;
 }
 
-.transaction-list {
+.shortcut-list {
     list-style: none;
     padding: 0;
     margin: 0;
-}
-
-.transaction-list li {
     display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #F8F8F8;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    font-size: 16px;
+    flex-direction: row;
 }
 
-.transaction-list li span {
-    flex: 1;
+.shortcut-a{
+    display: flex;
+    flex-direction: column;
+}
+
+.shortcut-b{
+    display: flex;
+    flex-direction: column;
+}
+.shortcut-c{
+    display: flex;
+    flex-direction: column;
+}
+.shortcut-c h4{
+    margin-left: -10px;
+}
+.shortcut-d{
+    display: flex;
+    flex-direction: column;
+}
+
+.shortcut-container button{
+    height: 100px;
+    width: 100px;
+    border-radius: 200px;
+    margin-right: 90px;
+    margin-bottom: 10px;
+    background: #e3e6e9;
+}
+
+.shortcut-container button:hover{
+    background: #1ABC9C;
+}
+
+.client-dropdown{
+    margin-bottom: 20px;
+}
+
+.second-container{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.tasks-container{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.tasks-container span{
+    margin-top: 10px;
+    font-weight: 100px;
+    font-size: 20px;
+}
+
+.bank-account{
+    background-color: white;
+    padding: 20px;
+    width: 25%;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.profit-loss{
+    background-color: white;
+    padding: 20px;
+    width: 25%;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
-.transaction-list li span.id {
-    flex: 0.5;
-}
+
 
 /* Responsive design */
 @media (max-width: 768px) {
@@ -156,7 +220,7 @@ body {
         padding: 10px;
     }
 
-    .subcontainer {
+    .third-container {
         flex-direction: column;
     }
 

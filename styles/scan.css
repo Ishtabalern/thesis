@@ -85,11 +85,8 @@ body {
 
 .receipt-table {
     display: flex;
-    width: 1000px;
-    margin-top: -200px;
-    margin-left: 100px;
+    width: 100%;
     margin-right: 100px;
-    margin-bottom: 100px;
     justify-content: space-between;
     padding-top: 20px;
     flex-wrap: wrap; /* Allow content to wrap on smaller screens */

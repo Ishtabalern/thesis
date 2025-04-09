@@ -40,6 +40,41 @@ if ($result && $row = $result->fetch_assoc()) {
     $sales_count = $row['total_sales'] ?? 0;
 }
 
+// Fetch distinct client names for dropdown
+$clients = [];
+$clientResult = $conn->query("SELECT DISTINCT clients.id, clients.name 
+                              FROM receipts 
+                              LEFT JOIN clients ON receipts.client_id = clients.id");
+
+if ($clientResult->num_rows > 0) {
+    while ($row = $clientResult->fetch_assoc()) {
+        $clients[] = ['id' => $row['id'], 'name' => $row['name']];
+    }
+}
+
+// Filter by client if selected
+$clientFilter = $_GET['client_id'] ?? null;
+
+$sql = "SELECT receipts.id, COALESCE(clients.name, 'Unknown') AS client_name, receipts.date, receipts.vendor, 
+               receipts.category, receipts.type, receipts.total 
+        FROM receipts 
+        LEFT JOIN clients ON receipts.client_id = clients.id";
+
+if ($clientFilter !== null && $clientFilter !== "") {
+    $sql .= " WHERE receipts.client_id = ?";
+    $stmt = $conn->prepare($sql);
+    
+    if ($stmt) {
+        $stmt->bind_param("s", $clientFilter);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    } else {
+        die("Error preparing statement: " . $conn->error);
+    }
+} else {
+    $result = $conn->query($sql);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -51,6 +86,8 @@ if ($result && $row = $result->fetch_assoc()) {
     <link rel="stylesheet" href="styles/sidebar.css">
     <link rel="stylesheet" href="styles/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=scan" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=receipt_long" />
 </head>
 <body>
 
@@ -72,7 +109,7 @@ if ($result && $row = $result->fetch_assoc()) {
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Refund receipt</a></li>
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Delayed credit</a></li>
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Delayed charge</a></li>
-                        <li><a class="btn-tabs" href="dashboard.php" class="active">Add customer</a></li>
+                        <li><a class="btn-tabs" href="client_form.php" class="active">Add customer</a></li>
                     </ul>
                 </div>
                 <div class="flyoutColumn">
@@ -129,43 +166,76 @@ if ($result && $row = $result->fetch_assoc()) {
             <div class="user-controls">
                 <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
                 <div class="dropdown">
-                    <button class="dropbtn">Employee ▼</button>
+                    <button class="dropbtn">Employee</button>
                 </div>
             </div>
         </div>
+        <div class="client-dropdown">
+            <label for="clientFilter">Choose Client: </label>
+                <select id="clientFilter">
+                    <option value="">All Clients</option>
+                    <?php foreach ($clients as $client) { ?>
+                        <option value="<?php echo htmlspecialchars($client['id']); ?>" 
+                            <?php echo ($client['id'] == $clientFilter) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($client['name'] ?? "Unknown"); ?>
+                        </option>
+                    <?php } ?>
+                </select>
+        </div>
 
-        <div class="subcontainer">
+        <div class="second-container">
+            <div class="shortcut-container">
+                <h2>Shortcuts</h2>
+                <div class="shortcut-list">
+                    <div class="shortcut-a">
+                        <button class="button-a" onclick="location.href='scan.php'">
+                            <i class="fa-solid fa-qrcode" style="font-size: 50px;"></i>
+                        </button>
+                        <h4>Scan receipts</h4>
+                    </div>
+                    <div class="shortcut-b">
+                        <button class="button-b">
+                            <i class="fa-solid fa-file-invoice" style="font-size: 50px;"></i>
+                        </button>
+                        <h4>Create invoice</h4>
+                    </div>
+                    <div class="shortcut-c">
+                        <button class="button-c">
+                            <i class="fa-solid fa-piggy-bank" style="font-size: 50px;"></i>
+                        </button>
+                        <h4>Add bank account</h4>
+                    </div>
+                    <div class="shortcut-d">
+                        <button class="button-d">
+                            <i class="fa-solid fa-money-check-dollar" style="font-size: 50px;"></i>
+                        </button>
+                        <h4>Create cheque</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="tasks-container">
+                <i class="fa-solid fa-list-check" style="font-size: 100px;"></i>
+                <span>No Tasks Yet!</span>
+            </div>
+        </div>
+
+        <div class="third-container">
+            <div class="bank-account">
+                <h2>bank</h2>
+            </div>
+            <div class="profit-loss">
+                <h2>profits and loss</h2>
+            </div>
             <div class="report-card">
-                <h2>Total Expenses</h2>
+                <h2>Expenses</h2>
                 <h3>₱<?php echo number_format($expense_count, 2); ?></h3>
             </div>
             <div class="report-card">
-                <h2>Latest Income</h2>
+                <h2>Invoices</h2>
                 <h3>₱<?php echo number_format($sales_count, 2); ?></h3>
             </div>
         </div>
 
-        <div class="transaction-container">
-            <h2>Shortcuts</h2>
-            <ul class="transaction-list">
-                <li>
-                    <span class="id">1</span>
-                    <span class="date">Oct 24, 2024</span>
-                    <span class="location">CVSU - Bacoor</span>
-                    <span class="item">Fan</span>
-                    <span class="price">₱45</span>
-                </li>
-                <li>
-                    <span class="id">2</span>
-                    <span class="date">Oct 24, 2024</span>
-                    <span class="location">CVSU - Bacoor</span>
-                    <span class="item">Fan</span>
-                    <span class="price">₱45</span>
-                </li>
-                <!-- Repeat for more transactions -->
-            </ul>
-        </div>
-        <div class="tasks">hello</div>
     </div>
     <script src="script/dashboard.js"></script>
 </body>

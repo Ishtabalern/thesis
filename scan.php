@@ -90,35 +90,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['updatedData'])) {
     exit();
 }
 
-// Handle report generation (moving data to receipts table)
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['client'])) {
-    $selectedClient = $_POST['client'];
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
+    $selectedClient = intval($_POST['client']);
 
-    // Ensure selectedClient is a valid ID
-    if (!is_numeric($selectedClient) || empty($selectedClient)) {
-        echo json_encode(["success" => false, "message" => "Invalid client selected."]);
-        exit();
-    }
+    $sql = "SELECT date, vendor, category, type, total, img_url FROM scanned_receipts";
+    $result = $conn->query($sql);
 
-    // Move receipts from scanned_receipts to receipts table
-    $sql = "INSERT INTO receipts (date, vendor, category, type, total, img_url, client_id) 
-            SELECT date, vendor, category, type, total, img_url, ? 
-            FROM scanned_receipts";
+    if ($result && $result->num_rows > 0) {
+        $insertStmt = $conn->prepare("INSERT INTO receipts (date, vendor, category, type, total, img_url, client_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $selectedClient);
-    $stmt->execute();
+        while ($row = $result->fetch_assoc()) {
+            // Convert the date using PHP
+            $dateFormats = ['n/j/Y', 'm/d/Y', 'Y-m-d', 'd/m/Y'];
+            $formattedDate = null;
 
-    if ($stmt->affected_rows > 0) {
-        $conn->query("DELETE FROM scanned_receipts"); // Clear scanned receipts table
-        echo json_encode(["success" => true, "message" => "Report generated successfully!"]);
+            foreach ($dateFormats as $format) {
+                $tryDate = DateTime::createFromFormat($format, $row['date']);
+                if ($tryDate !== false) {
+                    $formattedDate = $tryDate;
+                    break;
+                }
+            }
+
+            $mysqlDate = $formattedDate ? $formattedDate->format('Y-m-d') : null;
+
+            if (!$mysqlDate) {
+                error_log("Failed to parse date: " . $row['date']);
+            }
+            
+            $insertStmt->bind_param(
+                "ssssdsi",
+                $mysqlDate,
+                $row['vendor'],
+                $row['category'],
+                $row['type'],
+                $row['total'],
+                $row['img_url'],
+                $selectedClient
+            );
+
+            $insertStmt->execute();
+        }
+
+        $insertStmt->close();
+        $conn->query("DELETE FROM scanned_receipts");
+
+        echo json_encode(["success" => true]);
     } else {
-        echo json_encode(["success" => false, "message" => "Error: No data moved."]);
+        echo json_encode(["success" => false, "message" => "No receipts to move."]);
     }
 
-    $stmt->close();
     exit();
 }
+
 ?>
 
 
@@ -234,78 +258,73 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['client'])) {
             </div>
 
             <!-- Receipts viewer -->
-            <div class="receipt-card">
-                <div class="document-placeholder">
-                    <i class="fa-solid fa-plus"></i>
-                    <p>Scanned Documents / Receipt Here</p>
+            <div class="receipt-table">
+                <div class="data-table">
+                    <table id="recordsTable">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Date</th>
+                                <th>Vendor</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Total Price</th>
+                                <th>Receipt Image</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $sql = "SELECT id, date, vendor, category, type, total, img_url FROM scanned_receipts";
+                                $result = $conn->query($sql);
+
+                                if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td>" . $row["id"] . "</td>";
+                                    echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
+                                    echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
+                                    echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
+                                    echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
+                                    echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
+                                    echo "<td>" . $row["img_url"] . "</td>";
+                                    echo "</tr>";
+                                    }
+                                } else {
+                                            
+                                        }
+                            ?>
+                        </tbody>
+                    </table>
+
+                    <button id="saveChanges" class="btn save-btn">Save Changes</button>
+                    <!-- Client Dropdown -->
+                    <form id="clientForm" method="POST">
+                        <label for="client">Select Client:</label>
+                        <select id="clientSelect" name="client">
+                            <option value="">-- Select Client --</option>
+                            <option value="add_client">+ Add New Client</option>
+                            <?php
+                            $result = $conn->query("SELECT id, name FROM clients ORDER BY name ASC");
+                            while ($row = $result->fetch_assoc()) {
+                            echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </form>
+
+                    <!-- New Client Modal -->
+                    <div id="newClientModal" style="display: none;">
+                        <label for="new_client_name">New Client Name:</label>
+                        <input type="text" id="new_client_name">
+                        <button id="confirmNewClient">Confirm</button>
+                    </div>
+                    <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="receipt-table">
-        <div class="data-table">
-            <table id="recordsTable">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Date</th>
-                        <th>Vendor</th>
-                        <th>Category</th>
-                        <th>Type</th>
-                        <th>Total Price</th>
-                        <th>Receipt Image</th>
-                        </tr>
-                </thead>
-                <tbody>
-                    <?php
-                        $sql = "SELECT id, date, vendor, category, type, total, img_url FROM scanned_receipts";
-                        $result = $conn->query($sql);
-
-                        if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row["id"] . "</td>";
-                            echo "<td contenteditable='true' data-column='date'>" . $row["date"] . "</td>";
-                            echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
-                            echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
-                            echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
-                            echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
-                            echo "<td>" . $row["img_url"] . "</td>";
-                            echo "</tr>";
-                            }
-                        } else {
-                                    
-                                }
-                    ?>
-                </tbody>
-            </table>
-
-            <button id="saveChanges" class="btn save-btn">Save Changes</button>
-            <!-- Client Dropdown -->
-            <form id="clientForm" method="POST">
-                <label for="client">Select Client:</label>
-                <select id="clientSelect" name="client">
-                    <option value="">-- Select Client --</option>
-                    <option value="add_client">+ Add New Client</option>
-                    <?php
-                    $result = $conn->query("SELECT id, name FROM clients ORDER BY name ASC");
-                    while ($row = $result->fetch_assoc()) {
-                    echo "<option value='{$row['id']}'>{$row['name']}</option>";
-                    }
-                    ?>
-                </select>
-            </form>
-
-            <!-- New Client Modal -->
-            <div id="newClientModal" style="display: none;">
-                <label for="new_client_name">New Client Name:</label>
-                <input type="text" id="new_client_name">
-                <button id="confirmNewClient">Confirm</button>
-            </div>
-            <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
-        </div>
-    </div>
+    
 
     <script src="script/dashboard.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
