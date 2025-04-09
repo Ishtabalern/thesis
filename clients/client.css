@@ -137,7 +137,7 @@ flex-direction: column;
  }
  
  
- .customer-information .info input[type="text"] {
+ .customer-information .info input{
    width: 270px;
    border-radius: 4px;
    padding: 8px;
