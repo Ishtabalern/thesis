@@ -156,6 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
     <link rel="stylesheet" href="styles/scan.css">
     <link rel="stylesheet" href="styles/sidebar.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         /* Include the CSS below directly in your HTML for simplicity or link to an external CSS file */
     </style>
@@ -223,7 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
         <div class="btn-container">
             <button id="myBtn" class="modalBtn"><i class="fa-solid fa-plus"></i>New</button>
             <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
-            <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+            <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-wallet"></i>Record Expense</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
@@ -232,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
 
     <div class="dashboard">
         <div class="top-bar">
-            <h1>Capture Documents</h1>
+            <h1>Record Expense</h1>
             <div class="user-controls">
                 <a href="logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
@@ -243,25 +244,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Scan and Scanner dropdown side by side -->
-            <div class="scan-options">
-                <button class="scan-btn">
-                    <i class="fa-solid fa-qrcode"></i><br>
-                    Scan
-                </button>
-
-                <div class="scanner-dropdown">
-                    <select>
-                        <option value="epson">Raspberry Pi 4</option>
-                    </select>
-                </div>
-            </div>
-
+            
             <!-- Receipts viewer -->
             <div class="receipt-table">
                 <div class="data-table">
                     <table id="recordsTable">
                         <thead>
+                        <form id="clientForm" method="POST">
+                            <select id="clientSelect" name="client" class="client-dropdown" style="margin-bottom: 10px;">
+                                <option value="">-- Select Client --</option>
+                                <option value="add_client">+ Add New Client</option>
+                                <?php
+                                $result = $conn->query("SELECT id, name FROM clients ORDER BY name ASC");
+                                while ($row = $result->fetch_assoc()) {
+                                echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </form>
                             <tr>
                                 <th>Id</th>
                                 <th>Date</th>
@@ -296,29 +296,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                         </tbody>
                     </table>
 
-                    <button id="saveChanges" class="btn save-btn">Save Changes</button>
-                    <!-- Client Dropdown -->
-                    <form id="clientForm" method="POST">
-                        <label for="client">Select Client:</label>
-                        <select id="clientSelect" name="client">
-                            <option value="">-- Select Client --</option>
-                            <option value="add_client">+ Add New Client</option>
-                            <?php
-                            $result = $conn->query("SELECT id, name FROM clients ORDER BY name ASC");
-                            while ($row = $result->fetch_assoc()) {
-                            echo "<option value='{$row['id']}'>{$row['name']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </form>
+                    <!-- Add Receipt Modal -->
+                    <div id="addReceiptModal" class="modal-overlay" style="display: none;">
+                        <div class="modal-content" style="max-width: 400px; margin: 10% auto; background: white; padding: 20px; border-radius: 10px;">
+                            <span id="closeAddModal" style="float: right; cursor: pointer;">&times;</span>
+                            <h3>Add New Receipt</h3>
+                            <form id="addReceiptForm">
+                                <label>Date:</label>
+                                <input type="text" name="date" id="receiptDate" required placeholder="yyyy/mm/dd">
+                                <br><br>
+                                <label>Vendor:</label>
+                                <input type="text" name="vendor" required><br><br>
+                                <label>Category:</label>
+                                <input type="text" name="category"><br><br>
+                                <label>Type:</label>
+                                <input type="text" name="type"><br><br>
+                                <label>Total:</label>
+                                <input type="number" name="total" step="0.01"><br><br>
+                                <label>Image URL:</label>
+                                <input type="text" name="img_url"><br><br>
+                                <button type="submit" class="btn save-btn">Add Receipt</button>
+                            </form>
+                        </div>
+                    </div>
 
+
+                    <button id="openAddModal" class="btn save-btn" style="background-color: #062335; color: #fff;">Add Receipt</button>
+                    <button id="saveChanges" class="btn save-btn" style="background-color: #00AF7E; color: #fff;">Save Changes</button>
                     <!-- New Client Modal -->
                     <div id="newClientModal" style="display: none;">
                         <label for="new_client_name">New Client Name:</label>
                         <input type="text" id="new_client_name">
-                        <button id="confirmNewClient">Confirm</button>
+                        <button id="confirmNewClient" class="btn save-btn">Confirm</button>
                     </div>
-                    <button type="submit" name="generateReport" class="btn save-btn">Generate Report</button>
+                    <button type="submit" name="generateReport" class="btn save-btn" style="background-color: #E74C3C; color: #fff;">Generate Report</button>
+                </div>
+            </div>
+
+            <!-- Scan and Scanner dropdown side by side -->
+            <div class="scan">
+                <h2>Do you have an image of your receipt? click here to automatically record your expenses!</h2>
+                <div class="scan-options">
+                    <button class="scan-btn">
+                        <i class="fa-solid fa-qrcode"></i><br>
+                        Scan on Raspberry Pi
+                    </button>
+                    <button class="scan-btn">
+                        <i class="fa-solid fa-folder"></i><br>
+                        Scan on device
+                    </button>
                 </div>
             </div>
         </div>
@@ -330,9 +356,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(document).ready(function () {
             $('#recordsTable').DataTable(); // Initialize DataTable
+
+            // Modal toggle
+            $('#openAddModal').click(() => $('#addReceiptModal').show());
+            $('#closeAddModal').click(() => $('#addReceiptModal').hide());
+
+            // Handle form submission
+            $('#addReceiptForm').submit(function (e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+
+                $.ajax({
+                    url: 'add_expense.php',
+                    method: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        alert(response);
+                        $('#addReceiptModal').hide();
+                        location.reload(); // Optional: reload to reflect new data
+                    },
+                    error: function () {
+                        alert("Failed to add receipt.");
+                    }
+                });
+            });
+
+            flatpickr("#receiptDate", {
+                dateFormat: "Y/m/d", // yyyy/mm/dd
+                allowInput: true,    // still allows manual typing
+            });
+
 
             // Save Changes (Update scanned_receipts)
             $('#saveChanges').click(function () {

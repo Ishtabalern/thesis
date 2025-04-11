@@ -13,14 +13,23 @@ body {
     flex-wrap: wrap; /* Allow content to wrap on smaller screens */
 }
 
+.scan {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.scan h2 {
+    margin-top: 100px;
+}
 /* Scan and Scanner options side by side */
 .scan-options {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 20px;
-    padding: 10%;
-    width: 200px; /* Adjust for better responsiveness */
+    padding: 2%;
+    width: 400px; /* Adjust for better responsiveness */
 }
 
 .scan-btn {
@@ -35,6 +44,7 @@ body {
     border-radius: 10px;
     cursor: pointer;
     font-size: 18px;
+    margin-right: 10px;
 }
 
 .scan-btn:active{
@@ -105,7 +115,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 5px;
 }
+
 
 .add-category-btn {
     background-color: #2ECC71;
@@ -139,27 +151,43 @@ body {
     border-radius: 5px;
 }
 
+.client-dropdown {
+    padding: 5px;
+    width: 200px;
+    cursor: pointer;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ACACAC;
+    font-family: "Outfit", sans-serif;
+    font-weight: 300;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 15px;
+    transition: 0.2s ease;
+    gap: 10px;
+}
+
 .receipt-table{
-    width: 60%;
+    width: 70%;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    margin-left: 250px;
 }
 
-
 .data-table {
+    justify-items: center;
     background-color: white;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 20px;
     border: 1px solid #ddd;
     
-   
 }
 
 .data-table table {
     width: 100%;
-    border-collapse: collapse;
 }
 
 .data-table th, .data-table td {
@@ -169,7 +197,8 @@ body {
 }
 
 .data-table th {
-    background-color: #f2f2f2;
+    background-color: #062335;
+    color: #fff;
 }
 
 .data-table tbody tr:hover {

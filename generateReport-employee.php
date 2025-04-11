@@ -122,7 +122,7 @@ $expenseRecords = $conn->query("SELECT date, vendor, total FROM receipts WHERE t
         <div class="btn-container">
             <button id="myBtn" class="modalBtn"><i class="fa-solid fa-plus"></i>New</button>
             <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
-            <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-camera"></i>Capture Documents</a>
+            <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-wallet"></i>Record Expense</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
