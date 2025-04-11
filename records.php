@@ -46,7 +46,7 @@ if ($clientResult->num_rows > 0) {
 $clientFilter = $_GET['client_id'] ?? null;
 
 $sql = "SELECT receipts.id, COALESCE(clients.name, 'Unknown') AS client_name, receipts.date, receipts.vendor, 
-               receipts.category, receipts.type, receipts.total 
+               receipts.category, receipts.type, receipts.payment_method, receipts.total 
         FROM receipts 
         LEFT JOIN clients ON receipts.client_id = clients.id";
 
@@ -141,6 +141,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
             <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
             <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-wallet"></i>Record Expense</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
+            <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -186,6 +187,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
                             <th>Vendor</th>
                             <th>Category</th>
                             <th>Type</th>
+                            <th>Payment Method</th>
                             <th>Total Price</th>
                         </tr>
                     </thead>
@@ -194,12 +196,13 @@ if ($clientFilter !== null && $clientFilter !== "") {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<tr>";
-                                echo "<td>" . $row["id"] . "</td>";
+                                echo "<td>" . $row["id"] . "</td>"; 
                                 echo "<td>" . $row["client_name"] . "</td>";  
                                 echo "<td>" . $row["date"] . "</td>";
                                 echo "<td>" . $row["vendor"] . "</td>";
                                 echo "<td>" . $row["category"] . "</td>";
                                 echo "<td>" . $row["type"] . "</td>";
+                                echo "<td>" . $row["payment_method"] . "</td>";
                                 echo "<td>" . $row["total"] . "</td>";
                                 echo "</tr>";
                             }

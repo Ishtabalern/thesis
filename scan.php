@@ -226,6 +226,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
             <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
             <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-wallet"></i>Record Expense</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
+            <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="#"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -268,13 +269,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                                 <th>Vendor</th>
                                 <th>Category</th>
                                 <th>Type</th>
+                                <th>Payment Method</th>
                                 <th>Total Price</th>
                                 <th>Receipt Image</th>
                                 </tr>
                         </thead>
                         <tbody>
                             <?php
-                                $sql = "SELECT id, date, vendor, category, type, total, img_url FROM scanned_receipts";
+                                $sql = "SELECT id, date, vendor, category, type, payment_method, total, img_url FROM scanned_receipts";
                                 $result = $conn->query($sql);
 
                                 if ($result->num_rows > 0) {
@@ -285,6 +287,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                                     echo "<td contenteditable='true' data-column='vendor'>" . $row["vendor"] . "</td>";
                                     echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
                                     echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
+                                    echo "<td contenteditable='true' data-column='type'>" . $row["payment_method"] . "</td>";
                                     echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
                                     echo "<td>" . $row["img_url"] . "</td>";
                                     echo "</tr>";
@@ -311,6 +314,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                                 <input type="text" name="category"><br><br>
                                 <label>Type:</label>
                                 <input type="text" name="type"><br><br>
+                                <label>Payment Method:</label>
+                                <input type="text" name="payment_method"><br><br>
                                 <label>Total:</label>
                                 <input type="number" name="total" step="0.01"><br><br>
                                 <label>Image URL:</label>
@@ -349,8 +354,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
             </div>
         </div>
     </div>
-
-    
 
     <script src="script/dashboard.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -91,7 +91,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
 </head>
 <body>
 
-    <div class="modal-overlay"></div>
+        <div class="modal-overlay"></div>
         <!-- The Modal -->
         <div id="newModal" class="newModal">
             <!-- Modal content -->
@@ -154,6 +154,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
             <a class="btn-tabs" href="dashboard.php" class="active"><i class="fa-solid fa-house"></i>Home</a>
             <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-wallet"></i>Record Expense</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
+            <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>

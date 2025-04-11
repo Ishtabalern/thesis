@@ -22,11 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $vendor = $_POST['vendor'];
     $category = $_POST['category'];
     $type = $_POST['type'];
+    $payment_method = $_POST['payment_method'];
     $total = $_POST['total'];
     $img_url = $_POST['img_url'];
 
-    $stmt = $conn->prepare("INSERT INTO scanned_receipts (date, vendor, category, type, total, img_url) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssds", $date, $vendor, $category, $type, $total, $img_url);
+    $stmt = $conn->prepare("INSERT INTO scanned_receipts (date, vendor, category, type, payment_method, total, img_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssds", $date, $vendor, $category, $type, $payment_method, $total, $img_url);
 
     if ($stmt->execute()) {
         echo "Receipt added successfully!";
