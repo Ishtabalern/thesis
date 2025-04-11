@@ -49,7 +49,7 @@ if ($result && $row = $result->fetch_assoc()) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Home</title>
     <link rel="stylesheet" href="styles/sidebar.css">
-    <link rel="stylesheet" href="styles/settings.css">
+    <link rel="stylesheet" href="styles/sign-security.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -135,23 +135,32 @@ if ($result && $row = $result->fetch_assoc()) {
         </div>
 
          <div class="settings-container">
-            <h3>Manage your account</h3>
-            <p>Here's you control information that spans across all your datas</p>
-            <div class="card-settings">
-               <div class="card">
-                  <a href="sign-security.php">
-                     <i class="fa-solid fa-lock"></i>
-                     <p>Sign in & security</p>
-                  </a>
-               </div>
+            <h3>Sign in info</h3>
+            <p>We'll use this info to help make sure only you can sign in to your account</p>
 
-               <div class="card">
-                  <a href="profile.php">
-                     <i class="fa-solid fa-user"></i>
-                     <p>Profile</p>
-                  </a>
-               </div>
+            <div class="personal-infos-container">
+                <div class="infos">
+                    <h3>User id</h3>
+                    <a href="#">Edit</a>
+                </div>
+
+                <div class="infos">
+                    <h3>Email address</h3>
+                    <a href="#">Edit</a>
+                </div>
+
+                <div class="infos">
+                    <h3>Phone number</h3>
+                    <a href="#">Edit</a>
+                </div>
+
+                
             </div>
+
+            <div class="back-btn">
+                <a href="settings.php" >Back</a>
+            </div>
+       
          </div>
       
     </div>
