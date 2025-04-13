@@ -135,26 +135,33 @@ if ($result && $row = $result->fetch_assoc()) {
         </div>
 
          <div class="settings-container">
-            <h3>Sign in info</h3>
-            <p>We'll use this info to help make sure only you can sign in to your account</p>
+            <div class="headLogo-container">
+                <i class="fa-solid fa-lock"></i>
+                <h3>Sign in security</h3>
+                <p>We'll use this info to help make sure only you can sign in to your account</p>
+            </div>
+
 
             <div class="personal-infos-container">
                 <div class="infos">
-                    <h3>User id</h3>
-                    <a href="#">Edit</a>
+                    <h3>User ID</h3>
+                    <button class="edit-btn" data-target="user-id">Edit</button>
                 </div>
 
                 <div class="infos">
                     <h3>Email address</h3>
-                    <a href="#">Edit</a>
+                    <button class="edit-btn" data-target="email">Edit</button>
+                </div>
+
+                <div class="infos">
+                    <h3>Password</h3>
+                    <button class="edit-btn" data-target="password">Edit</button>
                 </div>
 
                 <div class="infos">
                     <h3>Phone number</h3>
-                    <a href="#">Edit</a>
+                    <button class="edit-btn" data-target="phone">Edit</button>
                 </div>
-
-                
             </div>
 
             <div class="back-btn">
@@ -162,8 +169,156 @@ if ($result && $row = $result->fetch_assoc()) {
             </div>
        
          </div>
+
+         <div id="changeDetailModal" class="modal">
+            <div class="modal-content">
+                <h3>Change user id</h3>
+                <form action="">
+                    <div class="edit-form">
+                        <label for="current">Current user id</label>
+                        <input type="text" id="current" name="current" required>
+                    </div>
+
+                    <div class="edit-form">
+                        <label for="type-new">Type new user id</label>
+                        <input type="text" id="type-new" name="type-new" required>                                                    
+                    </div>
+
+                    <div class="edit-form">
+                        <label for="re-type">Re-type new user id</label>
+                        <input type="text" id="re-type" name="re-type" required>
+                    </div>
+                    
+                    <div class="form-btns">
+                        <button class="submit">Submit</button>
+                        <button type="button" class="back close-modal">Back</button>
+                    </div>  
+                </form>
+            </div>
+            
+         </div>
+
+        <!-- Email Modal -->
+        <div id="modal-email" class="modal">
+            <div class="modal-content">
+                <h3>Change Email Address</h3>
+                <form>
+                    <div class="edit-form">
+                        <label for="current-email">Current Email</label>
+                        <input type="email" id="current-email" required>
+                    </div>
+                    <div class="edit-form">
+                        <label for="new-email">New Email</label>
+                        <input type="email" id="new-email" required>
+                    </div>
+                    <div class="edit-form">
+                        <label for="confirm-email">Confirm New Email</label>
+                        <input type="email" id="confirm-email" required>
+                    </div>
+                    <div class="form-btns">
+                        <button class="submit">Submit</button>
+                        <button type="button" class="back close-modal">Back</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+          <!-- Password Modal -->
+          <div id="modal-password" class="modal">
+            <div class="modal-content">
+                <h3>Change Password</h3>
+                <form>
+                    <div class="edit-form">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" required>
+                    </div>
+                    <div class="edit-form">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required>
+                    </div>
+                    <div class="edit-form">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" required>
+                    </div>
+                    <div class="form-btns">
+                        <button class="submit">Submit</button>
+                        <button type="button" class="back close-modal">Back</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Phone Modal -->
+        <div id="modal-phone" class="modal">
+            <div class="modal-content">
+                <h3>Change Phone Number</h3>
+                <form>
+                    <div class="edit-form">
+                        <label for="current-phone">Current Phone Number</label>
+                        <input type="tel" id="current-phone" required>
+                    </div>
+                    <div class="edit-form">
+                        <label for="new-phone">New Phone Number</label>
+                        <input type="tel" id="new-phone" required>
+                    </div>
+                    <div class="edit-form">
+                        <label for="confirm-phone">Confirm Phone Number</label>
+                        <input type="tel" id="confirm-phone" required>
+                    </div>
+                    <div class="form-btns">
+                        <button class="submit">Submit</button>
+                        <button type="button" class="back close-modal">Back</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
       
     </div>
+
+    <script>
+        // Modern logic for opening modals
+        const editButtons = document.querySelectorAll(".edit-btn");
+        const modals = {
+            "user-id": document.getElementById("changeDetailModal"),
+            "email": document.getElementById("modal-email"),
+            "password": document.getElementById("modal-password"),
+            "phone": document.getElementById("modal-phone")
+        };
+
+        editButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const target = button.dataset.target;
+                if (modals[target]) {
+                    modals[target].style.display = "block";
+                }
+            });
+        });
+
+        // Close modals on 'Back' button or outside click
+        const closeButtons = document.querySelectorAll(".close-modal");
+
+        closeButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                button.closest(".modal").style.display = "none";
+                clearInputs(button.closest(".modal"));
+            });
+        });
+
+        window.onclick = function(event) {
+            document.querySelectorAll(".modal").forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                    clearInputs(modal);
+                }
+            });
+        };
+
+        function clearInputs(modal) {
+            const inputs = modal.querySelectorAll("input");
+            inputs.forEach(input => input.value = "");
+        }
+    </script>
 
 </body>
 </html>

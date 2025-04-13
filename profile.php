@@ -135,26 +135,27 @@ if ($result && $row = $result->fetch_assoc()) {
         </div>
 
          <div class="settings-container">
-            <h3>Profile</h3>
-            <p>This info helps us personalize your experience </p>
+            <div class="headLogo-container">
+                <i class="fa-solid fa-user"></i>
+                <h3>Sign in security</h3>
+                <p>We'll use this info to help make sure only you can sign in to your account</p>
+            </div>
 
             <div class="personal-infos-container">
                 <div class="infos">
                     <h3>Name</h3>
-                    <a href="#">Edit</a>
+                    <button class="edit-btn" data-target="name">Edit</button>
                 </div>
 
                 <div class="infos">
                     <h3>Date of birth</h3>
-                    <a href="#">Edit</a>
+                    <button class="edit-btn" data-target="birthday">Add</button>
                 </div>
 
                 <div class="infos">
                     <h3>Address</h3>
-                    <a href="#">Edit</a>
+                    <button class="edit-btn" data-target="address">Add</button>
                 </div>
-
-                
             </div>
 
             <div class="back-btn">
@@ -162,8 +163,114 @@ if ($result && $row = $result->fetch_assoc()) {
             </div>
        
          </div>
+
+         <div id="changeDetailModal" class="modal">
+            <div class="modal-content">
+                <h3>Change name</h3>
+                <form action="">
+                    <div class="edit-form">
+                        <label for="current">Current name</label>
+                        <input type="text" id="current" name="current" required>
+                    </div>
+
+                    <div class="edit-form">
+                        <label for="type-new">Type new name</label>
+                        <input type="text" id="type-new" name="type-new" required>                                                    
+                    </div>
+
+                    <div class="edit-form">
+                        <label for="re-type">Re-type new name</label>
+                        <input type="text" id="re-type" name="re-type" required>
+                    </div>
+                    
+                    <div class="form-btns">
+                        <button class="submit">Submit</button>
+                        <button type="button" class="back close-modal">Back</button>
+                    </div>  
+                </form>
+            </div>
+            
+         </div>
+
+        <!-- Email Modal -->
+        <div id="modal-birthday" class="modal">
+            <div class="modal-content">
+                <h3>Add date of birth</h3>
+                <form>
+                    <div class="edit-form">
+                        <label for="current-birthday">Enter your Birthday</label>
+                        <input type="birthday" id="current-birthday" required>
+                    </div>
+                    <div class="form-btns">
+                        <button class="submit">Submit</button>
+                        <button type="button" class="back close-modal">Back</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Phone Modal -->
+        <div id="modal-address" class="modal">
+            <div class="modal-content">
+                <h3>Add address</h3>
+                <form>
+                    <div class="edit-form">
+                        <label for="current-address">Enter your address</label>
+                        <input type="address" id="current-address" required>
+                    </div>
+
+                    <div class="form-btns">
+                        <button class="submit">Submit</button>
+                        <button type="button" class="back close-modal">Back</button>
+                    </div>
+                </form>
+            </div>
+        </div>
       
     </div>
+
+    <script>
+        // Modern logic for opening modals
+        const editButtons = document.querySelectorAll(".edit-btn");
+        const modals = {
+            "name": document.getElementById("changeDetailModal"),
+            "birthday": document.getElementById("modal-birthday"),
+            "address": document.getElementById("modal-address")
+        };
+
+        editButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const target = button.dataset.target;
+                if (modals[target]) {
+                    modals[target].style.display = "block";
+                }
+            });
+        });
+
+        // Close modals on 'Back' button or outside click
+        const closeButtons = document.querySelectorAll(".close-modal");
+
+        closeButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                button.closest(".modal").style.display = "none";
+                clearInputs(button.closest(".modal"));
+            });
+        });
+
+        window.onclick = function(event) {
+            document.querySelectorAll(".modal").forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                    clearInputs(modal);
+                }
+            });
+        };
+
+        function clearInputs(modal) {
+            const inputs = modal.querySelectorAll("input");
+            inputs.forEach(input => input.value = "");
+        }
+    </script>
 
 </body>
 </html>
