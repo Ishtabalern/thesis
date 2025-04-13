@@ -142,6 +142,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
             <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-wallet"></i>Record Expense</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
+            <a class="btn-tabs" href="balance_sheet.php"><i class="fa-solid fa-file"></i>Balance Sheet</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -212,6 +213,9 @@ if ($clientFilter !== null && $clientFilter !== "") {
                         ?>
                     </tbody>
                 </table>
+                <div style="margin-bottom: 15px;">
+                    <button id="postToLedger" class="btn btn-success">Post Receipts to Ledger</button>
+                </div>
             </div>
         </div>
     </div>
@@ -220,12 +224,30 @@ if ($clientFilter !== null && $clientFilter !== "") {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#recordsTable').DataTable();
-            $('#clientFilter').on('change', function () {
-                window.location.href = '?client_id=' + encodeURIComponent($(this).val());
-            });
+    $(document).ready(function () {
+        $('#recordsTable').DataTable();
+
+        $('#clientFilter').on('change', function () {
+            window.location.href = '?client_id=' + encodeURIComponent($(this).val());
         });
-    </script>
+
+        $('#postToLedger').on('click', function () {
+            if (confirm('Are you sure you want to post unposted receipts to the ledger?')) {
+                $.ajax({
+                    url: 'post_receipts_to_ledger.php',
+                    method: 'POST',
+                    success: function (response) {
+                        alert(response);
+                        location.reload();
+                    },
+                    error: function () {
+                        alert('Error posting receipts. Please try again.');
+                    }
+                });
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
