@@ -118,6 +118,7 @@ if ($result && $row = $result->fetch_assoc()) {
             <a class="btn-tabs" href="scan.php"><i class="fa-solid fa-wallet"></i>Record Expense</a>
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
+            <a class="btn-tabs" href="balance_sheet.php"><i class="fa-solid fa-file"></i>Balance Sheet</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -128,7 +129,7 @@ if ($result && $row = $result->fetch_assoc()) {
             <h1>Settings</h1>
             <h2>Hello, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
             <div class="user-controls">
-                <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>

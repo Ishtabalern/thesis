@@ -152,7 +152,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
         <div class="top-bar">
             <h1>Financial Records</h1>
             <div class="user-controls">
-                <a href="logout.php"><button class="logout-btn">Log out</button></a>
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>
@@ -234,7 +234,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
         $('#postToLedger').on('click', function () {
             if (confirm('Are you sure you want to post unposted receipts to the ledger?')) {
                 $.ajax({
-                    url: 'post_receipts_to_ledger.php',
+                    url: 'functions/post_receipts_to_ledger.php',
                     method: 'POST',
                     success: function (response) {
                         alert(response);

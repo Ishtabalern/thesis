@@ -166,7 +166,7 @@ if ($clientFilter !== null && $clientFilter !== "") {
             <h1>Home</h1>
             <h2>Welcome, <?php echo htmlspecialchars($username); ?></h2> <!-- Display employee's username -->
             <div class="user-controls">
-                <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
                 <div class="dropdown">
                     <button class="dropbtn">Employee</button>
                 </div>

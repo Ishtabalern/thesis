@@ -231,7 +231,7 @@ foreach ($allDates as $date) {
         <div class="top-bar">
             <h1>Receipt Summary Report</h1>
             <div class="user-controls">
-                <a href="logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
             </div>
         </div>
 

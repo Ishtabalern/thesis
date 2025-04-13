@@ -237,7 +237,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
         <div class="top-bar">
             <h1>Record Expense</h1>
             <div class="user-controls">
-                <a href="logout.php"><button class="logout-btn">Log out</button></a>
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>
@@ -411,7 +411,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                 });
 
                 $.ajax({
-                    url: 'update_scanned_receipts.php', // PHP script to update scanned_receipts
+                    url: 'functions/update_scanned_receipts.php', // PHP script to update scanned_receipts
                     method: 'POST',
                     data: { updatedData: JSON.stringify(updatedData) },
                     success: function (response) {
@@ -443,7 +443,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                 }
 
                 $.ajax({
-                    url: 'create_client.php', // PHP script to add new client
+                    url: 'functions/create_client.php', // PHP script to add new client
                     method: 'POST',
                     data: { new_client: newClientName },
                     dataType: 'json',
@@ -478,7 +478,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                 }
 
                 $.ajax({
-                    url: 'generate_report.php', // PHP script to handle report generation
+                    url: 'functions/generate_report.php', // PHP script to handle report generation
                     method: 'POST',
                     data: { client: selectedClient },
                     dataType: 'json',

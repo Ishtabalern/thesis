@@ -1,20 +1,16 @@
 <?php
-// Start session to check if the user is logged in
 session_start();
 
-// Check if the user is logged in as an employee
 if (!isset($_SESSION['logged_in'])) {
     header("Location: sign-in.php");
     exit();
 }
 
-// Database credentials
 $host = "localhost";
 $dbname = "cskdb";
 $username = "admin";
 $password = "123";
 
-// Set up PDO connection
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -23,9 +19,22 @@ try {
 }
 
 try {
+    // Reusable function to get account ID with fallback
+    function getAccountIdWithFallback($pdo, $account_name, $client_id) {
+        $stmt = $pdo->prepare("SELECT id FROM chart_of_accounts WHERE name = ? AND client_id = ?");
+        $stmt->execute([$account_name, $client_id]);
+        $account_id = $stmt->fetchColumn();
+
+        if (!$account_id) {
+            $stmt = $pdo->prepare("SELECT id FROM chart_of_accounts WHERE name = ? AND client_id IS NULL");
+            $stmt->execute([$account_name]);
+            $account_id = $stmt->fetchColumn();
+        }
+
+        return $account_id;
+    }
     $pdo->beginTransaction();
 
-    // Step 1: Fetch unposted receipts
     $stmt = $pdo->query("SELECT * FROM receipts WHERE posted_to_ledger = 0");
     $receipts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -39,11 +48,13 @@ try {
         $client_id = $receipt['client_id'];
         $date = $receipt['date'];
         $amount = $receipt['total'];
-        $category = strtolower($receipt['category']); // lowercase for consistency
-        echo "Category: $category | Debit: $debit_name | Credit: $credit_name<br>";
+        $category = strtolower(trim($receipt['category'])); // lowercase and trim
 
+        if (!$date || !$amount || !$category) {
+            echo "Skipping receipt #$receipt_id due to missing date, amount, or category.<br>";
+            continue;
+        }
 
-        // Step 2: Determine debit and credit accounts
         switch ($category) {
             case 'sales':
                 $debit_name = 'Cash';
@@ -80,44 +91,65 @@ try {
                 $debit_name = 'Food & Beverage Expense';
                 $credit_name = 'Cash';
                 break;
+            case 'wages':
+                $debit_name = 'Wages Expense';
+                $credit_name = 'Cash';
+                break;
             default:
-                echo "Skipping unknown category: $category<br>";
+                echo "Skipping unknown category: '$category' in receipt #$receipt_id<br>";
                 continue 2;
+        }
+
+        
+
+        // Get debit and credit account IDs
+        $debit_id = getAccountIdWithFallback($pdo, $debit_name, $client_id);
+        $credit_id = getAccountIdWithFallback($pdo, $credit_name, $client_id);
+
+
+        if (!$debit_id || !$credit_id) {
+            echo "Skipping receipt #$receipt_id: Missing account IDs → Debit: $debit_id, Credit: $credit_id<br>";
+            continue;
+        }
+
+        if (!$debit_id) {
+            $createAccount = $pdo->prepare("INSERT INTO chart_of_accounts (name, account_type_id, description, client_id) VALUES (?, ?, ?, ?)");
+            $createAccount->execute([$debit_name, 5, "$debit_name auto-created", $client_id]); // 5 is usually expense
+            $debit_id = $pdo->lastInsertId();
+            echo "🛠 Created missing debit account '$debit_name' for client $client_id<br>";
+        }
+        
+        if (!$credit_id) {
+            $createAccount = $pdo->prepare("INSERT INTO chart_of_accounts (name, account_type_id, description, client_id) VALUES (?, ?, ?, ?)");
+            $createAccount->execute([$credit_name, 1, "$credit_name auto-created", $client_id]); // 1 is usually asset (Cash)
+            $credit_id = $pdo->lastInsertId();
+            echo "🛠 Created missing credit account '$credit_name' for client $client_id<br>";
         }
         
 
-        // Step 3: Get account IDs
-        $getAccountId = $pdo->prepare("SELECT id FROM chart_of_accounts WHERE name = ? AND client_id = ?");
-
-        $getAccountId->execute([$debit_name, $client_id]);
-        $debit_id = $getAccountId->fetchColumn();
-
-        $getAccountId->execute([$credit_name, $client_id]);
-        $credit_id = $getAccountId->fetchColumn();
-
-        if (!$debit_id || !$credit_id) {
-            continue; // Skip if account IDs are missing
-        }
-
-        // Step 4: Insert journal entry
+        // Insert journal entry
         $insertEntry = $pdo->prepare("INSERT INTO journal_entries (date, description, client_id) VALUES (?, ?, ?)");
         $insertEntry->execute([$date, ucfirst($category) . " from receipt #$receipt_id", $client_id]);
         $entry_id = $pdo->lastInsertId();
 
-        // Step 5: Insert journal lines
+        // Insert lines
         $insertLine = $pdo->prepare("INSERT INTO journal_entry_lines (journal_entry_id, account_id, debit, credit) VALUES (?, ?, ?, ?)");
         $insertLine->execute([$entry_id, $debit_id, $amount, 0]);
         $insertLine->execute([$entry_id, $credit_id, 0, $amount]);
 
-        // Step 6: Mark receipt as posted
+        // Update posted_to_ledger
         $markPosted = $pdo->prepare("UPDATE receipts SET posted_to_ledger = 1 WHERE id = ?");
-        $markPosted->execute([$receipt_id]);
+        if ($markPosted->execute([$receipt_id])) {
+            echo "✅ Posted receipt #$receipt_id to ledger.<br>";
+        } else {
+            echo "❌ Failed to mark receipt #$receipt_id as posted.<br>";
+        }
     }
 
     $pdo->commit();
-    echo "Receipts posted to ledger successfully.";
+    echo "<br>🎉 All eligible receipts posted.";
 } catch (Exception $e) {
     $pdo->rollBack();
-    echo "Error posting receipts: " . $e->getMessage();
+    echo "🚨 Error posting receipts: " . $e->getMessage();
 }
 ?>

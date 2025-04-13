@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
 }
 
+
 // Filters
 $filterClient = $_GET['client_id'] ?? '';
 $filterMonth = $_GET['month'] ?? '';
@@ -88,6 +89,11 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 <body>
+        <?php if (isset($_GET['updated'])): ?>
+        <div class="alert alert-success">
+        Balance sheet updated for client ID <?= htmlspecialchars($_GET['client_id']) ?>!
+        </div>
+        <?php endif; ?>
         <div class="modal-overlay"></div>
         <!-- The Modal -->
         <div id="newModal" class="newModal">
@@ -162,7 +168,7 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="top-bar">
             <h1>Balance Sheet</h1>
             <div class="user-controls">
-                <a href="logout.php"><button class="logout-btn">Log out</button></a>
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
                     <button class="dropbtn">Employee ▼</button>
                 </div>
@@ -266,6 +272,11 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <form action="functions/update_balance_sheet.php" method="post" style="display:inline;">
+        <input type="hidden" name="client_id" value="<?= $client['id'] ?>">
+        <button type="submit" class="btn btn-sm btn-primary">Update Balance Sheet</button>
+        </form>
+
         <button onclick="openModal('classicBalanceSheetModal')">
         📄 View Classic Balance Sheet
         </button>
