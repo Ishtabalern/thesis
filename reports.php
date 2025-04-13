@@ -53,43 +53,97 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch dropdown options
 $clients = $pdo->query("SELECT id, name FROM clients ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 $vendors = $pdo->query("SELECT DISTINCT vendor FROM receipts ORDER BY vendor")->fetchAll(PDO::FETCH_ASSOC);
 
-// Totals
 $clientTotals = [];
 $paymentTotals = [];
 
 foreach ($data as $row) {
-    $client = $row['client_name'];
+    $clientKey = $row['client_name'] . ' - ' . $row['period'];
     $type = strtolower(trim($row['type']));
-    $amount = $row['total'];
+    $amount = (float)$row['total'];
 
     if (!in_array($type, ['income', 'expense'])) continue;
 
-    if (!isset($clientTotals[$client])) {
-        $clientTotals[$client] = ['income' => 0, 'expense' => 0];
+    if (!isset($clientTotals[$clientKey])) {
+        $clientTotals[$clientKey] = ['income' => 0, 'expense' => 0];
     }
-    $clientTotals[$client][$type] += $amount;
+    $clientTotals[$clientKey][$type] += $amount;
 
-    $pm = $row['payment_method'];
+    $pm = $row['payment_method'] ?? 'Unknown';
     if (!isset($paymentTotals[$pm])) {
         $paymentTotals[$pm] = 0;
     }
     $paymentTotals[$pm] += $amount;
 }
+
+$salesStmt = $pdo->prepare("
+    SELECT r.date, r.vendor, r.total 
+    FROM receipts r
+    WHERE LOWER(r.type) = 'income'
+    " . ($client ? "AND r.client_id = :client " : "") . 
+    ($month ? "AND DATE_FORMAT(r.date, '%Y-%m') = :month " : "") . 
+    "ORDER BY r.date ASC
+");
+$expenseStmt = $pdo->prepare("
+    SELECT r.date, r.vendor, r.total 
+    FROM receipts r
+    WHERE LOWER(r.type) = 'expense'
+    " . ($client ? "AND r.client_id = :client " : "") . 
+    ($month ? "AND DATE_FORMAT(r.date, '%Y-%m') = :month " : "") . 
+    "ORDER BY r.date ASC
+");
+
+$salesStmt->execute($params);
+$expenseStmt->execute($params);
+
+$salesRecords = $salesStmt->fetchAll(PDO::FETCH_ASSOC);
+$expenseRecords = $expenseStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Group sales and expenses by date
+$salesByDate = [];
+foreach ($salesRecords as $row) {
+    $date = $row['date'];
+    $salesByDate[$date] = isset($salesByDate[$date]) ? $salesByDate[$date] + (float)$row['total'] : (float)$row['total'];
+}
+
+$expensesByDate = [];
+foreach ($expenseRecords as $row) {
+    $date = $row['date'];
+    $expensesByDate[$date] = isset($expensesByDate[$date]) ? $expensesByDate[$date] + (float)$row['total'] : (float)$row['total'];
+}
+
+// Combine all unique dates from both sales and expenses
+$allDates = array_unique(array_merge(array_keys($salesByDate), array_keys($expensesByDate)));
+sort($allDates);
+
+// Prepare arrays for JavaScript
+$chartLabels = [];
+$salesData = [];
+$expensesData = [];
+
+foreach ($allDates as $date) {
+    $chartLabels[] = $date;
+    $salesData[] = $salesByDate[$date] ?? 0;
+    $expensesData[] = $expensesByDate[$date] ?? 0;
+}
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Receipt Summary Report</title>
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/reports.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=scan" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=receipt_long" />
+    
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         h2 { margin-bottom: 20px; }
@@ -245,19 +299,22 @@ foreach ($data as $row) {
             <thead>
                 <tr>
                     <th>Client</th>
+                    <th>Period</th>
                     <th>Total Income</th>
                     <th>Total Expenses</th>
                     <th>Profit/Loss</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($clientTotals as $name => $totals):
+                <?php foreach ($clientTotals as $key => $totals):
+                    list($name, $period) = explode(' - ', $key);
                     $income = $totals['income'];
                     $expense = $totals['expense'];
                     $net = $income - $expense;
                 ?>
                 <tr>
                     <td><?= htmlspecialchars($name) ?></td>
+                    <td><?= htmlspecialchars($period) ?></td>
                     <td style="color:green;">$<?= number_format($income, 2) ?></td>
                     <td style="color:red;">$<?= number_format($expense, 2) ?></td>
                     <td style="<?= $net >= 0 ? 'color:green' : 'color:red' ?>">
@@ -267,6 +324,82 @@ foreach ($data as $row) {
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <section class="client-content">
+            <section class="chart-section">
+                <header>Sales vs Expenses Chart</header>
+                <canvas id="salesExpensesChart" width="400" height="200"></canvas>
+            </section>
+            <div class="overall">
+                <div class="client-monthly">
+                <span>Client Balance (Last Month)</span>
+                <span>₱ 20</span>
+                </div>
+                <div class="client-monthly">
+                <span>Monthly Balance</span>
+                <span>₱ 20000</span>
+                </div>
+            </div>
+
+            <div class="tables-container">
+                <div class="table" style="border-right: 1px solid #919191;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Vendor</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (count($salesRecords) > 0) {
+                            foreach ($salesRecords as $index => $row) {
+                                echo "<tr>";
+                                echo "<td>" . ($index + 1) . ".</td>";
+                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['vendor']) . "</td>";
+                                echo "<td>₱" . htmlspecialchars($row['total']) . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No sales records found</td></tr>";
+                        }
+                        ?>
+                    </tbody>                
+                </table>
+                </div>
+
+                <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Vendor</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (count($expenseRecords) > 0) {
+                            foreach ($expenseRecords as $index => $row) {
+                                echo "<tr>";
+                                echo "<td>" . ($index + 1) . ".</td>";
+                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['vendor']) . "</td>";
+                                echo "<td>₱" . htmlspecialchars($row['total']) . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='4'>No expense records found</td></tr>";
+                        }                        
+                        ?>
+                    </tbody>                
+                </table>
+                </div>
+            </div>
+        </section>
 
         <!-- Payment Method Summary -->
         <h3>Summary by Payment Method</h3>
@@ -281,16 +414,77 @@ foreach ($data as $row) {
                 <?php foreach ($paymentTotals as $pm => $total): ?>
                 <tr>
                     <td><?= htmlspecialchars($pm) ?></td>
+                    <td>₱<?= number_format($row['total'], 2) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <h3>Payment Method Breakdown</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Payment Method</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($paymentTotals as $method => $total): ?>
+                <tr>
+                    <td><?= htmlspecialchars($method) ?></td>
                     <td>$<?= number_format($total, 2) ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
+
     </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+const chartLabels = <?= json_encode($chartLabels) ?>;
+const salesData = <?= json_encode($salesData) ?>;
+const expensesData = <?= json_encode($expensesData) ?>;
+
+const ctx = document.getElementById('salesExpensesChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: chartLabels,
+        datasets: [
+            {
+                label: 'Sales (Income)',
+                data: salesData,
+                borderColor: 'green',
+                backgroundColor: 'rgba(0, 128, 0, 0.1)',
+                fill: true,
+                tension: 0.3
+            },
+            {
+                label: 'Expenses',
+                data: expensesData,
+                borderColor: 'red',
+                backgroundColor: 'rgba(255, 0, 0, 0.1)',
+                fill: true,
+                tension: 0.3
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: 'Sales vs Expenses Over Time' }
+        },
+        scales: {
+            x: { title: { display: true, text: 'Date' } },
+            y: { title: { display: true, text: 'Amount (₱)' } }
+        }
+    }
+});
+    
     $(document).ready(() => {
         $('#reportTable').DataTable({
             paging: true,
@@ -298,6 +492,7 @@ foreach ($data as $row) {
             ordering: true
         });
     });
+
 </script>
 
 </body>
