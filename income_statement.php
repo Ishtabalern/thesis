@@ -66,6 +66,18 @@ $sql .= " ORDER BY inc.statement_date DESC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Create a period label like "For the month ended April 30, 2025"
+$periodLabel = 'For the year';
+if ($filterMonth) {
+    $monthName = date('F', strtotime($filterMonth . '-01'));
+    $year = date('Y', strtotime($filterMonth . '-01'));
+    $periodLabel = "For the month ended {$monthName} " . date('t, Y', strtotime($filterMonth . '-01'));
+} elseif (!empty($entries)) {
+    $latest = max(array_column($entries, 'statement_date'));
+    $year = date('Y', strtotime($latest));
+    $periodLabel = "For the year ended December 31, {$year}";
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -148,7 +160,8 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
             <a class="btn-tabs" href="balance_sheet.php"><i class="fa-solid fa-file"></i>Balance Sheet</a>
-            <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement</a>
+            <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement (Manual)</a>
+            <a class="btn-tabs" href="auto_income_statement.php"><i class="fa-solid fa-file"></i>Income Statement (auto)</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -193,6 +206,9 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <hr>
         <h2>Income Statement Summary</h2>
+        <h3><?= $periodLabel ?></h3>
+        
+
         <form method="GET">
             <label>Filter by Client:
                 <select name="client_id">
@@ -208,7 +224,7 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button type="submit">Filter</button>
         </form>
 
-        <table>
+        <table id="incomeTable">
             <thead>
                 <tr>
                     <th>Client</th>
@@ -248,7 +264,72 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <button onclick="exportPDF()">Export as PDF</button>
     </div>
     <script src="script/dashboard.js"></script>
+    <!-- jQuery, DataTables, jsPDF CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" 
+      href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#incomeTable').DataTable({
+            paging: true,
+            ordering: true,
+            info: false
+        });
+    });
+
+    async function exportPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(14);
+        doc.text("Income Statement", 14, 20);
+        doc.setFontSize(11);
+        doc.text("<?= $periodLabel ?>", 14, 28);
+
+        let startY = 40;
+        const headers = [
+            "Client", "Date", "Sales Revenue", "Other Income", "Total Revenue",
+            "COGS", "Salaries", "Rent", "Utilities", "Other Expenses",
+            "Total Expenses", "Net Income"
+        ];
+
+        const rows = <?php echo json_encode(array_map(function($e) {
+            $totalRevenue = $e['sales_revenue'] + $e['other_income'];
+            $totalExpenses = $e['cogs'] + $e['salaries'] + $e['rent'] + $e['utilities'] + $e['other_expenses'];
+            $netIncome = $totalRevenue - $totalExpenses;
+            return [
+                $e['client_name'],
+                $e['statement_date'],
+                number_format($e['sales_revenue'], 2),
+                number_format($e['other_income'], 2),
+                number_format($totalRevenue, 2),
+                number_format($e['cogs'], 2),
+                number_format($e['salaries'], 2),
+                number_format($e['rent'], 2),
+                number_format($e['utilities'], 2),
+                number_format($e['other_expenses'], 2),
+                number_format($totalExpenses, 2),
+                number_format($netIncome, 2)
+            ];
+        }, $entries)); ?>;
+
+        doc.autoTable({
+            head: [headers],
+            body: rows,
+            startY: startY,
+            styles: { fontSize: 8 },
+            margin: { left: 14, right: 14 },
+        });
+
+        doc.save("income_statement.pdf");
+    }
+</script>
+
 </body>
 </html>
