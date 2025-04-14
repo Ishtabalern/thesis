@@ -228,6 +228,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
             <a class="btn-tabs" href="balance_sheet.php"><i class="fa-solid fa-file"></i>Balance Sheet</a>
+            <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -289,7 +290,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                                     echo "<td contenteditable='true' data-column='category'>" . $row["category"] . "</td>";
                                     echo "<td contenteditable='true' data-column='type'>" . $row["type"] . "</td>";
                                     echo "<td contenteditable='true' data-column='type'>" . $row["payment_method"] . "</td>";
-                                    echo "<td contenteditable='true' data-column='total'>" . $row["total"] . "</td>";
+                                    echo "<td contenteditable='true' data-column='total'>₱" . number_format($row["total"], 2) . "</td>";
                                     echo "<td>" . $row["img_url"] . "</td>";
                                     echo "</tr>";
                                     }
@@ -307,7 +308,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['client'])) {
                             <h3>Add New Receipt</h3>
                             <form id="addReceiptForm">
                                 <label>Date:</label>
-                                <input type="text" name="date" id="receiptDate" required placeholder="yyyy/mm/dd">
+                                <input type="text" name="date" id="receiptDate" required placeholder="yyyy/mm/dd" autocomplete="off">
                                 <br><br>
                                 <label>Vendor:</label>
                                 <input type="text" name="vendor" required><br><br>

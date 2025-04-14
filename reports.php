@@ -222,6 +222,7 @@ foreach ($allDates as $date) {
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
             <a class="btn-tabs" href="balance_sheet.php"><i class="fa-solid fa-file"></i>Balance Sheet</a>
+            <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -281,7 +282,7 @@ foreach ($allDates as $date) {
                     <td><?= htmlspecialchars($row['vendor']) ?></td>
                     <td><?= htmlspecialchars($row['category']) ?></td>
                     <td><?= htmlspecialchars($row['type']) ?></td>
-                    <td>$<?= number_format($row['total'], 2) ?></td>
+                    <td>₱<?= number_format($row['total'], 2) ?></td>
                     <td>
                         <?php if ($row['img_url']): ?>
                             <a href="<?= htmlspecialchars($row['img_url']) ?>" target="_blank">
@@ -316,10 +317,10 @@ foreach ($allDates as $date) {
                 <tr>
                     <td><?= htmlspecialchars($name) ?></td>
                     <td><?= htmlspecialchars($period) ?></td>
-                    <td style="color:green;">$<?= number_format($income, 2) ?></td>
-                    <td style="color:red;">$<?= number_format($expense, 2) ?></td>
+                    <td style="color:green;">₱<?= number_format($income, 2) ?></td>
+                    <td style="color:red;">₱<?= number_format($expense, 2) ?></td>
                     <td style="<?= $net >= 0 ? 'color:green' : 'color:red' ?>">
-                        $<?= number_format($net, 2) ?>
+                    ₱<?= number_format($net, 2) ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -389,7 +390,7 @@ foreach ($allDates as $date) {
                                 echo "<td>" . ($index + 1) . ".</td>";
                                 echo "<td>" . htmlspecialchars($row['date']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['vendor']) . "</td>";
-                                echo "<td>₱" . htmlspecialchars($row['total']) . "</td>";
+                                echo "<td>₱" . number_format($row['total'], 2) . "</td>";
                                 echo "</tr>";
                             }
                         } else {
@@ -433,7 +434,7 @@ foreach ($allDates as $date) {
                 <?php foreach ($paymentTotals as $method => $total): ?>
                 <tr>
                     <td><?= htmlspecialchars($method) ?></td>
-                    <td>$<?= number_format($total, 2) ?></td>
+                    <td>₱<?= number_format($total, 2) ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
