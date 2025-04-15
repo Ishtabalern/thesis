@@ -238,95 +238,109 @@ foreach ($allDates as $date) {
         </div>
 
         <form class="filters" method="get">
-            <label>Month:
-                <input type="month" name="month" value="<?= htmlspecialchars($month ?? '') ?>">
-            </label>
-            <label>Client:
-                <select name="client">
-                    <option value="">All</option>
-                    <?php foreach ($clients as $c): ?>
-                        <option value="<?= $c['id'] ?>" <?= $client == $c['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($c['name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
-            <label>Vendor:
-                <select name="vendor">
-                    <option value="">All</option>
-                    <?php foreach ($vendors as $v): ?>
-                        <option value="<?= htmlspecialchars($v['vendor']) ?>" <?= $vendor == $v['vendor'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($v['vendor']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
+            <div class="input-container">
+                <div class="input">
+                    <label>Month</label>
+                    <input type="month" name="month" value="<?= htmlspecialchars($month ?? '') ?>">
+                </div>
+                <div class="input">
+                    <label>Client: </label>
+                    <select name="client">
+                        <option value="">All</option>
+                        <?php foreach ($clients as $c): ?>
+                            <option value="<?= $c['id'] ?>" <?= $client == $c['id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($c['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="input">
+                    <label>Vendor:</label>
+                    <select name="vendor">
+                        <option value="">All</option>
+                        <?php foreach ($vendors as $v): ?>
+                            <option value="<?= htmlspecialchars($v['vendor']) ?>" <?= $vendor == $v['vendor'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($v['vendor']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            
+           
             <button type="submit">Filter</button>
         </form>
 
         <!-- Main Data Table -->
-        <table id="reportTable">
-            <thead>
-                <tr>
-                    <th>Client</th>
-                    <th>Vendor</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>Total</th>
-                    <th>Receipt</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($data as $row): ?>
-                <tr>
-                    <td><?= htmlspecialchars($row['client_name']) ?></td>
-                    <td><?= htmlspecialchars($row['vendor']) ?></td>
-                    <td><?= htmlspecialchars($row['category']) ?></td>
-                    <td><?= htmlspecialchars($row['type']) ?></td>
-                    <td>₱<?= number_format($row['total'], 2) ?></td>
-                    <td>
-                        <?php if ($row['img_url']): ?>
-                            <a href="<?= htmlspecialchars($row['img_url']) ?>" target="_blank">
-                                <img src="<?= htmlspecialchars($row['img_url']) ?>" class="preview">
-                            </a>
-                        <?php else: ?> N/A <?php endif; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div class="reportTable-container">
+            <table id="reportTable">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Vendor</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Total</th>
+                        <th>Receipt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($data as $row): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['client_name']) ?></td>
+                        <td><?= htmlspecialchars($row['vendor']) ?></td>
+                        <td><?= htmlspecialchars($row['category']) ?></td>
+                        <td><?= htmlspecialchars($row['type']) ?></td>
+                        <td>₱<?= number_format($row['total'], 2) ?></td>
+                        <td>
+                            <?php if ($row['img_url']): ?>
+                                <a href="<?= htmlspecialchars($row['img_url']) ?>" target="_blank">
+                                    <img src="<?= htmlspecialchars($row['img_url']) ?>" class="preview">
+                                </a>
+                            <?php else: ?> N/A <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+       
 
         <!-- Profit/Loss Summary -->
-        <h3>Profit/Loss Summary</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Client</th>
-                    <th>Period</th>
-                    <th>Total Income</th>
-                    <th>Total Expenses</th>
-                    <th>Profit/Loss</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($clientTotals as $key => $totals):
-                    list($name, $period) = explode(' - ', $key);
-                    $income = $totals['income'];
-                    $expense = $totals['expense'];
-                    $net = $income - $expense;
-                ?>
-                <tr>
-                    <td><?= htmlspecialchars($name) ?></td>
-                    <td><?= htmlspecialchars($period) ?></td>
-                    <td style="color:green;">₱<?= number_format($income, 2) ?></td>
-                    <td style="color:red;">₱<?= number_format($expense, 2) ?></td>
-                    <td style="<?= $net >= 0 ? 'color:green' : 'color:red' ?>">
-                    ₱<?= number_format($net, 2) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+         <div class="profitLoss-container">
+            <h3>Profit/Loss Summary</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Period</th>
+                        <th>Total Income</th>
+                        <th>Total Expenses</th>
+                        <th>Profit/Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($clientTotals as $key => $totals):
+                        list($name, $period) = explode(' - ', $key);
+                        $income = $totals['income'];
+                        $expense = $totals['expense'];
+                        $net = $income - $expense;
+                    ?>
+                    <tr>
+                        <td><?= htmlspecialchars($name) ?></td>
+                        <td><?= htmlspecialchars($period) ?></td>
+                        <td style="color:green;">₱<?= number_format($income, 2) ?></td>
+                        <td style="color:red;">₱<?= number_format($expense, 2) ?></td>
+                        <td style="<?= $net >= 0 ? 'color:green' : 'color:red' ?>">
+                        ₱<?= number_format($net, 2) ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+         </div>
+      
         <section class="client-content">
             <section class="chart-section">
                 <header>Sales vs Expenses Chart</header>
@@ -405,41 +419,46 @@ foreach ($allDates as $date) {
         </section>
 
         <!-- Payment Method Summary -->
-        <h3>Summary by Payment Method</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Payment Method</th>
-                    <th>Total Spent</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($paymentTotals as $pm => $total): ?>
-                <tr>
-                    <td><?= htmlspecialchars($pm) ?></td>
-                    <td>₱<?= number_format($row['total'], 2) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <h3>Payment Method Breakdown</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Payment Method</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($paymentTotals as $method => $total): ?>
-                <tr>
-                    <td><?= htmlspecialchars($method) ?></td>
-                    <td>₱<?= number_format($total, 2) ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+         <div class="payment-container">
+            <h3>Summary by Payment Method</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Payment Method</th>
+                        <th>Total Spent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($paymentTotals as $pm => $total): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($pm) ?></td>
+                        <td>₱<?= number_format($row['total'], 2) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+         </div>
+            
+        <div class="payment-method-container">
+            <h3>Payment Method Breakdown</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Payment Method</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($paymentTotals as $method => $total): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($method) ?></td>
+                        <td>₱<?= number_format($total, 2) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        
 
     </div>
 

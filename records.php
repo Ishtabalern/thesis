@@ -163,12 +163,14 @@ if ($clientFilter !== null && $clientFilter !== "") {
 
         <div class="main-content">
             <div class="record-summary">
-                <button class="summary-btn">All Receipt<br><?php echo $receipt_count; ?></button>
-                <button class="summary-btn">Sales<br>5</button>
-                <button class="summary-btn">Expense<br>15</button>
+                <button class="summary-btn"><h3>All Receipt</h3><br><span><?php echo $receipt_count; ?></span></button>
+                <button class="summary-btn"><h3>Sales</h3><br><span>5</span></button>
+                <button class="summary-btn"><h3>Expense</h3><br><span>15</span></button>       
+            </div>
 
-                <!-- Client Dropdown Filter -->
-                <label for="clientFilter">Filter by Client:</label>
+            <div class="filterContainer">
+                 <!-- Client Dropdown Filter -->
+                 <label for="clientFilter">Filter by Client:</label>
                 <select id="clientFilter">
                     <option value="">All Clients</option>
                     <?php foreach ($clients as $client) { ?>

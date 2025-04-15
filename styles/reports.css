@@ -1,3 +1,218 @@
+.filters{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filters .input-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 80%;
+  width: 70%;
+
+}
+
+.input-container .input{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.input label{
+  font-size: 1rem;
+  font-weight: bolder;
+  
+}
+
+.input input[type="month"]{
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.input select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.filters button{
+  width: 120px;
+  padding: 15px 0px ;
+  border-radius: 6px;
+  background-color:#00AF7E;
+  color: #FFF;
+  font-weight: bold;
+  border: 1px solid #c3c3c3;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  transform: scale(0.95);
+}
+
+.filters button:active {
+  transform: scale(0.9); /* Even smaller when clicked */
+}
+
+.reportTable-container{
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reportTable-container table{ 
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.reportTable-container th, .reportTable-container td { 
+  padding: 15px !important;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.reportTable-container th{
+  background-color: #f2f2f2;
+  font-weight: bold;
+  color: #434343;
+}
+
+.reportTable-container tbody tr:hover{
+  background-color: #f2f2f2;
+}
+
+
+/* profit loss container */
+
+.profitLoss-container{
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.profitLoss-container h3 {
+  
+}
+
+.profitLoss-container table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.profitLoss-container th, .profitLoss-container td { 
+  padding: 15px !important;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.profitLoss-container th{
+  background-color: #f2f2f2;
+  font-weight: bold;
+  color: #434343;
+}
+
+.profitLoss-container tbody tr:hover{
+  background-color: #f2f2f2;
+}
+
+/* Payment Method Summary */
+.payment-container{
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.payment-container h3{
+  
+}
+
+.payment-container table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.payment-container th, .payment-container td { 
+  padding: 15px !important;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.payment-container th{
+  background-color: #f2f2f2;
+  font-weight: bold;
+  color: #434343;
+}
+
+.payment-container tbody tr:hover{
+  background-color: #f2f2f2;
+}
+
+/* Payment Method container */
+
+.payment-method-container{
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.payment-method-container h3{
+  
+}
+
+.payment-method-container table{
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.payment-method-container th, .payment-method-container td { 
+  padding: 15px !important;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.payment-method-container th{
+  background-color: #f2f2f2;
+  font-weight: bold;
+  color: #434343;
+}
+
+.payment-method-container tbody tr:hover{
+  background-color: #f2f2f2;
+}
+
 .client-content{
     background-color: #fff;
     border-radius: 5px;
