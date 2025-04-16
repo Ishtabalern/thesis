@@ -67,4 +67,6 @@ function updateBalanceSheetFromJournals($pdo, $clientId, $year) {
         $stmt->execute($values);
     }
 }
+
+
 ?>

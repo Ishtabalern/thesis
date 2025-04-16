@@ -10,80 +10,68 @@ $pdo = new PDO("mysql:host=localhost;dbname=cskdb", "admin", "123");
 // Fetch clients
 $clients = $pdo->query("SELECT id, name FROM clients ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 
-// Insert new entry
+// Handle new entry
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $pdo->prepare("
-        INSERT INTO income_statements (
-            client_id, statement_date, sales_revenue, other_income, cogs,
-            salaries, rent, utilities, other_expenses
-        ) VALUES (
-            :client_id, :statement_date, :sales_revenue, :other_income, :cogs,
-            :salaries, :rent, :utilities, :other_expenses
-        )
+    $stmt = $pdo->prepare("REPLACE INTO owners_equity 
+        (client_id, year, beginning_capital, additional_investment, withdrawals) 
+        VALUES (:client_id, :year, :beginning_capital, :additional_investment, :withdrawals)
     ");
     $stmt->execute([
         ':client_id' => $_POST['client_id'],
-        ':statement_date' => $_POST['statement_date'],
-        ':sales_revenue' => $_POST['sales_revenue'] ?? 0,
-        ':other_income' => $_POST['other_income'] ?? 0,
-        ':cogs' => $_POST['cogs'] ?? 0,
-        ':salaries' => $_POST['salaries'] ?? 0,
-        ':rent' => $_POST['rent'] ?? 0,
-        ':utilities' => $_POST['utilities'] ?? 0,
-        ':other_expenses' => $_POST['other_expenses'] ?? 0,
+        ':year' => $_POST['year'],
+        ':beginning_capital' => $_POST['beginning_capital'],
+        ':additional_investment' => $_POST['additional_investment'],
+        ':withdrawals' => $_POST['withdrawals'],
     ]);
-    header("Location: income_statement.php?success=1");
+    header("Location: owners_equity.php?success=1");
     exit();
 }
 
-// Filtering
+// Filters
 $filterClient = $_GET['client_id'] ?? '';
-$filterMonth = $_GET['month'] ?? '';
+$filterYear = $_GET['year'] ?? date('Y');
 
 $where = [];
 $params = [];
 
 if ($filterClient) {
-    $where[] = "inc.client_id = :client_id";
+    $where[] = "oe.client_id = :client_id";
     $params[':client_id'] = $filterClient;
 }
-if ($filterMonth) {
-    $where[] = "DATE_FORMAT(inc.statement_date, '%Y-%m') = :month";
-    $params[':month'] = $filterMonth;
+if ($filterYear) {
+    $where[] = "oe.year = :year";
+    $params[':year'] = $filterYear;
 }
 
-$sql = "
-    SELECT inc.*, c.name AS client_name
-    FROM income_statements inc
-    JOIN clients c ON inc.client_id = c.id
-";
+$sql = "SELECT oe.*, c.name AS client_name
+        FROM owners_equity oe
+        JOIN clients c ON oe.client_id = c.id";
 if ($where) {
     $sql .= " WHERE " . implode(" AND ", $where);
 }
-$sql .= " ORDER BY inc.statement_date DESC";
-
+$sql .= " ORDER BY oe.year DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-// Create a period label like "For the month ended April 30, 2025"
-$periodLabel = 'For the year';
-if ($filterMonth) {
-    $monthName = date('F', strtotime($filterMonth . '-01'));
-    $year = date('Y', strtotime($filterMonth . '-01'));
-    $periodLabel = "For the month ended {$monthName} " . date('t, Y', strtotime($filterMonth . '-01'));
-} elseif (!empty($entries)) {
-    $latest = max(array_column($entries, 'statement_date'));
-    $year = date('Y', strtotime($latest));
-    $periodLabel = "For the year ended December 31, {$year}";
-}
 
+// Fetch Net Income from income_statements (optional auto-calc)
+function getNetIncome($pdo, $clientId, $year) {
+    $stmt = $pdo->prepare("SELECT 
+        SUM(sales_revenue + other_income - cogs - salaries - rent - utilities - other_expenses) AS net_income
+        FROM income_statements 
+        WHERE client_id = :client_id AND YEAR(statement_date) = :year
+    ");
+    $stmt->execute([':client_id' => $clientId, ':year' => $year]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $row ? floatval($row['net_income']) : 0;
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Income Statement Report</title>
+    <title>Statement of Owner's Equity</title>
     <style>
         body { font-family: Arial; padding: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -91,11 +79,11 @@ if ($filterMonth) {
         th:first-child, td:first-child { text-align: left; }
         .success { color: green; margin-bottom: 10px; }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-        <div class="modal-overlay"></div>
+<div class="modal-overlay"></div>
         <!-- The Modal -->
         <div id="newModal" class="newModal">
             <!-- Modal content -->
@@ -170,7 +158,7 @@ if ($filterMonth) {
 
     <div class="dashboard">
         <div class="top-bar">
-            <h1>Income Statement Report</h1>
+            <h1>Owner's Equity</h1>
             <div class="user-controls">
                 <a href="functions/logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
                 <div class="dropdown">
@@ -179,10 +167,10 @@ if ($filterMonth) {
         </div>
 
         <?php if (isset($_GET['success'])): ?>
-            <div class="success">Income statement saved!</div>
+            <div class="success">Entry saved successfully!</div>
         <?php endif; ?>
 
-        <h2>Add New Entry</h2>
+        <h2>Add / Update Entry</h2>
         <form method="POST">
             <label>Client:
                 <select name="client_id" required>
@@ -192,24 +180,17 @@ if ($filterMonth) {
                     <?php endforeach; ?>
                 </select>
             </label>
-            <label>Date: <input type="date" name="statement_date" required></label><br><br>
+            <label>Year: <input type="number" name="year" value="<?= date('Y') ?>" required></label><br><br>
 
-            <label>Sales Revenue: <input type="number" step="0.01" name="sales_revenue"></label>
-            <label>Other Income: <input type="number" step="0.01" name="other_income"></label><br><br>
-            <label>COGS: <input type="number" step="0.01" name="cogs"></label>
-            <label>Salaries: <input type="number" step="0.01" name="salaries"></label>
-            <label>Rent: <input type="number" step="0.01" name="rent"></label>
-            <label>Utilities: <input type="number" step="0.01" name="utilities"></label>
-            <label>Other Expenses: <input type="number" step="0.01" name="other_expenses"></label><br><br>
+            <label>Beginning Capital: <input type="number" step="0.01" name="beginning_capital"></label>
+            <label>Additional Investment: <input type="number" step="0.01" name="additional_investment"></label>
+            <label>Withdrawals: <input type="number" step="0.01" name="withdrawals"></label><br><br>
 
-            <button type="submit">Save Statement</button>
+            <button type="submit">Save Entry</button>
         </form>
 
         <hr>
-        <h2>Income Statement Summary</h2>
-        <h3><?= $periodLabel ?></h3>
-        
-
+        <h2>Owner's Equity Report</h2>
         <form method="GET">
             <label>Filter by Client:
                 <select name="client_id">
@@ -221,116 +202,40 @@ if ($filterMonth) {
                     <?php endforeach; ?>
                 </select>
             </label>
-            <label>Month: <input type="month" name="month" value="<?= htmlspecialchars($filterMonth) ?>"></label>
+            <label>Year: <input type="number" name="year" value="<?= htmlspecialchars($filterYear) ?>"></label>
             <button type="submit">Filter</button>
         </form>
 
-        <table id="incomeTable">
+        <table>
             <thead>
                 <tr>
                     <th>Client</th>
-                    <th>Date</th>
-                    <th>Sales Revenue</th>
-                    <th>Other Income</th>
-                    <th>Total Revenue</th>
-                    <th>COGS</th>
-                    <th>Salaries</th>
-                    <th>Rent</th>
-                    <th>Utilities</th>
-                    <th>Other Expenses</th>
-                    <th>Total Expenses</th>
+                    <th>Year</th>
+                    <th>Beginning Capital</th>
+                    <th>Additional Investment</th>
                     <th>Net Income</th>
+                    <th>Withdrawals</th>
+                    <th>Ending Capital</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($entries as $e): 
-                    $totalRevenue = $e['sales_revenue'] + $e['other_income'];
-                    $totalExpenses = $e['cogs'] + $e['salaries'] + $e['rent'] + $e['utilities'] + $e['other_expenses'];
-                    $netIncome = $totalRevenue - $totalExpenses;
+                    $netIncome = getNetIncome($pdo, $e['client_id'], $e['year']);
+                    $endingCapital = $e['beginning_capital'] + $e['additional_investment'] + $netIncome - $e['withdrawals'];
                 ?>
                 <tr>
                     <td><?= htmlspecialchars($e['client_name']) ?></td>
-                    <td><?= htmlspecialchars($e['statement_date']) ?></td>
-                    <td><?= number_format($e['sales_revenue'], 2) ?></td>
-                    <td><?= number_format($e['other_income'], 2) ?></td>
-                    <td><strong><?= number_format($totalRevenue, 2) ?></strong></td>
-                    <td><?= number_format($e['cogs'], 2) ?></td>
-                    <td><?= number_format($e['salaries'], 2) ?></td>
-                    <td><?= number_format($e['rent'], 2) ?></td>
-                    <td><?= number_format($e['utilities'], 2) ?></td>
-                    <td><?= number_format($e['other_expenses'], 2) ?></td>
-                    <td><strong><?= number_format($totalExpenses, 2) ?></strong></td>
+                    <td><?= htmlspecialchars($e['year']) ?></td>
+                    <td><?= number_format($e['beginning_capital'], 2) ?></td>
+                    <td><?= number_format($e['additional_investment'], 2) ?></td>
                     <td><strong><?= number_format($netIncome, 2) ?></strong></td>
+                    <td><?= number_format($e['withdrawals'], 2) ?></td>
+                    <td><strong><?= number_format($endingCapital, 2) ?></strong></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <button onclick="exportPDF()">Export as PDF</button>
     </div>
     <script src="script/dashboard.js"></script>
-    <!-- jQuery, DataTables, jsPDF CDN -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" 
-      href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $('#incomeTable').DataTable({
-            paging: true,
-            ordering: true,
-            info: false
-        });
-    });
-
-    async function exportPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-
-        doc.setFontSize(14);
-        doc.text("Income Statement", 14, 20);
-        doc.setFontSize(11);
-        doc.text("<?= $periodLabel ?>", 14, 28);
-
-        let startY = 40;
-        const headers = [
-            "Client", "Date", "Sales Revenue", "Other Income", "Total Revenue",
-            "COGS", "Salaries", "Rent", "Utilities", "Other Expenses",
-            "Total Expenses", "Net Income"
-        ];
-
-        const rows = <?php echo json_encode(array_map(function($e) {
-            $totalRevenue = $e['sales_revenue'] + $e['other_income'];
-            $totalExpenses = $e['cogs'] + $e['salaries'] + $e['rent'] + $e['utilities'] + $e['other_expenses'];
-            $netIncome = $totalRevenue - $totalExpenses;
-            return [
-                $e['client_name'],
-                $e['statement_date'],
-                number_format($e['sales_revenue'], 2),
-                number_format($e['other_income'], 2),
-                number_format($totalRevenue, 2),
-                number_format($e['cogs'], 2),
-                number_format($e['salaries'], 2),
-                number_format($e['rent'], 2),
-                number_format($e['utilities'], 2),
-                number_format($e['other_expenses'], 2),
-                number_format($totalExpenses, 2),
-                number_format($netIncome, 2)
-            ];
-        }, $entries)); ?>;
-
-        doc.autoTable({
-            head: [headers],
-            body: rows,
-            startY: startY,
-            styles: { fontSize: 8 },
-            margin: { left: 14, right: 14 },
-        });
-
-        doc.save("income_statement.pdf");
-    }
-</script>
-
 </body>
 </html>

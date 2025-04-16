@@ -7,87 +7,87 @@ if (!isset($_SESSION['logged_in'])) {
 
 $pdo = new PDO("mysql:host=localhost;dbname=cskdb", "admin", "123");
 
-$clients = $pdo->query("SELECT id, name FROM clients ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
-function updateBalanceSheetFromReceipt($pdo, $receipt, $clientId) {
-    $date = new DateTime($receipt['date']);
-    $year = $date->format('Y');
-    $total = floatval($receipt['total']);
-    $category = $receipt['category'];
-    $paymentMethod = $receipt['payment_method'];
+// === CONFIGURABLE ACCOUNTS MAPPING ===
+$accountMap = [
+    'Cash' => 'cash',
+    'Accounts Receivable' => 'receivables',
+    'Inventory' => 'inventory',
+    'Equipment' => 'equipment',
+    'Accounts Payable' => 'accounts_payable',
+    'Loans' => 'loans',
+    'Taxes Payable' => 'taxes_payable',
+];
 
-    // Get or create balance sheet
-    $stmt = $pdo->prepare("SELECT id FROM balance_sheets WHERE client_id = ? AND year = ?");
+// === AUTO UPDATE FROM JOURNAL ENTRIES ===
+function updateBalanceSheetFromJournals($pdo, $clientId, $year)
+{
+    global $accountMap;
+
+    // Create or get balance sheet
+    $stmt = $pdo->prepare("SELECT id FROM balance_sheets WHERE client_id = ? AND YEAR(sheet_date) = ?");
     $stmt->execute([$clientId, $year]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row) {
         $balanceSheetId = $row['id'];
     } else {
-        $insertStmt = $pdo->prepare("INSERT INTO balance_sheets (client_id, year) VALUES (?, ?)");
-        $insertStmt->execute([$clientId, $year]);
+        $insertStmt = $pdo->prepare("INSERT INTO balance_sheets (client_id, sheet_date) VALUES (?, ?)");
+        $insertStmt->execute([$clientId, "$year-12-31"]);
         $balanceSheetId = $pdo->lastInsertId();
     }
 
-    // Determine balance sheet impact
+    // Gather balances
+    $sql = "
+        SELECT a.name, SUM(l.debit - l.credit) as net_amount
+        FROM journal_entries e
+        JOIN journal_entry_lines l ON e.id = l.journal_entry_id
+        JOIN chart_of_accounts a ON l.account_id = a.id
+        WHERE e.client_id = ? AND YEAR(e.date) = ?
+        GROUP BY a.name
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$clientId, $year]);
+    $updates = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $updateFields = [];
-
-    if ($category === "Inventory") {
-        $updateFields['inventory'] = $total;
-        if ($paymentMethod === "Credit") {
-            $updateFields['accounts_payable'] = $total;
-        } elseif ($paymentMethod === "Cash") {
-            $updateFields['cash'] = -$total;
+    foreach ($updates as $row) {
+        $field = $accountMap[$row['name']] ?? null;
+        if ($field) {
+            $updateFields[$field] = floatval($row['net_amount']);
         }
-
-    } elseif ($category === "Equipment") {
-        $updateFields['equipment'] = $total;
-        if ($paymentMethod === "Cash") {
-            $updateFields['cash'] = -$total;
-        }
-
-    } elseif ($category === "Loan Payment") {
-        $updateFields['loans'] = -$total;
-        $updateFields['cash'] = -$total;
-
-    } elseif ($category === "Tax Payment") {
-        $updateFields['taxes_payable'] = -$total;
-        $updateFields['cash'] = -$total;
     }
 
-    // Prepare dynamic update query
+    // Update balance sheet
     if (!empty($updateFields)) {
         $setClause = [];
         $values = [];
 
-        foreach ($updateFields as $field => $value) {
-            $setClause[] = "$field = $field + ?";
-            $values[] = $value;
+        foreach ($updateFields as $field => $amount) {
+            $setClause[] = "$field = ?";
+            $values[] = $amount;
         }
 
         $values[] = $balanceSheetId;
         $sql = "UPDATE balance_sheets SET " . implode(', ', $setClause) . " WHERE id = ?";
-        $updateStmt = $pdo->prepare($sql);
-        $updateStmt->execute($values);
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($values);
     }
 }
 
-
+// === MAIN EXECUTION ===
 $clientId = $_POST['client_id'] ?? null;
-
 if (!$clientId) {
     die("No client selected.");
 }
 
-// Get all receipts for this client
-$stmt = $pdo->prepare("SELECT * FROM receipts WHERE client_id = ?");
+// Get journal years for client
+$stmt = $pdo->prepare("SELECT DISTINCT YEAR(date) as year FROM journal_entries WHERE client_id = ?");
 $stmt->execute([$clientId]);
-$receipts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$years = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Loop through and update the balance sheet
-foreach ($receipts as $receipt) {
-    updateBalanceSheetFromReceipt($pdo, $receipt, $clientId);
+foreach ($years as $year) {
+    updateBalanceSheetFromJournals($pdo, $clientId, $year);
 }
 
 header("Location: ../balance_sheet.php");
 exit;
-?>
