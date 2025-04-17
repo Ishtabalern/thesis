@@ -1,93 +1,124 @@
 <?php
-session_start();
-if (!isset($_SESSION['logged_in'])) {
-    header("Location: sign-in.php");
-    exit();
+require_once '../config.php'; // adjust path as needed
+
+$client_id = $_POST['client_id'] ?? null;
+
+if (!$client_id) {
+    exit("Missing client ID.");
 }
 
-$pdo = new PDO("mysql:host=localhost;dbname=cskdb", "admin", "123");
+$year = date('Y');
 
+// Step 1: Fetch account balances from journal_entry_lines
+$sql = "
+    SELECT coa.name AS account_name, coa.account_type_id, 
+           SUM(jel.debit) AS total_debit, 
+           SUM(jel.credit) AS total_credit
+    FROM journal_entries je
+    JOIN journal_entry_lines jel ON je.id = jel.journal_entry_id
+    JOIN chart_of_accounts coa ON coa.id = jel.account_id
+    WHERE je.client_id = :client_id AND YEAR(je.date) = :year
+    GROUP BY coa.name, coa.account_type_id
+";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $client_id = $_POST['client_id'];
-    $year = $_POST['year'];
-    $sheet_date = "$year-12-31";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['client_id' => $client_id, 'year' => $year]);
+$entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Fetch computed values from journal entries (same as before)
-    $stmt = $pdo->prepare("
-        SELECT jel.account_id, coa.name AS account_name, coa.account_type_id,
-               SUM(jel.debit) AS total_debit, SUM(jel.credit) AS total_credit
-        FROM journal_entry_lines jel
-        JOIN journal_entries je ON jel.journal_entry_id = je.id
-        JOIN chart_of_accounts coa ON jel.account_id = coa.id
-        WHERE je.client_id = ? AND YEAR(je.date) = ?
-        GROUP BY jel.account_id
-    ");
-    $stmt->execute([$client_id, $year]);
-    $accountSums = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    $balances = [
-        'cash' => 0,
-        'receivables' => 0,
-        'inventory' => 0,
-        'equipment' => 0,
-        'other_assets' => 0,
-        'accounts_payable' => 0,
-        'loans' => 0,
-        'taxes_payable' => 0,
-        'other_liabilities' => 0,
-    ];
-
-    foreach ($accountSums as $row) {
-        $net = $row['total_debit'] - $row['total_credit'];
-        $name = strtolower($row['account_name']);
-
-        if (strpos($name, 'cash') !== false) $balances['cash'] += $net;
-        elseif (strpos($name, 'receivable') !== false) $balances['receivables'] += $net;
-        elseif (strpos($name, 'inventory') !== false) $balances['inventory'] += $net;
-        elseif (strpos($name, 'equipment') !== false) $balances['equipment'] += $net;
-        elseif ($row['account_type_id'] == 1) $balances['other_assets'] += $net;
-        elseif (strpos($name, 'payable') !== false && strpos($name, 'tax') === false) $balances['accounts_payable'] += abs($net);
-        elseif (strpos($name, 'loan') !== false) $balances['loans'] += abs($net);
-        elseif (strpos($name, 'tax') !== false) $balances['taxes_payable'] += abs($net);
-        elseif ($row['account_type_id'] == 2) $balances['other_liabilities'] += abs($net);
-    }
-
-    // Override with manual values if provided
-    foreach ($balances as $key => $value) {
-        if (isset($_POST[$key]) && $_POST[$key] !== '') {
-            $balances[$key] = floatval($_POST[$key]);
-        }
-    }
-
-    // Check for existing record
-    $stmt = $pdo->prepare("SELECT id FROM balance_sheets WHERE client_id = ? AND YEAR(sheet_date) = ?");
-    $stmt->execute([$client_id, $year]);
-    $existing = $stmt->fetch();
-
-    if ($existing) {
-        $stmt = $pdo->prepare("UPDATE balance_sheets SET
-            sheet_date = ?, cash = ?, receivables = ?, inventory = ?, equipment = ?, other_assets = ?,
-            accounts_payable = ?, loans = ?, taxes_payable = ?, other_liabilities = ?
-            WHERE client_id = ? AND YEAR(sheet_date) = ?");
-        $stmt->execute([
-            $sheet_date,
-            $balances['cash'], $balances['receivables'], $balances['inventory'], $balances['equipment'], $balances['other_assets'],
-            $balances['accounts_payable'], $balances['loans'], $balances['taxes_payable'], $balances['other_liabilities'],
-            $client_id, $year
-        ]);
-    } else {
-        $stmt = $pdo->prepare("INSERT INTO balance_sheets (
-            client_id, sheet_date, cash, receivables, inventory, equipment, other_assets,
-            accounts_payable, loans, taxes_payable, other_liabilities
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $client_id, $sheet_date,
-            $balances['cash'], $balances['receivables'], $balances['inventory'], $balances['equipment'], $balances['other_assets'],
-            $balances['accounts_payable'], $balances['loans'], $balances['taxes_payable'], $balances['other_liabilities']
-        ]);
-    }
-
-    header("Location: ../balance_sheet.php?client_id=$client_id&year=$year&success=1");
-    exit();
+// No data? Exit to avoid inserting a blank record
+if (empty($entries)) {
+    exit("No journal data found for this client/year.");
 }
+
+// Step 2: Map data to balance sheet fields
+$data = [
+    'cash' => 0,
+    'receivables' => 0,
+    'inventory' => 0,
+    'equipment' => 0,
+    'other_assets' => 0,
+    'accounts_payable' => 0,
+    'loans' => 0,
+    'taxes_payable' => 0,
+    'other_liabilities' => 0,
+];
+
+foreach ($entries as $row) {
+    $balance = ($row['total_debit'] ?? 0) - ($row['total_credit'] ?? 0);
+    $name = strtolower($row['account_name']);
+
+    switch ($name) {
+        case 'cash':
+            $data['cash'] += $balance;
+            break;
+        case 'accounts receivable':
+            $data['receivables'] += $balance;
+            break;
+        case 'inventory':
+            $data['inventory'] += $balance;
+            break;
+        case 'equipment':
+            $data['equipment'] += $balance;
+            break;
+        case 'accounts payable':
+            $data['accounts_payable'] += abs($balance);
+            break;
+        case 'loans':
+            $data['loans'] += abs($balance);
+            break;
+        case 'taxes payable':
+            $data['taxes_payable'] += abs($balance);
+            break;
+        default:
+            // Auto-classify others
+            if (in_array($row['account_type_id'], [1])) {
+                $data['other_assets'] += $balance;
+            } elseif (in_array($row['account_type_id'], [2, 3])) {
+                $data['other_liabilities'] += abs($balance);
+            }
+            break;
+    }
+}
+
+// Step 3: Check if balance sheet already exists
+$check = $pdo->prepare("SELECT id FROM balance_sheets WHERE client_id = :client_id AND YEAR(sheet_date) = :year");
+$check->execute(['client_id' => $client_id, 'year' => $year]);
+$existing = $check->fetchColumn();
+
+if ($existing) {
+    // Update
+    $sql = "UPDATE balance_sheets SET
+                cash = :cash,
+                receivables = :receivables,
+                inventory = :inventory,
+                equipment = :equipment,
+                other_assets = :other_assets,
+                accounts_payable = :accounts_payable,
+                loans = :loans,
+                taxes_payable = :taxes_payable,
+                other_liabilities = :other_liabilities
+            WHERE client_id = :client_id AND YEAR(sheet_date) = :year";
+} else {
+    // Insert
+    $sql = "INSERT INTO balance_sheets (
+                client_id, sheet_date,
+                cash, receivables, inventory, equipment, other_assets,
+                accounts_payable, loans, taxes_payable, other_liabilities
+            ) VALUES (
+                :client_id, :sheet_date,
+                :cash, :receivables, :inventory, :equipment, :other_assets,
+                :accounts_payable, :loans, :taxes_payable, :other_liabilities
+            )";
+}
+
+// Step 4: Run query
+$stmt = $pdo->prepare($sql);
+$params = array_merge($data, [
+    'client_id' => $client_id,
+    'sheet_date' => $year . '-12-31',
+    'year' => $year
+]);
+$stmt->execute($params);
+
+header("Location: ../balance_sheet.php?client_id=$client_id&updated=1");
+exit;
