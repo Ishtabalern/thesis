@@ -1,70 +1,47 @@
 <?php
-// Start session to check if the user is logged in
 session_start();
-
-// Check if the user is logged in as an employee
-if (!isset($_SESSION['logged_in']) && !isset($_SESSION['logged_in'])) {
-    // If not logged in, redirect to login page
+if (!isset($_SESSION['logged_in'])) {
     header("Location: sign-in.php");
     exit();
 }
 
-// Database connection
-$servername = "localhost";
-$username = "admin";  // Change if necessary
-$password = "123";     // Change if necessary
-$dbname = "cskdb";     // Your database name
+$pdo = new PDO("mysql:host=localhost;dbname=cskdb", "admin", "123");
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$clients = mysqli_query($conn, "SELECT id, name FROM clients");
+// Fetch clients
+$clients = $pdo->query("SELECT id, name FROM clients ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 
 $selected_client = $_GET['client_id'] ?? '';
 $selected_year = $_GET['year'] ?? date('Y');
 
-// Fetch Net Income from income_statements
+// Fetch clients
+$client_stmt = $pdo->query("SELECT id, name FROM clients");
+$clients = $client_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch Net Income
 $net_income = 0;
-
 if ($selected_client && $selected_year) {
-    $stmt = $conn->prepare("SELECT sales_revenue, other_income, cogs, salaries, rent, utilities, other_expenses 
-                            FROM income_statements 
-                            WHERE client_id = ? AND statement_date = ?");
+    $stmt = $pdo->prepare("SELECT net_income FROM income_statements WHERE client_id = ? AND YEAR(statement_date) = ?");
+    $stmt->execute([$selected_client, $selected_year]);
+    $net_income = $stmt->fetchColumn() ?: 0;
+}
 
-    if ($stmt) {
-        $stmt->bind_param("ii", $selected_client, $selected_year);
-        $stmt->execute();
-        $stmt->bind_result($sales, $other, $cogs, $salaries, $rent, $utilities, $others);
-        if ($stmt->fetch()) {
-            $totalRevenue = $sales + $other;
-            $totalExpenses = $cogs + $salaries + $rent + $utilities + $others;
-            $net_income = $totalRevenue - $totalExpenses;
-        }
-        $stmt->close();
+// Fetch Owner's Equity (Investment & Withdrawals)
+$investment = $withdrawal = 0;
+if ($selected_client && $selected_year) {
+    $stmt = $pdo->prepare("SELECT additional_investment, withdrawals FROM owners_equity WHERE client_id = ? AND year = ?");
+    $stmt->execute([$selected_client, $selected_year]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $investment = $row['additional_investment'] ?? 0;
+        $withdrawal = $row['withdrawals'] ?? 0;
     }
 }
 
-
-// Fetch Owner's Equity details (investment & withdrawals)
-$investment = $withdrawal = 0;
-if ($selected_client && $selected_year) {
-    $stmt = $conn->prepare("SELECT additional_investment, withdrawals FROM owners_equity WHERE client_id = ? AND year = ?");
-    $stmt->bind_param("is", $selected_client, $selected_year);
-    $stmt->execute();
-    $stmt->bind_result($investment, $withdrawal);
-    $stmt->fetch();
-    $stmt->close();
-}
-
-// Calculate totals
 $cash_from_operating = $net_income;
 $cash_from_financing = $investment - $withdrawal;
 $net_cash_flow = $cash_from_operating + $cash_from_financing;
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -89,11 +66,11 @@ $net_cash_flow = $cash_from_operating + $cash_from_financing;
         <label>Client:</label>
         <select name="client_id" onchange="this.form.submit()">
             <option value="">Select Client</option>
-            <?php while ($row = mysqli_fetch_assoc($clients)) { ?>
+            <?php foreach ($clients as $row): ?>
                 <option value="<?= $row['id'] ?>" <?= ($selected_client == $row['id']) ? 'selected' : '' ?>>
                     <?= htmlspecialchars($row['name']) ?>
                 </option>
-            <?php } ?>
+            <?php endforeach; ?>
         </select>
 
         <label style="margin-left: 20px;">Year:</label>
