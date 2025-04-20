@@ -182,28 +182,84 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if (isset($_GET['success'])): ?>
             <div class="success">Balance sheet entry saved!</div>
         <?php endif; ?>
-        <form method="POST">
-            <label>Client:
-                <select name="client_id" required>
-                    <option value="">Select Client</option>
-                    <?php foreach ($clients as $c): ?>
-                        <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
-            <label>Date: <input type="date" name="sheet_date" required></label><br><br>
+        <form class="balance-sheet" method="POST">
+            <div class="input-container">
+                
+                <div class="section">
+                    
+                    <div class="inputs">
+                        <label>Client:</label>
+                        <select name="client_id" required>
+                            <option value="">Select Client</option>
+                            <?php foreach ($clients as $c): ?>
+                                <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    
+                    <div class="inputs">
+                        <label>Date:</label> 
+                        <input type="date" name="sheet_date" required>
+                    </div>
+ 
+                </div>
+                
+             
+                 <div class="section">
+                    <div class="inputs">
+                        <label>Cash:</label> 
+                        <input type="number" step="0.01" name="cash">
+                    </div>
 
-            <label>Cash: <input type="number" step="0.01" name="cash"></label>
-            <label>Receivables: <input type="number" step="0.01" name="receivables"></label>
-            <label>Inventory: <input type="number" step="0.01" name="inventory"></label>
-            <label>Equipment: <input type="number" step="0.01" name="equipment"></label>
-            <label>Other Assets: <input type="number" step="0.01" name="other_assets"></label><br><br>
+                    <div class="inputs">
+                        <label>Receivables:</label>
+                        <input type="number" step="0.01" name="receivables">
+                    </div>
 
-            <label>Accounts Payable: <input type="number" step="0.01" name="accounts_payable"></label>
-            <label>Loans: <input type="number" step="0.01" name="loans"></label>
-            <label>Taxes Payable: <input type="number" step="0.01" name="taxes_payable"></label>
-            <label>Other Liabilities: <input type="number" step="0.01" name="other_liabilities"></label><br><br>
+                    <div class="inputs">
+                        <label>Inventory:</label>
+                        <input type="number" step="0.01" name="inventory">
+                    </div>
 
+                    <div class="inputs">
+                        <label>Equipment: </label>
+                        <input type="number" step="0.01" name="equipment">
+                    </div>
+
+                    <div class="inputs">
+                        <label>Other Assets:</label>
+                        <input type="number" step="0.01" name="other_assets">
+                    </div>            
+                </div>
+
+                <div class="section">         
+                    <div class="inputs">
+                        <label>Accounts Payable:</label> 
+                        <input type="number" step="0.01" name="accounts_payable">
+                    </div> 
+
+                    <div class="inputs">
+                        <label>Loans:</label>
+                        <input type="number" step="0.01" name="loans">
+                    </div> 
+
+                    <div class="inputs">
+                        <label>Taxes Payable:</label> 
+                        <input type="number" step="0.01" name="taxes_payable">
+                    </div> 
+
+                    <div class="inputs">
+                        <label>Other Liabilities:</label> 
+                        <input type="number" step="0.01" name="other_liabilities">
+                    </div>            
+                </div>           
+                            
+                
+                  <!--- -->
+                
+
+            </div>
+    
             <button type="submit">Save Balance Sheet</button>
         </form>
 
@@ -228,53 +284,57 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button type="submit">Filter</button>
         </form>
 
-        <table id="balanceTable">
-            <thead>
-                <tr>
-                    <th>Client</th>
-                    <th>Date</th>
-                    <th>Cash</th>
-                    <th>Receivables</th>
-                    <th>Inventory</th>
-                    <th>Equipment</th>
-                    <th>Other Assets</th>
-                    <th>Total Assets</th>
-                    <th>Accounts Payable</th>
-                    <th>Loans</th>
-                    <th>Taxes Payable</th>
-                    <th>Other Liabilities</th>
-                    <th>Total Liabilities</th>
-                    <th>Equity</th>
-                    <th>Net Worth</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($entries as $e): 
-                    $totalAssets = $e['cash'] + $e['receivables'] + $e['inventory'] + $e['equipment'] + $e['other_assets'];
-                    $totalLiabilities = $e['accounts_payable'] + $e['loans'] + $e['taxes_payable'] + $e['other_liabilities'];
-                    $equity = $totalAssets - $totalLiabilities;
-                    $netWorth = $equity; // or any custom logic you want
-                ?>
-                <tr>
-                    <td><?= htmlspecialchars($e['client_name']) ?></td>
-                    <td><?= htmlspecialchars($e['sheet_date']) ?></td>
-                    <td><?= number_format($e['cash'], 2) ?></td>
-                    <td><?= number_format($e['receivables'], 2) ?></td>
-                    <td><?= number_format($e['inventory'], 2) ?></td>
-                    <td><?= number_format($e['equipment'], 2) ?></td>
-                    <td><?= number_format($e['other_assets'], 2) ?></td>
-                    <td><strong><?= number_format($totalAssets, 2) ?></strong></td>
-                    <td><?= number_format($e['accounts_payable'], 2) ?></td>
-                    <td><?= number_format($e['loans'], 2) ?></td>
-                    <td><?= number_format($e['taxes_payable'], 2) ?></td>
-                    <td><?= number_format($e['other_liabilities'], 2) ?></td>
-                    <td><strong><?= number_format($totalLiabilities, 2) ?></strong></td>
-                    <td><strong><?= number_format($equity, 2) ?></strong></td>
-                    <td><strong><?= number_format($netWorth, 2) ?></strong></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div class="balance-container">
+            <table id="balanceTable">
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Cash</th>
+                        <th>Receivables</th>
+                        <th>Inventory</th>
+                        <th>Equipment</th>
+                        <th>Other Assets</th>
+                        <th>Total Assets</th>
+                        <th>Accounts Payable</th>
+                        <th>Loans</th>
+                        <th>Taxes Payable</th>
+                        <th>Other Liabilities</th>
+                        <th>Total Liabilities</th>
+                        <th>Equity</th>
+                        <th>Net Worth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($entries as $e): 
+                        $totalAssets = $e['cash'] + $e['receivables'] + $e['inventory'] + $e['equipment'] + $e['other_assets'];
+                        $totalLiabilities = $e['accounts_payable'] + $e['loans'] + $e['taxes_payable'] + $e['other_liabilities'];
+                        $equity = $totalAssets - $totalLiabilities;
+                        $netWorth = $equity; // or any custom logic you want
+                    ?>
+                    <tr>
+                        <td><?= htmlspecialchars($e['client_name']) ?></td>
+                        <td><?= htmlspecialchars($e['sheet_date']) ?></td>
+                        <td><?= number_format($e['cash'], 2) ?></td>
+                        <td><?= number_format($e['receivables'], 2) ?></td>
+                        <td><?= number_format($e['inventory'], 2) ?></td>
+                        <td><?= number_format($e['equipment'], 2) ?></td>
+                        <td><?= number_format($e['other_assets'], 2) ?></td>
+                        <td><strong><?= number_format($totalAssets, 2) ?></strong></td>
+                        <td><?= number_format($e['accounts_payable'], 2) ?></td>
+                        <td><?= number_format($e['loans'], 2) ?></td>
+                        <td><?= number_format($e['taxes_payable'], 2) ?></td>
+                        <td><?= number_format($e['other_liabilities'], 2) ?></td>
+                        <td><strong><?= number_format($totalLiabilities, 2) ?></strong></td>
+                        <td><strong><?= number_format($equity, 2) ?></strong></td>
+                        <td><strong><?= number_format($netWorth, 2) ?></strong></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+       
+
         <form action="functions/update_balance_sheet.php" method="post" style="display:inline;">
         <input type="hidden" name="client_id" value="<?= $client['id'] ?>">
         <button type="submit" class="btn btn-sm btn-primary">Update Balance Sheet</button>

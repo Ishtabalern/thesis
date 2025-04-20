@@ -45,4 +45,114 @@
     border: none;
     font-size: 20px;
   }
+
+/* balance sheet */
+  .balance-sheet{
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid rgb(164, 164, 164);
+    border-radius: 7px;
+    margin-top: 20px;
+  }
+
+  .balance-sheet .input-container{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .input-container .section{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+ 
+  }
+
+  .section .inputs{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .inputs label{
+    font-size: 1rem;
+    font-weight: bolder;
+  }
+
+  .inputs input[type="date"],input[type="number"]{
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+
+  .inputs select{
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+
+  .inputs select option{
+
+  }
+
+  .balance-sheet button{
+    width: 150px;
+    padding: 15px 0px ;
+    border-radius: 6px;
+    background-color:#00AF7E;
+    color: #FFF;
+    font-weight: bold;
+    border: 1px solid #c3c3c3;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    transform: scale(0.95);
+    margin-top: 20px;
+  }
+
+  .balance-sheet button:active {
+    transform: scale(0.9); /* Even smaller when clicked */
+  }
+
+/* balance-container */
+
+  .balance-container{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .balance-container table{ 
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+  }
+  
+  .balance-container th, .balance-container td { 
+    padding: 15px !important;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 1rem;
+  }
+  
+  .balance-container th{
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #434343;
+  }
+  
+  .balance-container tbody tr:hover{
+    background-color: #f2f2f2;
+  }
   
