@@ -286,60 +286,8 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button type="submit">Filter</button>
         </form>
 
-<<<<<<< HEAD
         <div class="balance-container">
-            <table id="balanceTable">
-                <thead>
-                    <tr>
-                        <th>Client</th>
-                        <th>Date</th>
-                        <th>Cash</th>
-                        <th>Receivables</th>
-                        <th>Inventory</th>
-                        <th>Equipment</th>
-                        <th>Other Assets</th>
-                        <th>Total Assets</th>
-                        <th>Accounts Payable</th>
-                        <th>Loans</th>
-                        <th>Taxes Payable</th>
-                        <th>Other Liabilities</th>
-                        <th>Total Liabilities</th>
-                        <th>Equity</th>
-                        <th>Net Worth</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($entries as $e): 
-                        $totalAssets = $e['cash'] + $e['receivables'] + $e['inventory'] + $e['equipment'] + $e['other_assets'];
-                        $totalLiabilities = $e['accounts_payable'] + $e['loans'] + $e['taxes_payable'] + $e['other_liabilities'];
-                        $equity = $totalAssets - $totalLiabilities;
-                        $netWorth = $equity; // or any custom logic you want
-                    ?>
-                    <tr>
-                        <td><?= htmlspecialchars($e['client_name']) ?></td>
-                        <td><?= htmlspecialchars($e['sheet_date']) ?></td>
-                        <td><?= number_format($e['cash'], 2) ?></td>
-                        <td><?= number_format($e['receivables'], 2) ?></td>
-                        <td><?= number_format($e['inventory'], 2) ?></td>
-                        <td><?= number_format($e['equipment'], 2) ?></td>
-                        <td><?= number_format($e['other_assets'], 2) ?></td>
-                        <td><strong><?= number_format($totalAssets, 2) ?></strong></td>
-                        <td><?= number_format($e['accounts_payable'], 2) ?></td>
-                        <td><?= number_format($e['loans'], 2) ?></td>
-                        <td><?= number_format($e['taxes_payable'], 2) ?></td>
-                        <td><?= number_format($e['other_liabilities'], 2) ?></td>
-                        <td><strong><?= number_format($totalLiabilities, 2) ?></strong></td>
-                        <td><strong><?= number_format($equity, 2) ?></strong></td>
-                        <td><strong><?= number_format($netWorth, 2) ?></strong></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-       
-
-=======
-        <table id="balanceTable">
+             <table id="balanceTable">
             <thead>
                 <tr>
                     <th>Client</th>
@@ -386,8 +334,11 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
+       
+
+       
         <?php if ($filterClient): ?>
->>>>>>> 527e52dedfbadcc0859c2b3aadd6ec726f597773
         <form action="functions/update_balance_sheet.php" method="post" style="display:inline;">
             <input type="hidden" name="client_id" value="<?= htmlspecialchars($filterClient) ?>">
             <button type="submit" class="btn btn-sm btn-primary">Update Balance Sheet</button>
