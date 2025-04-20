@@ -10,80 +10,51 @@ $pdo = new PDO("mysql:host=localhost;dbname=cskdb", "admin", "123");
 // Fetch clients
 $clients = $pdo->query("SELECT id, name FROM clients ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 
-// Handle new entry
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $pdo->prepare("REPLACE INTO owners_equity 
-        (client_id, year, beginning_capital, additional_investment, withdrawals) 
-        VALUES (:client_id, :year, :beginning_capital, :additional_investment, :withdrawals)
-    ");
-    $stmt->execute([
-        ':client_id' => $_POST['client_id'],
-        ':year' => $_POST['year'],
-        ':beginning_capital' => $_POST['beginning_capital'],
-        ':additional_investment' => $_POST['additional_investment'],
-        ':withdrawals' => $_POST['withdrawals'],
-    ]);
-    header("Location: owners_equity.php?success=1");
-    exit();
+$selected_client = $_GET['client_id'] ?? '';
+$selected_year = $_GET['year'] ?? date('Y');
+
+// Fetch clients
+$client_stmt = $pdo->query("SELECT id, name FROM clients");
+$clients = $client_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch Net Income
+$net_income = 0;
+if ($selected_client && $selected_year) {
+    $stmt = $pdo->prepare("SELECT net_income FROM income_statements WHERE client_id = ? AND YEAR(statement_date) = ?");
+    $stmt->execute([$selected_client, $selected_year]);
+    $net_income = $stmt->fetchColumn() ?: 0;
 }
 
-// Filters
-$filterClient = $_GET['client_id'] ?? '';
-$filterYear = $_GET['year'] ?? date('Y');
-
-$where = [];
-$params = [];
-
-if ($filterClient) {
-    $where[] = "oe.client_id = :client_id";
-    $params[':client_id'] = $filterClient;
-}
-if ($filterYear) {
-    $where[] = "oe.year = :year";
-    $params[':year'] = $filterYear;
-}
-
-$sql = "SELECT oe.*, c.name AS client_name
-        FROM owners_equity oe
-        JOIN clients c ON oe.client_id = c.id";
-if ($where) {
-    $sql .= " WHERE " . implode(" AND ", $where);
-}
-$sql .= " ORDER BY oe.year DESC";
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Fetch Net Income from income_statements (optional auto-calc)
-function getNetIncome($pdo, $clientId, $year) {
-    $stmt = $pdo->prepare("SELECT 
-        SUM(sales_revenue + other_income - cogs - salaries - rent - utilities - other_expenses) AS net_income
-        FROM income_statements 
-        WHERE client_id = :client_id AND YEAR(statement_date) = :year
-    ");
-    $stmt->execute([':client_id' => $clientId, ':year' => $year]);
+// Fetch Owner's Equity (Investment & Withdrawals)
+$investment = $withdrawal = 0;
+if ($selected_client && $selected_year) {
+    $stmt = $pdo->prepare("SELECT additional_investment, withdrawals FROM owners_equity WHERE client_id = ? AND year = ?");
+    $stmt->execute([$selected_client, $selected_year]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row ? floatval($row['net_income']) : 0;
+    if ($row) {
+        $investment = $row['additional_investment'] ?? 0;
+        $withdrawal = $row['withdrawals'] ?? 0;
+    }
 }
+
+$cash_from_operating = $net_income;
+$cash_from_financing = $investment - $withdrawal;
+$net_cash_flow = $cash_from_operating + $cash_from_financing;
 ?>
+
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Statement of Owner's Equity</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: right; }
-        th:first-child, td:first-child { text-align: left; }
-        .success { color: green; margin-bottom: 10px; }
-    </style>
+    <title>Cash Flow Statement</title>
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/cash_flow.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 <body>
-<div class="modal-overlay"></div>
+
+        <div class="modal-overlay"></div>
         <!-- The Modal -->
         <div id="newModal" class="newModal">
             <!-- Modal content -->
@@ -101,7 +72,7 @@ function getNetIncome($pdo, $clientId, $year) {
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Refund receipt</a></li>
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Delayed credit</a></li>
                         <li><a class="btn-tabs" href="dashboard.php" class="active">Delayed charge</a></li>
-                        <li><a class="btn-tabs" href="client_form.php" class="active">Add customer</a></li>
+                        <li><a class="btn-tabs" href="dashboard.php" class="active">Add customer</a></li>
                     </ul>
                 </div>
                 <div class="flyoutColumn">
@@ -148,7 +119,7 @@ function getNetIncome($pdo, $clientId, $year) {
             <a class="btn-tabs" href="records.php"><i class="fa-solid fa-file"></i>Financial Records</a>
             <a class="btn-tabs" href="reports.php"><i class="fa-solid fa-file"></i>Reports</a>
             <a class="btn-tabs" href="balance_sheet.php"><i class="fa-solid fa-file"></i>Balance Sheet</a>
-            <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement (Manual)</a>
+            <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement</a>
             <a class="btn-tabs" href="auto_income_statement.php"><i class="fa-solid fa-file"></i>Income Statement (auto)</a>
             <a class="btn-tabs" href="owners_equity.php"><i class="fa-solid fa-file"></i>Owner's Equity</a>
             <a class="btn-tabs" href="trial_balance.php"><i class="fa-solid fa-file"></i>Trial Balance</a>
@@ -160,84 +131,58 @@ function getNetIncome($pdo, $clientId, $year) {
 
     <div class="dashboard">
         <div class="top-bar">
-            <h1>Owner's Equity</h1>
+            <h1>Cash Flow Statement</h1>
             <div class="user-controls">
-                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
+                    <button class="dropbtn">Employee ▼</button>
                 </div>
             </div>
         </div>
 
-        <?php if (isset($_GET['success'])): ?>
-            <div class="success">Entry saved successfully!</div>
-        <?php endif; ?>
+        <div class="cash-flow-box">
+            <h2>Cash Flow Statement - <?= htmlspecialchars($selected_year) ?></h2>
 
-        <h2>Add / Update Entry</h2>
-        <form method="POST">
-            <label>Client:
-                <select name="client_id" required>
+            <form method="GET">
+                <label>Client:</label>
+                <select name="client_id" onchange="this.form.submit()">
                     <option value="">Select Client</option>
-                    <?php foreach ($clients as $c): ?>
-                        <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
-            <label>Year: <input type="number" name="year" value="<?= date('Y') ?>" required></label><br><br>
-
-            <label>Beginning Capital: <input type="number" step="0.01" name="beginning_capital"></label>
-            <label>Additional Investment: <input type="number" step="0.01" name="additional_investment"></label>
-            <label>Withdrawals: <input type="number" step="0.01" name="withdrawals"></label><br><br>
-
-            <button type="submit">Save Entry</button>
-        </form>
-
-        <hr>
-        <h2>Owner's Equity Report</h2>
-        <form method="GET">
-            <label>Filter by Client:
-                <select name="client_id">
-                    <option value="">All Clients</option>
-                    <?php foreach ($clients as $c): ?>
-                        <option value="<?= $c['id'] ?>" <?= $filterClient == $c['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($c['name']) ?>
+                    <?php foreach ($clients as $row): ?>
+                        <option value="<?= $row['id'] ?>" <?= ($selected_client == $row['id']) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($row['name']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-            </label>
-            <label>Year: <input type="number" name="year" value="<?= htmlspecialchars($filterYear) ?>"></label>
-            <button type="submit">Filter</button>
-        </form>
 
-        <table>
-            <thead>
+                <label style="margin-left: 20px;">Year:</label>
+                <input type="number" name="year" value="<?= htmlspecialchars($selected_year) ?>" onchange="this.form.submit()" />
+            </form>
+
+            <?php if ($selected_client && $selected_year): ?>
+            <table>
+                <tr><td colspan="2" class="label">Cash Flows from Operating Activities</td></tr>
                 <tr>
-                    <th>Client</th>
-                    <th>Year</th>
-                    <th>Beginning Capital</th>
-                    <th>Additional Investment</th>
-                    <th>Net Income</th>
-                    <th>Withdrawals</th>
-                    <th>Ending Capital</th>
+                    <td>Net Income</td>
+                    <td class="amount">$<?= number_format($net_income, 2) ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($entries as $e): 
-                    $netIncome = getNetIncome($pdo, $e['client_id'], $e['year']);
-                    $endingCapital = $e['beginning_capital'] + $e['additional_investment'] + $netIncome - $e['withdrawals'];
-                ?>
+                <tr><td colspan="2" class="label">Cash Flows from Financing Activities</td></tr>
                 <tr>
-                    <td><?= htmlspecialchars($e['client_name']) ?></td>
-                    <td><?= htmlspecialchars($e['year']) ?></td>
-                    <td><?= number_format($e['beginning_capital'], 2) ?></td>
-                    <td><?= number_format($e['additional_investment'], 2) ?></td>
-                    <td><strong><?= number_format($netIncome, 2) ?></strong></td>
-                    <td><?= number_format($e['withdrawals'], 2) ?></td>
-                    <td><strong><?= number_format($endingCapital, 2) ?></strong></td>
+                    <td>Owner Investment</td>
+                    <td class="amount">$<?= number_format($investment, 2) ?></td>
                 </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                <tr>
+                    <td>Owner Withdrawals</td>
+                    <td class="amount">($<?= number_format($withdrawal, 2) ?>)</td>
+                </tr>
+                <tr class="label">
+                    <td>Net Cash Flow</td>
+                    <td class="amount">$<?= number_format($net_cash_flow, 2) ?></td>
+                </tr>
+            </table>
+            <?php endif; ?>
+        </div>
     </div>
     <script src="script/dashboard.js"></script>
+
 </body>
 </html>

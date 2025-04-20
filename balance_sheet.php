@@ -162,6 +162,8 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement</a>
             <a class="btn-tabs" href="auto_income_statement.php"><i class="fa-solid fa-file"></i>Income Statement (auto)</a>
             <a class="btn-tabs" href="owners_equity.php"><i class="fa-solid fa-file"></i>Owner's Equity</a>
+            <a class="btn-tabs" href="trial_balance.php"><i class="fa-solid fa-file"></i>Trial Balance</a>
+            <a class="btn-tabs" href="cash_flow.php"><i class="fa-solid fa-file"></i>Cash Flow</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
@@ -284,6 +286,7 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button type="submit">Filter</button>
         </form>
 
+<<<<<<< HEAD
         <div class="balance-container">
             <table id="balanceTable">
                 <thead>
@@ -335,10 +338,62 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
        
 
+=======
+        <table id="balanceTable">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Cash</th>
+                    <th>Receivables</th>
+                    <th>Inventory</th>
+                    <th>Equipment</th>
+                    <th>Other Assets</th>
+                    <th>Total Assets</th>
+                    <th>Accounts Payable</th>
+                    <th>Loans</th>
+                    <th>Taxes Payable</th>
+                    <th>Other Liabilities</th>
+                    <th>Total Liabilities</th>
+                    <th>Equity</th>
+                    <th>Net Worth</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($entries as $e): 
+                    $totalAssets = $e['cash'] + $e['receivables'] + $e['inventory'] + $e['equipment'] + $e['other_assets'];
+                    $totalLiabilities = $e['accounts_payable'] + $e['loans'] + $e['taxes_payable'] + $e['other_liabilities'];
+                    $equity = $totalAssets - $totalLiabilities;
+                    $netWorth = $equity; // or any custom logic you want
+                ?>
+                <tr>
+                    <td><?= htmlspecialchars($e['client_name']) ?></td>
+                    <td><?= htmlspecialchars($e['sheet_date']) ?></td>
+                    <td>₱<?= number_format($e['cash'], 2) ?></td>
+                    <td>₱<?= number_format($e['receivables'], 2) ?></td>
+                    <td>₱<?= number_format($e['inventory'], 2) ?></td>
+                    <td>₱<?= number_format($e['equipment'], 2) ?></td>
+                    <td>₱<?= number_format($e['other_assets'], 2) ?></td>
+                    <td><strong>₱<?= number_format($totalAssets, 2) ?></strong></td>
+                    <td>₱<?= number_format($e['accounts_payable'], 2) ?></td>
+                    <td>₱<?= number_format($e['loans'], 2) ?></td>
+                    <td>₱<?= number_format($e['taxes_payable'], 2) ?></td>
+                    <td>₱<?= number_format($e['other_liabilities'], 2) ?></td>
+                    <td><strong>₱<?= number_format($totalLiabilities, 2) ?></strong></td>
+                    <td><strong>₱<?= number_format($equity, 2) ?></strong></td>
+                    <td><strong>₱<?= number_format($netWorth, 2) ?></strong></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php if ($filterClient): ?>
+>>>>>>> 527e52dedfbadcc0859c2b3aadd6ec726f597773
         <form action="functions/update_balance_sheet.php" method="post" style="display:inline;">
-        <input type="hidden" name="client_id" value="<?= $client['id'] ?>">
-        <button type="submit" class="btn btn-sm btn-primary">Update Balance Sheet</button>
+            <input type="hidden" name="client_id" value="<?= htmlspecialchars($filterClient) ?>">
+            <button type="submit" class="btn btn-sm btn-primary">Update Balance Sheet</button>
         </form>
+        <?php endif; ?>
+
 
         <button onclick="openModal('classicBalanceSheetModal')">
         📄 View Classic Balance Sheet
@@ -354,74 +409,90 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="modal-body">
                 <style>
-                .balance-box {
-                    font-family: Arial, sans-serif;
-                    max-width: 600px;
-                    margin: auto;
-                    padding: 20px;
-                    border: 1px solid #000;
-                    background-color: #fff;
-                }
-                .balance-box h4, .balance-box h5 {
-                    text-align: center;
-                    margin-bottom: 20px;
-                }
-                .balance-box table {
-                    width: 100%;
-                    font-size: 14px;
-                }
-                .balance-box td {
-                    padding: 4px;
-                }
-                .right { text-align: right; }
-                .bold { font-weight: bold; }
+                    .balance-box {
+                        font-family: Arial, sans-serif;
+                        max-width: 600px;
+                        margin: auto;
+                        padding: 20px;
+                        border: 1px solid #000;
+                        background-color: #fff;
+                    }
+                    .balance-box h4, .balance-box h5 {
+                        text-align: center;
+                        margin-bottom: 20px;
+                    }
+                    .balance-box table {
+                        width: 100%;
+                        font-size: 14px;
+                    }
+                    .balance-box td {
+                        padding: 4px;
+                    }
+                    .right { text-align: right; }
+                    .bold { font-weight: bold; }
                 </style>
 
-                <div class="balance-box">
-                <h4>XYZ COMPANY</h4>
-                <h5>Balance Sheet<br>12/31/2017</h5>
+                <?php
+                // Fetch the latest balance sheet entry per client
+                $stmt = $pdo->prepare("
+                    SELECT bs.*, c.name AS client_name
+                    FROM balance_sheets bs
+                    JOIN clients c ON bs.client_id = c.id
+                    WHERE bs.id = (
+                        SELECT id FROM balance_sheets
+                        WHERE client_id = bs.client_id
+                        ORDER BY sheet_date DESC
+                        LIMIT 1
+                    )
+                    ORDER BY c.name
+                ");
+                $stmt->execute();
+                $latestEntries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
 
-                <table>
-                    <tr><td colspan="2" class="bold">ASSETS</td></tr>
-                    <tr><td colspan="2" class="bold">Current Assets:</td></tr>
-                    <tr><td>Cash</td><td class="right">$12,000</td></tr>
-                    <tr><td>Accounts Receivable</td><td class="right">$25,000</td></tr>
-                    <tr><td>Inventory</td><td class="right">$13,000</td></tr>
-                    <tr><td>Prepaid Rent</td><td class="right">$20,000</td></tr>
-                    <tr><td class="bold">Total Current Assets</td><td class="right bold">$70,000</td></tr>
+                <?php foreach ($latestEntries as $entry): ?>
+                    <?php
+                    $totalCurrentAssets = $entry['cash'] + $entry['receivables'] + $entry['inventory'];
+                    $totalLongTermAssets = $entry['equipment'] + $entry['other_assets'];
+                    $totalAssets = $totalCurrentAssets + $totalLongTermAssets;
 
-                    <tr><td colspan="2" class="bold">Long-Term Assets:</td></tr>
-                    <tr><td>Land</td><td class="right">$126,000</td></tr>
-                    <tr><td>Buildings & Improvements</td><td class="right">$300,000</td></tr>
-                    <tr><td>Furniture & Fixtures</td><td class="right">$150,000</td></tr>
-                    <tr><td>General Equipment</td><td class="right">$30,000</td></tr>
-                    <tr><td class="bold">Total Fixed Assets</td><td class="right bold">$606,000</td></tr>
+                    $totalLiabilities = $entry['accounts_payable'] + $entry['loans'] + $entry['taxes_payable'] + $entry['other_liabilities'];
+                    $equity = $totalAssets - $totalLiabilities;
+                    ?>
+                    <div class="balance-box" style="margin-bottom: 40px;">
+                        <h4><?= htmlspecialchars($entry['client_name']) ?></h4>
+                        <h5>Balance Sheet<br><?= date('F d, Y', strtotime($entry['sheet_date'])) ?></h5>
 
-                    <tr><td class="bold">TOTAL ASSETS</td><td class="right bold">$776,000</td></tr>
+                        <table>
+                            <tr><td colspan="2" class="bold">ASSETS</td></tr>
+                            <tr><td colspan="2" class="bold">Current Assets:</td></tr>
+                            <tr><td>Cash</td><td class="right">₱<?= number_format($entry['cash'], 2) ?></td></tr>
+                            <tr><td>Accounts Receivable</td><td class="right">₱<?= number_format($entry['receivables'], 2) ?></td></tr>
+                            <tr><td>Inventory</td><td class="right">₱<?= number_format($entry['inventory'], 2) ?></td></tr>
+                            <tr><td class="bold">Total Current Assets</td><td class="right bold">₱<?= number_format($totalCurrentAssets, 2) ?></td></tr>
 
-                    <tr><td colspan="2" class="bold">LIABILITIES</td></tr>
-                    <tr><td colspan="2" class="bold">Current Liabilities:</td></tr>
-                    <tr><td>Accounts Payable</td><td class="right">$50,000</td></tr>
-                    <tr><td>Taxes Payable</td><td class="right">$25,000</td></tr>
-                    <tr><td>Salaries/Wages Payable</td><td class="right">$30,000</td></tr>
-                    <tr><td>Interest Payable</td><td class="right">$7,000</td></tr>
-                    <tr><td class="bold">Total Current Liabilities</td><td class="right bold">$112,000</td></tr>
+                            <tr><td colspan="2" class="bold">Long-Term Assets:</td></tr>
+                            <tr><td>Equipment</td><td class="right">₱<?= number_format($entry['equipment'], 2) ?></td></tr>
+                            <tr><td>Other Assets</td><td class="right">₱<?= number_format($entry['other_assets'], 2) ?></td></tr>
+                            <tr><td class="bold">Total Long-Term Assets</td><td class="right bold">₱<?= number_format($totalLongTermAssets, 2) ?></td></tr>
 
-                    <tr><td colspan="2" class="bold">Long-Term Liabilities:</td></tr>
-                    <tr><td>Loan</td><td class="right">$350,000</td></tr>
-                    <tr><td class="bold">Total Long-Term Liabilities</td><td class="right bold">$350,000</td></tr>
+                            <tr><td class="bold">Total Assets</td><td class="right bold">₱<?= number_format($totalAssets, 2) ?></td></tr>
 
-                    <tr><td class="bold">TOTAL LIABILITIES</td><td class="right bold">$462,000</td></tr>
+                            <tr><td colspan="2" class="bold" style="padding-top: 15px;">LIABILITIES</td></tr>
+                            <tr><td>Accounts Payable</td><td class="right">₱<?= number_format($entry['accounts_payable'], 2) ?></td></tr>
+                            <tr><td>Loans</td><td class="right">₱<?= number_format($entry['loans'], 2) ?></td></tr>
+                            <tr><td>Taxes Payable</td><td class="right">₱<?= number_format($entry['taxes_payable'], 2) ?></td></tr>
+                            <tr><td>Other Liabilities</td><td class="right">₱<?= number_format($entry['other_liabilities'], 2) ?></td></tr>
+                            <tr><td class="bold">Total Liabilities</td><td class="right bold">₱<?= number_format($totalLiabilities, 2) ?></td></tr>
 
-                    <tr><td colspan="2" class="bold">OWNER'S EQUITY</td></tr>
-                    <tr><td>Paid in Capital</td><td class="right">$84,000</td></tr>
-                    <tr><td>Retained Earnings</td><td class="right">$230,000</td></tr>
-                    <tr><td class="bold">TOTAL OWNER'S EQUITY</td><td class="right bold">$314,000</td></tr>
+                            <tr><td colspan="2" class="bold" style="padding-top: 15px;">EQUITY</td></tr>
+                            <tr><td>Owner’s Equity</td><td class="right">₱<?= number_format($equity, 2) ?></td></tr>
 
-                    <tr><td class="bold">TOTAL LIABILITIES & OWNER'S EQUITY</td><td class="right bold">$776,000</td></tr>
-                </table>
+                            <tr><td class="bold">Total Liabilities & Equity</td><td class="right bold">₱<?= number_format($totalLiabilities + $equity, 2) ?></td></tr>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
             </div>
-
         </div>
         </div>
     </div>
@@ -439,10 +510,12 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     function openModal(id) {
     document.getElementById(id).classList.add('show');
+    document.getElementById(id).style.display = 'block';
     }
 
     function closeModal(id) {
         document.getElementById(id).classList.remove('show');
+        document.getElementById(id).style.display = 'none';
     }
 
     // Optional: Close on background click
