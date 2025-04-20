@@ -12,17 +12,18 @@ $clients = $pdo->query("SELECT id, name FROM clients ORDER BY name")->fetchAll(P
 
 // Insert new entry
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $sales_revenue = $_POST['sales_revenue'] ?? 0;
-    $other_income = $_POST['other_income'] ?? 0;
-    $cogs = $_POST['cogs'] ?? 0;
-    $salaries = $_POST['salaries'] ?? 0;
-    $rent = $_POST['rent'] ?? 0;
-    $utilities = $_POST['utilities'] ?? 0;
-    $other_expenses = $_POST['other_expenses'] ?? 0;
+    $sales_revenue = floatval($_POST['sales_revenue'] ?? 0);
+    $other_income = floatval($_POST['other_income'] ?? 0);
+    $cogs = floatval($_POST['cogs'] ?? 0);
+    $salaries = floatval($_POST['salaries'] ?? 0);
+    $rent = floatval($_POST['rent'] ?? 0);
+    $utilities = floatval($_POST['utilities'] ?? 0);
+    $other_expenses = floatval($_POST['other_expenses'] ?? 0);
 
     $total_revenue = $sales_revenue + $other_income;
     $total_expenses = $cogs + $salaries + $rent + $utilities + $other_expenses;
     $net_income = $total_revenue - $total_expenses;
+
 
     $stmt = $pdo->prepare("
         INSERT INTO income_statements (
@@ -178,6 +179,8 @@ if ($filterMonth) {
             <a class="btn-tabs" href="income_statement.php"><i class="fa-solid fa-file"></i>Income Statement (Manual)</a>
             <a class="btn-tabs" href="auto_income_statement.php"><i class="fa-solid fa-file"></i>Income Statement (auto)</a>
             <a class="btn-tabs" href="owners_equity.php"><i class="fa-solid fa-file"></i>Owner's Equity</a>
+            <a class="btn-tabs" href="trial_balance.php"><i class="fa-solid fa-file"></i>Trial Balance</a>
+            <a class="btn-tabs" href="cash_flow.php"><i class="fa-solid fa-file"></i>Cash Flow</a>
             <a class="btn-tabs" href="generateReport-employee.php"><i class="fa-solid fa-file-export"></i>Generate Report</a>
             <a class="btn-tabs" href="settings.php"><i class="fa-solid fa-gear"></i>Settings</a>
         </div>
