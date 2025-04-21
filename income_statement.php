@@ -188,10 +188,11 @@ if ($filterMonth) {
 
     <div class="dashboard">
         <div class="top-bar">
-            <h1>Income Statement Report</h1>
+            <h1>Income Statement</h1>
             <div class="user-controls">
-                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a> <!-- Link to logout -->
+                <a href="functions/logout.php"><button class="logout-btn">Log out</button></a>
                 <div class="dropdown">
+                    <button class="dropbtn">Employee ▼</button>
                 </div>
             </div>
         </div>

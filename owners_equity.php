@@ -80,6 +80,7 @@ function getNetIncome($pdo, $clientId, $year) {
         .success { color: green; margin-bottom: 10px; }
     </style>
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/owners_equity.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -172,71 +173,115 @@ function getNetIncome($pdo, $clientId, $year) {
             <div class="success">Entry saved successfully!</div>
         <?php endif; ?>
 
-        <h2>Add / Update Entry</h2>
-        <form method="POST">
-            <label>Client:
-                <select name="client_id" required>
-                    <option value="">Select Client</option>
-                    <?php foreach ($clients as $c): ?>
-                        <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+        <div class="entry-container">
+            <h2>Add / Update Entry</h2>
+            <form class="owners-equity" method="POST">
+                
+                <div class="input-container">
+                    <div class="section">
+                        
+                        <div class="input">
+                            <label>Client:</label>
+                            <select name="client_id" required>
+                                <option value="">Select Client</option>
+                                <?php foreach ($clients as $c): ?>
+                                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="input">
+                            <label>Year:</label> 
+                            <input type="number" name="year" value="<?= date('Y') ?>" required>
+                        </div>
+                    
+                    </div>
+
+                    <div class="section">
+
+                        <div class="input">
+                            <label>Beginning Capital:</label> 
+                            <input type="number" step="0.01" name="beginning_capital">
+                        </div>
+
+                        <div class="input">
+                            <label>Additional Investment:</label> 
+                            <input type="number" step="0.01" name="additional_investment">
+                        </div>
+
+                        <div class="input">
+                            <label>Withdrawals:</label> 
+                            <input type="number" step="0.01" name="withdrawals">
+                        </div>
+
+                    </div>
+                </div>
+                
+                <button type="submit">Save Entry</button>
+            </form>
+        </div>
+        
+        <div class="owners-equity-report">
+            <h2>Owner's Equity Report</h2>    
+            <form class="owners-equity" method="GET">
+                
+                <div class="input-container">
+                    <div class="section">
+                        <div class="input">
+                            <label>Filter by Client:</label>
+                            <select name="client_id">
+                                <option value="">All Clients</option>
+                                <?php foreach ($clients as $c): ?>
+                                    <option value="<?= $c['id'] ?>" <?= $filterClient == $c['id'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($c['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="input">
+                            <label>Year:</label> 
+                            <input type="number" name="year" value="<?= htmlspecialchars($filterYear) ?>">
+                        </div>
+                    </div>
+                </div>     
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+        
+        <div class="ownersEquity-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Year</th>
+                        <th>Beginning Capital</th>
+                        <th>Additional Investment</th>
+                        <th>Net Income</th>
+                        <th>Withdrawals</th>
+                        <th>Ending Capital</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($entries as $e): 
+                        $netIncome = getNetIncome($pdo, $e['client_id'], $e['year']);
+                        $endingCapital = $e['beginning_capital'] + $e['additional_investment'] + $netIncome - $e['withdrawals'];
+                    ?>
+                    <tr>
+                        <td><?= htmlspecialchars($e['client_name']) ?></td>
+                        <td><?= htmlspecialchars($e['year']) ?></td>
+                        <td><?= number_format($e['beginning_capital'], 2) ?></td>
+                        <td><?= number_format($e['additional_investment'], 2) ?></td>
+                        <td><strong><?= number_format($netIncome, 2) ?></strong></td>
+                        <td><?= number_format($e['withdrawals'], 2) ?></td>
+                        <td><strong><?= number_format($endingCapital, 2) ?></strong></td>
+                    </tr>
                     <?php endforeach; ?>
-                </select>
-            </label>
-            <label>Year: <input type="number" name="year" value="<?= date('Y') ?>" required></label><br><br>
+                </tbody>
+            </table>
+        </div>
 
-            <label>Beginning Capital: <input type="number" step="0.01" name="beginning_capital"></label>
-            <label>Additional Investment: <input type="number" step="0.01" name="additional_investment"></label>
-            <label>Withdrawals: <input type="number" step="0.01" name="withdrawals"></label><br><br>
-
-            <button type="submit">Save Entry</button>
-        </form>
-
-        <hr>
-        <h2>Owner's Equity Report</h2>
-        <form method="GET">
-            <label>Filter by Client:
-                <select name="client_id">
-                    <option value="">All Clients</option>
-                    <?php foreach ($clients as $c): ?>
-                        <option value="<?= $c['id'] ?>" <?= $filterClient == $c['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($c['name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
-            <label>Year: <input type="number" name="year" value="<?= htmlspecialchars($filterYear) ?>"></label>
-            <button type="submit">Filter</button>
-        </form>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Client</th>
-                    <th>Year</th>
-                    <th>Beginning Capital</th>
-                    <th>Additional Investment</th>
-                    <th>Net Income</th>
-                    <th>Withdrawals</th>
-                    <th>Ending Capital</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($entries as $e): 
-                    $netIncome = getNetIncome($pdo, $e['client_id'], $e['year']);
-                    $endingCapital = $e['beginning_capital'] + $e['additional_investment'] + $netIncome - $e['withdrawals'];
-                ?>
-                <tr>
-                    <td><?= htmlspecialchars($e['client_name']) ?></td>
-                    <td><?= htmlspecialchars($e['year']) ?></td>
-                    <td><?= number_format($e['beginning_capital'], 2) ?></td>
-                    <td><?= number_format($e['additional_investment'], 2) ?></td>
-                    <td><strong><?= number_format($netIncome, 2) ?></strong></td>
-                    <td><?= number_format($e['withdrawals'], 2) ?></td>
-                    <td><strong><?= number_format($endingCapital, 2) ?></strong></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        
     </div>
     <script src="script/dashboard.js"></script>
 </body>

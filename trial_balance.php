@@ -38,6 +38,7 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>🧾 Trial Balance</title>
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/trial-balane.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -70,15 +71,95 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-weight: bold;
         }
 
-        .form-bar {
-            text-align: center;
-            margin-bottom: 20px;
+        /* trial balance */
+
+        .trialBalance-container{
         }
 
-        .form-bar form {
-            display: inline-block;
+        .trial-balance{
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid rgb(164, 164, 164);
+            border-radius: 7px;
+            margin-top: 20px;
         }
 
+        .trial-balance .input-container{
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .input-container .section{
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            justify-content:center ;
+
+        }
+
+        .section .input{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input label{
+            font-size: 1rem;
+            font-weight: bolder;
+        }
+
+        .input input[type="date"],input[type="number"]{
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .input select{
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .inputs select option{
+
+        }
+
+        .submit-btn{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .trial-balance button{
+            width: 150px;
+            padding: 15px 0px ;
+            border-radius: 6px;
+            background-color:#00AF7E;
+            color: #FFF;
+            font-weight: bold;
+            border: 1px solid #c3c3c3;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform: scale(0.95);
+            margin-top: 20px;
+        
+        }
+
+        .trial-balance button:active {
+            transform: scale(0.9); /* Even smaller when clicked */
+        }
+
+
+        /* total */
         .totals {
             margin-top: 20px;
             border-top: 1px dashed #000;
@@ -178,23 +259,34 @@ $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="form-bar">
-            <form method="GET">
-                <label>Client:
-                    <select name="client_id">
-                        <?php foreach ($clients as $client): ?>
-                            <option value="<?= $client['id'] ?>" <?= $client['id'] == $clientId ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($client['name']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </label>
+        <div class="trialBalance-container">
+            <form class="trial-balance" method="GET">
+                <div class="input-container">
+                    <div class="section">
 
-                <label>As of:
-                    <input type="date" name="as_of" value="<?= htmlspecialchars($asOfDate) ?>">
-                </label>
+                        <div class="input">
+                            <label>Client:</label>
+                            <select name="client_id">
+                                <?php foreach ($clients as $client): ?>
+                                    <option value="<?= $client['id'] ?>" <?= $client['id'] == $clientId ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($client['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
 
-                <button type="submit">📄 View</button>
+                        <div class="input">
+                            <label>As of:</label>
+                            <input type="date" name="as_of" value="<?= htmlspecialchars($asOfDate) ?>">     
+                        </div>
+
+                    </div>
+                </div>
+                
+                <div class="submit-btn">
+                    <button type="submit">📄 View</button>
+                </div>
+                
             </form>
         </div>
 
